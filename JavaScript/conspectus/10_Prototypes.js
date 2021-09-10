@@ -18,20 +18,36 @@
  *      Object.keys, Object.values и другие.
  * Не меняйте [[Prototype]] существующих объектов, если важна скорость!
  */
- let animal = {
+
+// функция-конструктор
+function Point(x, y) {
+    this.x = x;
+    this.y = y;
+}
+// статический метод
+Point.from = function(obj) {
+    const { x, y } = obj;
+    return new Point(x, y);
+};
+// динамический метод
+Point.prototype.move = function(x, y) {
+    this.x += x;
+    this.y += y;
+};
+
+
+
+let animal = {
     eats: true
-  };
-  
-  let rabbit = {
+};
+let rabbit = {
     jumps: true,
     __proto__: animal
-  };
-  
-  // Object.keys возвращает только собственные ключи
-  alert(Object.keys(rabbit)); // jumps
-  
-  // for..in проходит и по своим, и по унаследованным ключам
-  for(let prop in rabbit) alert(prop); // jumps, затем eat
+};
+// Object.keys возвращает только собственные ключи
+alert(Object.keys(rabbit)); // jumps
+// for..in проходит и по своим, и по унаследованным ключам
+for(let prop in rabbit) alert(prop); // jumps, затем eat
 
 
 
