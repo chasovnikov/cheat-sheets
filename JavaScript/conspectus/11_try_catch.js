@@ -146,3 +146,67 @@ readData();
  *      ошибок для таких случаев, такие как https://errorception.com 
  *      или http://www.muscula.com.
  */
+
+
+/**
+ * Расширение Error.
+ * Лучше наследоваться от Error.
+ */
+
+// "Псевдокод" встроенного класса Error, определённого самим JavaScript
+class Error {
+    constructor(message) {
+      this.message = message;
+      this.name = "Error"; // (разные имена для разных встроенных классов ошибок)
+      this.stack = stack;  // стек вызовов. Нестандартное свойство, но обычно поддерживается
+    }
+  }
+
+class MyError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = this.constructor.name;
+    }
+}
+
+class ValidationError extends MyError { }
+
+class PropertyRequiredError extends ValidationError {
+  constructor(property) {
+    super("Нет свойства: " + property);
+    this.property = property;
+  }
+}
+
+// name корректное
+alert( new PropertyRequiredError("field").name ); // PropertyRequiredError
+  
+// Применение
+function readUser(json) {
+    let user = JSON.parse(json);
+  
+    if (!user.age) {
+      throw new PropertyRequiredError("age");
+    }
+    if (!user.name) {
+      throw new PropertyRequiredError("name");
+    }  
+    return user;
+}
+  
+try {
+    let user = readUser('{ "age": 25 }');
+} catch (err) {
+    if (err instanceof ValidationError) {
+      alert("Неверные данные: " + err.message); // Неверные данные: Нет свойства: name
+      alert(err.name); // PropertyRequiredError
+      alert(err.property); // name
+    } else if (err instanceof SyntaxError) {
+      alert("Ошибка синтаксиса JSON: " + err.message);
+    } else {
+      throw err; // неизвестная ошибка, повторно выбросит исключение
+    }
+}
+// вместо (err instanceof SyntaxError) можно
+//      } else if (err.name == "SyntaxError") {
+// Версия с instanceof лучше, если в будущем нужно расширить ValidationError.
