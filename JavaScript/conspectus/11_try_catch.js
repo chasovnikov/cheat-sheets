@@ -210,3 +210,69 @@ try {
 // вместо (err instanceof SyntaxError) можно
 //      } else if (err.name == "SyntaxError") {
 // Версия с instanceof лучше, если в будущем нужно расширить ValidationError.
+
+
+const sum = (a, b) => {
+    if (typeof a === 'number' && typeof b === 'number') {
+        return [null, a + b];
+    } else {
+        // для совместимости контракта синхронных ф-ий с контрактом колбэков (асинхр.)
+        return [new Error('a and b should be numbers')];
+    }
+};
+
+
+// на колбэках
+const sum = (a, b, callback) => {
+    if (typeof a === 'number' && typeof b === 'number') {
+        callback(null, a + b);
+    } else {
+        callback(new Error('a and b should be numbers'));
+    }
+};
+
+sum(2, 3, (err, result) => {
+    if (err) {
+        console.log(err.message);
+        return;
+    }
+    console.log(result);
+});
+
+
+// обработка ошибок с промисами
+const sum = (a, b) => new Promise((resolve, reject) => {
+    if (typeof a === 'number' && typeof b === 'number') {
+        resolve(a + b);
+    } else {
+        reject(new Error('a and b should be numbers'));
+    }
+});
+
+sum(2, 3)
+    .then(data => {
+        console.log(data);
+    })
+    .catch(err => {
+        console.log(err.message);
+    });
+
+
+// async-await
+const sum = async (a, b) => {
+    if (typeof a === 'number' && typeof b === 'number') {
+        return a + b;
+    } else {
+        throw new Error('a and b should be numbers');
+    }
+};
+
+(async () => {
+    try {
+        console.log(await sum(2, 3));
+    } catch (e) {
+        console.log(message);
+    }
+})();
+
+
