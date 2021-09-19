@@ -1,0 +1,9 @@
+an event happened           произошло событие
+not necessarily known       не обязательно известно
+eventual success            возможный успех
+failure reason              причина сбоя
+immediately returning       немедленно возвращается
+neither fulfilled           ни одно не выполнено 
+is said to be settled       говорят, что улажено
+takes up to two arguments   принимает до 2-х элементов
+safely omit                 безопасно пропускать

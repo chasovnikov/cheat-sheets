@@ -3,3 +3,63 @@
 я               - I am
 он/она/оно      - he/she/it is
 мы/вы/Вы/ты/они - we/you/you/you/they are
+
+
+processing          обработка
+processed           обработанный
+
+memory              память
+memorize            запоминать
+memorable           памятный
+memorial            памятник
+memorability        запоминание
+
+compare             сравнивать
+comparable          сравнимый
+comparison          сравнение
+comparative         сравнительный
+comparatively       сравнительно
+
+transfer            передача
+transferable        передаваемый
+transferability     перемещаемость
+transferee          получатель
+transferor          передающий
+
+differ              отличать(ся)
+different           различный
+difference          разность
+differential        дифференциал
+differentiate       различать
+
+similar             похожий
+similarity          сходство  
+similarly           так же
+
+apply               
+application
+applicable
+applied
+
+multipurpose
+multivalued
+
+interfere
+interference
+
+advantage
+disadvantage
+
+precision
+precise
+precisely
+
+probability
+compatibility
+to enable
+unable
+reliable
+capable
+capability
+readable
+

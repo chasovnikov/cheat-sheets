@@ -1,0 +1,95 @@
+Preface
+This book covers the JavaScript language and the JavaScript APIs
+implemented by web browsers and by Node. 
+Предисловие
+В настоящей книге рассматривается язык JavaScript и API-интерфейсы
+JavaScript, реализованные в веб-браузерах и Node.
+
+I wrote it for readers with
+some prior programming experience who want to learn JavaScript and also
+for programmers who already use JavaScript but want to take their
+understanding to a new level and really master the language. 
+Я написал ее для читателей, которые имеют определенный опыт программирования и хотят изучить
+JavaScript, а также для программистов, которые уже используют JavaScript, но
+стремятся повысить уровень своих знаний и мастерства владения языком. 
+
+My goal with
+this book is to document the JavaScript language comprehensively and
+definitively and to provide an in-depth introduction to the most important
+client-side and server-side APIs available to JavaScript programs. As a
+result, this is a long and detailed book. 
+comprehensively - всесторонне
+definitively    - исчерпывающе
+Моя цель в этой книге — исчерпывающе и всесторонне документировать язык
+JavaScript, чтобы предоставить подробное введение в наиболее важные APIинтерфейсы стороны 
+клиента и сервера, доступные программам на JavaScript
+
+My hope, however, is that it will
+reward careful study and that the time you spend reading it will be easily
+recouped in the form of higher programming productivity.
+Однако я надеюсь, что вы
+будете вознаграждены за ее тщательное изучение, а время, потраченное на чтение, будет 
+скомпенсировано в форме более высокой продуктивности программирования
+
+Previous editions of this book included a comprehensive reference section.
+Предыдущие издания книги содержали всесторонний справочный раздел.
+
+I no longer feel that it makes sense to include that material in printed form
+when it is so quick and easy to find up-to-date reference material online.
+feel        - чувствую
+makes sense - имеет смыл
+Я больше не считаю, что имеет смысл включать такой материал в печатный вариант, когда 
+настолько легко и быстро найти актуальную справочную информацию в Интернете.
+
+Supplemental material (code examples, exercises, etc.) for this book is
+available for download at:
+Supplemental - дополнительный
+exercises    - упражнения
+Дополнительные материалы (примеры кода, упражнения и т.п.) для этой книги доступны 
+для загрузки по ссылке
+
+This book is here to help you get your job done.
+Данная книга призвана помочь вам делать свою работу
+
+In general, if example
+code is offered with this book, you may use it in your programs and
+documentation. 
+offered - предложенный
+В общем случае вы
+можете применять приведенный здесь код примеров в своих программах и документации.
+
+You do not need to contact us for permission unless you’re
+reproducing a significant portion of the code. 
+permission  - разрешение
+unless      - пока не
+significant - значительный
+portion     - часть, порция
+Вы не обязаны спрашивать у нас разрешения, если только не воспроизводите 
+значительную часть кода.
+
+For example, writing a
+program that uses several chunks of code from this book does not require
+permission. 
+Например, написанная программа, которая использует некоторые части кода из этой книги,
+не требует разрешения.
+Например, для написания программы, в
+которой встречаются многие фрагменты кода из этой книги, разрешение не требуется.
+
+Selling or distributing examples from O’Reilly books does
+require permission.
+Selling - продажа
+Продажа или распростарнение примеров из книги O’Reilly требует разрешения.
+
+Answering a question by citing this book and quoting
+example code does not require permission. 
+Answering - отвечая
+citing - ссылаясь
+quoting - ссылаясь
+Ответ на вопрос путем ссылки на эту книгу и цитирования кода из примера разрешения не требует. 
+
+Incorporating a significant
+amount of example code from this book into your product’s
+documentation does require permission.
+Incorporating - внедрение
+Внедрение существенного объема кода примеров из этой книге, в
+документацию по вашему продукту требует разрешения.
