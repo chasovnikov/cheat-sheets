@@ -96,7 +96,7 @@ Incorporating - внедрение
 
 
 13.2 Promises
-designed        предназначенный
+designed        предназначенный, спланированный
 intentionally   умышленно
 vague           неопределенный
 way             способ
@@ -107,17 +107,16 @@ benefit         преимущество
 indented        отступы
 difficult       тяжелый
 nested          вложенный
-expressed       послать?
 tends           обслуживать
 propagate back       распространиться обратно
 breaks          нарушает
 meticulously    дотошно
 tedious         утомительный
-to get right    получать правильную реализацию
+to get right    получать правильно
 Note that       примечательно что
 something       примерно
 since           с тех пор, так как
-seem            кажутся
+seem            кажется
 straightforward     прямолинейный
 become          становиться
 anything        что-нибудь
@@ -139,3 +138,19 @@ arrives         прибывать, достигать
 Unlike many     в отличие от многих
 worth noting    стоит отметить
 distinctive     особенный, отличительный
+
+HANDLING ERRORS WITH PROMISES
+particularly        особенно
+involve             включать
+robust              крепкий, сильный, здравый
+inevitably          неизбежно
+wrong               неправильный
+until               до
+clause              пункт, предложение
+possible            возможный
+rare                редкий
+consider            учитывать
+meaningfully        значительный
+still               спокойный
+further             дальнейший
+fulfilled           выполнен

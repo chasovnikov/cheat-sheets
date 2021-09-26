@@ -1,3 +1,20 @@
+/**
+ * 2 способа вставить js-файл в HTML-документ.
+ * 'use strict' в старых браузерах.
+ * Имена переменных.
+ * Перечисление типов данных.
+ * BigInt: мат. операции, смешивание с другими типами, применение унарного опер-ра "+".
+ * null, undefined, typeof.
+ * Модальные окна: promt, alert, confirm
+ * Явное преобразование типов.
+ * Приведение к числу.
+ * Приведение к Boolean.
+ * Примеры разных преобразований типов.
+ * Присваивание переменных. Инкремент. Декремент.
+ * Побитовые операторы.
+ */
+
+
 // Программы на JavaScript могут быть вставлены в любое место HTML-документа с помощью тега <script>.
 
 // <!DOCTYPE HTML>
@@ -49,10 +66,10 @@ let user = 'John', age = 25, message = 'Hello';
  const bigintFromNumber = BigInt(10); // то же самое, что и 10n
 
 // BigInt можно использовать как обычные числа
- alert(1n + 2n); // 3
+alert(1n + 2n); // 3
 
 // В математических операциях мы не можем смешивать bigint и обычные числа:
- alert(1n + 2); // Error: Cannot mix BigInt and other types
+alert(1n + 2); // Error: Cannot mix BigInt and other types
 
 let bigint = 1n;
 // К BigInt числам нельзя применить унарный оператор +
@@ -61,7 +78,7 @@ alert( +bigint ); // SyntaxError: Unexpected identifier
 
 /**
  * null     - отсутствие объектного значения. 
-*            В отличие от undefined не является свойством глобального объекта. 
+ *           В отличие от undefined не является свойством глобального объекта. 
  *           В API часто присутствует в местах где ожидается объект, но подходящего объекта нет.
  * 
  * undefined - неопределённость. Является свойством глобального объекта.
@@ -75,26 +92,47 @@ typeof undefined   // undefined
 null === undefined // false
 null  == undefined // true
 
-//  возвращает тип аргумента
-typeof val;
-typeof (val);
-typeof Math // "object"  (1)
-typeof null // "object"  (2)
-typeof alert // "function"  (3)
+// возвращает тип аргумента
+typeof val;     // как оператор
+typeof(val);    // как функция
+typeof Math     // "object"
+typeof null     // "object"
+typeof alert    // "function"
 
-// Окно с вводом
-let age = prompt('Сколько тебе лет?', 100); // 100 - по умолчанию
-// Окно с сообщением
+
+/**
+ * Модальные окна.
+ *      Блокируют выполнение скриптов, пока окно не будет закрыто.
+ * Являются методами объекта Window.
+ */
+/**
+ * prompt - окно с полем для ввода.
+ * 
+ * result = window.prompt(message, default)
+ * @param message {string | undefined} Сообщение в окне. Необязательно
+ * @param default {string | undefined} Значение по умолчанию. Необязательно
+ * 
+ * @returns string (OK) | null (CANCEL)
+ */
+let age = prompt('Сколько тебе лет?', 100);
+
+/**
+ * alert - окно с сообщение.
+ * 
+ * window.alert(message)
+ * @param message {any | undefined} Сообщение в окне. Необязательно
+ */
 alert(`Тебе ${age} лет!`); // Тебе 100 лет!
 
-// Окно "Да/Нет"
-let isBoss = confirm("Ты здесь главный?");
-alert( isBoss ); // true, если нажата OK
 /**
- * Все эти методы являются модальными: останавливают выполнение скриптов
- *  и не позволяют пользователю взаимодействовать с остальной частью страницы
- *  до тех пор, пока окно не будет закрыто
+ * confirm - окно с выбором ответа "Ок/Отмена".
+ * 
+ * result = window.confirm(message)
+ * @param message {string | undefined} Cообщение в окне. Необязательно
+ * 
+ * @returns boolean
  */
+let isBoss = confirm("Ты здесь главный?");
 
 
 /**
