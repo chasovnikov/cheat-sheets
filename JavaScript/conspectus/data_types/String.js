@@ -109,124 +109,146 @@ alert( s1 == s2 ); // false, хотя на вид символы одинако�
  * String.prototype
  *      Позволяет добавлять свойства к объекту String.
  * 
+ * 
  * Статические методы:
  * 
- * String.fromCharCode()
- *      Возвращает строку, созданную из указанной последовательности значений Юникода.
- * String.fromCodePoint() 
- *      Возвращает строку, созданную из указанной последовательности кодовых точек Юникода.
- * String.raw() 
+ * String.fromCharCode(num1 [, ...[, numN]])
+ *      Создает строку по единицам кода UTF-16.
+ * 
+ * String.fromCodePoint(num1 [, ...[, numN)
+ *      То же что и String.fromCharCode, но может вернуть один символ, 
+ *      который на самом деле имеет длину 2, а не 1
+ * 
+ * String.raw(callSite, ...substitutions)
+ * String.raw`templateString`
  *      Возвращает строку, созданную из сырой шаблонной строки.
+ * 
  * 
  * Методы, унаследованные из Function:
  *      apply, call, toSource, toString
  * 
+ * 
  * Динамические методы:
  * 
- * String.prototype.at(index) 
+ *      ДОСТУП К СИМВОЛАМ:
+ * 
+ * .at(index) 
  *      Возвращает символ (ровно одну кодовую единицу UTF-16) по указанному индексу. 
  *      Принимает отрицательные целые числа, которые отсчитываются от последнего строкового символа.
  * 
- * String.prototype.charAt(index)
+ * .charAt(index)
  *      Возвращает символ (ровно одну кодовую единицу UTF-16) по указанному индексу.
  * 
- * String.prototype.charCodeAt(index)
+ * .charCodeAt(index)
  *      Возвращает число, которое является значением кодовой единицы UTF-16 по заданному индексу.
+ *      
  * 
- * String.prototype.codePointAt(pos)
+ *      ИЗМЕНЕНИЕ РЕГИСТРА:
+ * 
+ * .toLowerCase()
+ *      Возвращает значение вызывающей строки, преобразованное в нижний регистр.
+ * 
+ * .toUpperCase()
+ *      Возвращает значение вызывающей строки, преобразованное в верхний регистр.
+ * 
+ * .toLocaleLowerCase( [locale, ...locales])
+ *      Символы в строке преобразуются в нижний регистр с учетом текущего языкового стандарта.
+ *      Для большинства языков будет возвращено то же значение, что и toLowerCase ().
+ * 
+ * .toLocaleUpperCase( [locale, ...locales])
+ *      Символы в строке преобразуются в верхний регистр с учетом текущего языкового стандарта.
+ *      Для большинства языков будет возвращено то же значение, что и toUpperCase ().
+ * 
+ *  
+ *      ПОИСК ПОДСТРОКИ:
+ *  
+ * .indexOf(searchValue [, fromIndex])
+ *      Возвращает индекс первого вхождения searchValue или -1, если не найден.
+ * 
+ * .lastIndexOf(searchValue [, fromIndex])
+ *      Возвращает индекс последнего вхождения searchValue или -1, если не найден.
+ * 
+ * .includes(searchString [, position])
+ *      Определяет, содержит ли вызывающая строка searchString.
+ * 
+ * .startsWith(searchString [, length])
+ *      Определяет, начинается ли вызывающая строка с символов строки searchString.
+ * 
+ * .endsWith(searchString [, length])
+ *      Определяет, заканчивается ли строка символами строки searchString.
+ * 
+ * 
+ *      ПОЛУЧЕНИЕ ПОДСТРОКИ:
+ * 
+ * .slice(beginIndex[, endIndex])
+ *      Извлекает часть строки и возвращает новую строку.
+ * 
+ * .substring(indexStart [, indexEnd])
+ *      Возвращает новую строку, содержащую символы вызывающей строки из (или между) указанного индекса (или индексов).
+ * 
+ * 
+ *      СРАВНЕНИЕ СТРОК:
+ * 
+ * .codePointAt(pos)
  *      Возвращает неотрицательное целое число Number, которое является значением кодовой точки 
  *      кодовой точки в кодировке UTF-16, начиная с указанной позиции.
  * 
- * String.prototype.concat(str [, ...strN ])
+ * .localeCompare(compareString [, locales [, options]])
+ *      Возвращает число, указывающее, находится ли ссылочная строка compareString до, после или эквивалентна данной строке в порядке сортировки.
+ * 
+ * 
+ *      РАБОТА С РЕГУЛЯРНЫМИ ВЫРАЖЕНИЯМИ:
+ * 
+ * .match(regexp)
+ *      Используется для сопоставления регулярного выражения регулярного выражения со строкой.
+ * 
+ * .matchAll(regexp)
+ *      Возвращает итератор всех совпадений регулярного выражения.
+ * 
+ * .replace(searchFor, replaceWith)
+ *      Используется для замены вхождений searchFor с помощью replaceWith. searchFor может быть строкой или регулярным выражением, а replaceWith может быть строкой или функцией.
+ * 
+ * .replaceAll(searchFor, replaceWith)
+ *      Используется для замены всех вхождений searchFor с помощью replaceWith. searchFor может быть строкой или регулярным выражением, а replaceWith может быть строкой или функцией.
+ * 
+ * .search(regexp)
+ *      Найдите совпадение между регулярным выражением regexp и вызывающей строкой.
+ *  
+ * 
+ * 
+ * .toString()
+ *      Возвращает строку, представляющую указанный объект. Переопределяет метод Object.prototype.toString ().
+ *  
+ * .concat(str [, ...strN ])
  *      Объединяет текст двух (или более) строк и возвращает новую строку.
+ *  
+ * .normalize([form])
+ *      Возвращает форму нормализации Unicode вызывающего строкового значения.
  * 
- * String.prototype.includes(searchString [, position])
- *      Определяет, содержит ли вызывающая строка searchString.
+ * .padEnd(targetLength [, padString])
+ *      Дополняет текущую строку с конца заданной строкой и возвращает новую строку длины targetLength.
  * 
- * String.prototype.endsWith(searchString [, length])
- *      Определяет, заканчивается ли строка символами строки searchString.
+ * .padStart(targetLength [, padString])
+ *      Дополняет текущую строку с начала заданной строкой и возвращает новую строку длины targetLength.
  * 
- *      ОТРЕДАКТИРОВАТЬ:
+ * .repeat(count)
+ *      Возвращает строку, состоящую из элементов объекта, повторяющихся количество раз.
  * 
- * String.prototype.indexOf(searchValue [, fromIndex])
-Returns the index within the calling String object of the first occurrence of searchValue, or -1 if not found.
-
-String.prototype.lastIndexOf(searchValue [, fromIndex])
-Returns the index within the calling String object of the last occurrence of searchValue, or -1 if not found.
-
-String.prototype.localeCompare(compareString [, locales [, options]])
-Returns a number indicating whether the reference string compareString comes before, after, or is equivalent to the given string in sort order.
-
-String.prototype.match(regexp)
-Used to match regular expression regexp against a string.
-
-String.prototype.matchAll(regexp)
-Returns an iterator of all regexp's matches.
-
-String.prototype.normalize([form])
-Returns the Unicode Normalization Form of the calling string value.
-
-String.prototype.padEnd(targetLength [, padString])
-Pads the current string from the end with a given string and returns a new string of the length targetLength.
-
-String.prototype.padStart(targetLength [, padString])
-Pads the current string from the start with a given string and returns a new string of the length targetLength.
-
-String.prototype.repeat(count)
-Returns a string consisting of the elements of the object repeated count times.
-
-String.prototype.replace(searchFor, replaceWith)
-Used to replace occurrences of searchFor using replaceWith. searchFor may be a string or Regular Expression, and replaceWith may be a string or function.
-
-String.prototype.replaceAll(searchFor, replaceWith)
-Used to replace all occurrences of searchFor using replaceWith. searchFor may be a string or Regular Expression, and replaceWith may be a string or function.
-
-String.prototype.search(regexp)
-Search for a match between a regular expression regexp and the calling string.
-
-String.prototype.slice(beginIndex[, endIndex])
-Extracts a section of a string and returns a new string.
-
-String.prototype.split([sep [, limit] ])
-Returns an array of strings populated by splitting the calling string at occurrences of the substring sep.
-
-String.prototype.startsWith(searchString [, length])
-Determines whether the calling string begins with the characters of string searchString.
-
-String.prototype.substring(indexStart [, indexEnd])
-Returns a new string containing characters of the calling string from (or between) the specified index (or indeces).
-
-String.prototype.toLocaleLowerCase( [locale, ...locales])
-The characters within a string are converted to lowercase while respecting the current locale.
-
-For most languages, this will return the same as toLowerCase().
-
-String.prototype.toLocaleUpperCase( [locale, ...locales])
-The characters within a string are converted to uppercase while respecting the current locale.
-
-For most languages, this will return the same as toUpperCase().
-
-String.prototype.toLowerCase()
-Returns the calling string value converted to lowercase.
-
-String.prototype.toString()
-Returns a string representing the specified object. Overrides the Object.prototype.toString() method.
-
-String.prototype.toUpperCase()
-Returns the calling string value converted to uppercase.
-
-String.prototype.trim()
-Trims whitespace from the beginning and end of the string. Part of the ECMAScript 5 standard.
-
-String.prototype.trimStart()
-Trims whitespace from the beginning of the string.
-
-String.prototype.trimEnd()
-Trims whitespace from the end of the string.
-
-String.prototype.valueOf()
-Returns the primitive value of the specified object. Overrides the Object.prototype.valueOf() method.
-
-String.prototype.@@iterator()
-Returns a new iterator object that iterates over the code points of a String value, returning each code point as a String value.
+ * .split([sep [, limit] ])
+ *      Возвращает массив строк, заполненный путем разделения вызывающей строки на вхождения подстроки sep.
+ *  
+ * .trim()
+ *      Обрезает пробелы в начале и в конце строки. Часть стандарта ECMAScript 5.
+ * 
+ * .trimStart()
+ *      Обрезает пробелы в начале строки.
+ * 
+ * .trimEnd()
+ *      Обрезает пробелы в конце строки.
+ * 
+ * .valueOf()
+ *      Возвращает примитивное значение указанного объекта. Переопределяет метод Object.prototype.valueOf ().
+ * 
+ * .@@iterator()
+ *      Возвращает новый объект итератора, который выполняет итерацию по кодовым точкам значения String, возвращая каждую кодовую точку как значение String.
  */
