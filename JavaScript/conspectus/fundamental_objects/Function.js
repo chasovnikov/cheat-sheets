@@ -16,6 +16,48 @@
  *      и локальные переменные внеш-й ф-ии).
  */
 
+/**
+ * Function Declaration можно использовать во всем скрипте 
+ * или блоке кода, если функция объявлена в блоке.
+ * В строгом режиме, когда Function Declaration находится в блоке {...}, 
+ * функция доступна везде внутри блока. Но не снаружи него.
+ */
+function sayHi() {
+    //...
+}
+
+/**
+ * Function Expression создаётся, когда выполнение доходит до него, 
+ * и затем уже может использоваться.
+ */
+let sayHi = function() {
+    //...
+};      // ";" обязательна, т.к. здесь - выражение
+
+// Функции-«колбэки» - функции, передаваемые в аргументы другой функции
+function ask(question, yes, no) {
+    if (confirm(question)) yes()
+    else no();
+}
+ask(
+    "Вы согласны?",
+    function() { alert("Вы согласились."); },
+    function() { alert("Вы отменили выполнение."); }
+);
+
+/**
+ * "Стрелочные" функции.
+ * Не имеют this.
+ * Не имеют arguments.
+ * Не могут быть вызваны с new.
+ * Нет super.
+ */
+let sum = (a, b) => a + b;
+let sum = a => a + b;
+let sum = (a, b) => {
+    return a + b;       // return обязателен с {}
+};
+  
 // функция-конструктор
 function User(name) {
     this.name = name;
@@ -26,9 +68,6 @@ let user = new User("Вася");
 let user = new function() {
     this.name = "Вася";
     this.isAdmin = false;
-    // ...другой код для создания пользователя
-    // возможна любая сложная логика и выражения
-    // локальные переменные и т. д.
 };
 
 
@@ -55,7 +94,7 @@ function User(name) {
 function SmallUser() {
     this.name = "Вася";
     
-    return { name: "Godzilla" };
+    return { name: "Godzilla" };    // new SmallUser().name  ->  "Godzilla"
     // return 'fgbgt';              // new SmallUser().name  ->  "Вася"
     // return 3424;                 // new SmallUser().name  ->  "Вася"
 }
@@ -82,7 +121,7 @@ function many(a, b, ...more) {}
 
 alert(f1.length); // 1
 alert(f2.length); // 2
-alert(many.length); // 2
+alert(many.length); // 2 ("...more" не считаются)
 
 
 // добавим свойство counter для отслеживания общего количества вызовов:
@@ -96,8 +135,6 @@ sayHi.counter = 0; // начальное значение
 sayHi(); // Hi
 sayHi(); // Hi
 alert( `Вызвана ${sayHi.counter} раза` ); // Вызвана 2 раза
-
-
 
 
 /**
@@ -153,19 +190,6 @@ new Function('a, b', 'return a + b'); // через запятую в одной
 // Цепочка вызовов:
 const add = x => y => x + y;
 add(3)(6);    // 9
-
-// Рекурсия:
-const add = x => y => add(x + y);
-const a1 = add(5);
-const a2 = a1(2);
-const a3 = a2(3);
-const a4 = a1(1);
-const a5 = a2(10);
-console.log(a1, a2, a3, a4, a5);
-
-const res = add(1)(4)(8)(8);
-console.log(res);
-
 
 
 /**
