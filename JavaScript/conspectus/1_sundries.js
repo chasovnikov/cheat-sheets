@@ -57,24 +57,6 @@ let user = 'John', age = 25, message = 'Hello';
  *  String, Boolean, Number, BigInt, Symbol, Object, null, undefined
  */
 
-/**============ Тип данных BigInt============================
- *  Пример обозначения: 3214n
- * В JavaScript тип «number» не может содержать числа больше, чем ((2**53)-1).
- */
- const bigint = 1234567890123456789012345678901234567890n;
- const sameBigint = BigInt("1234567890123456789012345678901234567890"); 
- const bigintFromNumber = BigInt(10); // то же самое, что и 10n
-
-// BigInt можно использовать как обычные числа
-alert(1n + 2n); // 3
-
-// В математических операциях мы не можем смешивать bigint и обычные числа:
-alert(1n + 2); // Error: Cannot mix BigInt and other types
-
-let bigint = 1n;
-// К BigInt числам нельзя применить унарный оператор +
-alert( +bigint ); // SyntaxError: Unexpected identifier
-
 
 /**
  * null     - отсутствие объектного значения. 

@@ -154,3 +154,9 @@ meaningfully        значительный
 still               спокойный
 further             дальнейший
 fulfilled           выполнен
+
+Chapter 3. Types, Values, and Variables
+kinds       виды
+Overview    обзор
+divided     разделён
+truth       истинность
