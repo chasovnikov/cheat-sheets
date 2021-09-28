@@ -156,7 +156,33 @@ further             дальнейший
 fulfilled           выполнен
 
 Chapter 3. Types, Values, and Variables
-kinds       виды
-Overview    обзор
-divided     разделён
-truth       истинность
+kinds           виды
+Overview        обзор
+divided         разделён
+truth           истинность
+significant     существенный
+dedicated       посвящен
+sole            единственный
+harming         причинение вреда
+briefly         кратко
+unordered       неупорядоченный
+mapping         отображение
+facilitate      способствовать
+sophisticated   сложный
+arise           возникать
+themselves      самих себя
+garbage collection  сборщик мусора
+worry           волноваться
+reachable       достижимый
+reclaims        восстанавливает
+occupying       занимающий
+care            ухаживать
+ensure          гарантировать
+inadvertently   нечаянно
+therefore       следовательно
+necessary       необходимо
+Loosely         Слабо
+rather          скорее
+behave          вести себя
+mutable         изменчивый
+immutable       неизменный

@@ -133,3 +133,68 @@ Promise.race( [sleep(2000), sleep(5000)] )
     .then(() => {       // сработает после первого промиса в массиве
         console.log('All promises');
     });
+
+
+/**
+ * Обработчики промисов .then/.catch/.finally всегда асинхронны. Это
+ * означает, что они начнут выполнятся только после того, как
+ * выполнится весь неасинхронный код ("очередь микрозадач").
+ */
+
+
+
+/**
+ * async
+ * Результат ф-ии будет оборачиваться в завершившийся успешно промис
+ * Обязывает ф-ию всегда возвращать промис.
+ * Позволяет использовать await в теле этой функции.
+ */
+async function f() {
+    return 1;       // здесь вернёт Promise.resolve(1)
+}
+f().then(alert); // 1
+
+
+/**
+ * await заставит интерпретатор ждать до тех пор, пока промис не выполнится.
+ * «Синтаксический сахар» для получения результата промиса, более наглядный, 
+ *      чем promise.then.
+ * Работает только внутри async–функций.
+ * Как и promise.then, await позволяет работать с промис–совместимыми объектами.
+ */
+let value = await promise;
+
+// await нельзя использовать на верхнем уровне вложенности (вне функции).
+(async () => {
+    let response = await fetch('/article/promise-chaining/user.json');
+    let user = await response.json();
+    // ...
+  })();
+
+// await выбрасывает исключение (как throw), если код завершается с ошибкой.
+async function f() {
+  await Promise.reject(new Error("Упс!"));
+}
+
+// ловля ошибки с await
+async function f() {
+
+    try {
+        let response = await fetch('http://no-such-url');
+    } catch(err) {
+            alert(err); // TypeError: failed to fetch
+    }
+}
+f();
+// или
+async function f() {
+    let response = await fetch('http://no-such-url');
+}
+// f() вернёт промис в состоянии rejected
+f().catch(alert); // TypeError: failed to fetch // (*)
+
+/**
+ * Получить ссылку на AsyncFunction для установления:
+ *      явл-ся пришедшие идентификаотры асинхронными.
+ */
+const AsyncFunction = (async () => {}).constructor;
