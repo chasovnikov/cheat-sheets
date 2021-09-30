@@ -43,7 +43,7 @@ for(let value of generator) {
 let sequence = [0, ...generateSequence()];
 alert(sequence); // 0, 1, 2, 3
 
-// Генераторы были добавлены, в частности, с целью упростить создание перебираемых объектов
+// Генераторы добавлены, в частности, с целью упростить создание перебираемых объектов
 let range = {
     from: 1,
     to: 5,
@@ -71,15 +71,6 @@ function* generatePasswordCodes() {
     yield* generateSequence(48, 57); // 0..9    
     yield* generateSequence(65, 90); // A..Z    
     yield* generateSequence(97, 122); // a..z
-
-    // yield* generateSequence(48, 57) вместо
-    // for (let i = 48; i <= 57; i++) yield i;
-
-    // yield* generateSequence(65, 90) вместо
-    // for (let i = 65; i <= 90; i++) yield i;
-
-    // yield* generateSequence(97, 122) вместо
-    // for (let i = 97; i <= 122; i++) yield i;
 }
 
 let str = '';
@@ -103,12 +94,10 @@ let question = generator.next().value;  // <-- yield возвращает зна
 generator.next(4);                      // --> передаём результат в генератор
 
 function* gen() {
-    let ask1 = yield "2 + 2 = ?";
-  
+    let ask1 = yield "2 + 2 = ?";  
     alert(ask1); // 4
   
-    let ask2 = yield "3 * 3 = ?"
-  
+    let ask2 = yield "3 * 3 = ?"  
     alert(ask2); // 9
   }
   
@@ -144,3 +133,74 @@ generator.throw(new Error("Ответ не найден в моей базе д�
 // } catch(e) {
 //     alert(e); // покажет ошибку
 // }
+
+
+/**
+ * Из лекций Шемсединова
+ */
+function* counter(begin, end, delta = 1) {
+    let value = begin;
+    while (end > value) {
+        value += delta;
+        // if (value > end) return;
+        // yield value;
+        const back = yield value;
+        if (back) value += back;
+        console.log({ back });
+    }
+}
+
+const c = counter(0, 30, 12);
+const val1 = c.next();      // {value: 12, done: false}   back: undefined
+const val2 = c.next();      // {value: 24, done: false}   back: undefined
+// const val3 = c.next();      // {value: undefined, done: true}
+const val3 = c.next(150);      // {value: undefined, done: true}  back: 150
+const val4 = c.next();      // {value: undefined, done: true}
+console.log({c, val1, val2, val3, val4});
+
+
+function* ids(...args) {
+    let i =0;
+    while (args.length > i) {
+        const id = args[i++];
+        if (id === undefined) return undefined;
+        yield id;
+    }
+}
+const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
+for (const val of id) {
+    console.log({val});
+}
+// можно использовать спрэд-оператор
+console.log(...id);
+
+/**
+ * В массиве или Set есть свой Symbol.iterator. И его будет возращать yield*.
+ */
+function* genFn() {
+    yield* [10, 20, 30];
+    // yield* new Set([10, 20, 30]);
+}
+const c = genFn();
+const val1 = c.next();
+const val2 = c.next();
+const val3 = c.next();
+const val4 = c.next();
+console.log({c, val1, val2, val3, val4});
+
+
+function* gen1() {
+    yield 10;
+    yield 20;
+    yield 30;
+}
+function* gen2() {
+    yield 40;
+    yield 50;
+    yield 60;
+}
+function* genFn() {
+    yield* gen1();
+    yield* gen2();
+}
+console.log('[...genFn()] =', [...genFn()]);
