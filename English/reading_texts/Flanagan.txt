@@ -140,9 +140,9 @@ worth noting    стоит отметить
 distinctive     особенный, отличительный
 
 HANDLING ERRORS WITH PROMISES
-particularly        особенно
-involve             включать
-robust              крепкий, сильный, здравый
+particularly        в частности
+involve             вовлекать
+robust              крепкий
 inevitably          неизбежно
 wrong               неправильный
 until               до
@@ -168,7 +168,7 @@ briefly         кратко
 unordered       неупорядоченный
 mapping         отображение
 facilitate      способствовать
-sophisticated   сложный
+sophisticated   утонченный, непростой
 arise           возникать
 themselves      самих себя
 garbage collection  сборщик мусора

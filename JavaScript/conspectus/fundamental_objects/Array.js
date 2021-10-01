@@ -7,26 +7,40 @@
  *      Заполнение массива в обратном порядке, например: arr[1000], arr[999] и т.д.
  * Методы push/pop выполняются быстро, а методы shift/unshift – медленно.
  * Можно, но не следует использовать цикл for..in для массивов.
- * length - это наибольший цифровой индекс плюс один (а не количество элементов)
- *      (если мы уменьшим его, массив станет короче)
  * Массивы не имеют ни Symbol.toPrimitive, ни функционирующего valueOf, 
- *      они реализуют только преобразование toString
- * Рекомендуется массивы и объекты объявлять через "const"
+ *      они реализуют только преобразование toString.
+ * Рекомендуется массивы и объекты объявлять через "const".
+ * 
+ * Синтаксис:
+ * [element0, element1, ..., elementN]
+ * new Array(element0, element1[, ...[, elementN]])
+ * new Array(arrayLength)
  */
 
 // Создание массивов
-const arr = new Array("Яблоко", "Апельсин", "Груша");
 const fruits = ["Яблоко", "Апельсин", "Груша"];
+const arr = new Array("Яблоко", "Апельсин", "Груша");
+const arr1 = Array("Яблоко", "Апельсин", "Груша");
+
 
 /**
- * Если new Array вызывается с одним аргументом, 
- * который представляет собой число, он создаёт массив без элементов, 
- * но с заданной длиной
+ * length - это наибольший положительный числовой индекс плюс один 
+ *      (а не количество элементов).
  */
-const arr = new Array(2); // создастся ли массив [2]?
-alert( arr[0] ); // undefined! нет элементов.
-alert( arr.length ); // length 2
+{
+    const array = [];
+    array[70] = 100;    // length: 71, создано 70 пустых элементов
+}
 
+/**
+ * Если в new Array один аргумент, то это кол-во пустых элементов.
+ */
+const arr = new Array(2);    // создастся ли массив [2]?
+alert( arr[0] );             // undefined! нет элементов.
+alert( arr.length );         // length 2
+
+// создание массива из одного элемента или более
+const arr = Array.of(2);
 
 /**
  * Перебор элементов
@@ -42,47 +56,44 @@ for (let fruit of fruits) {
     alert( fruit );
 }
 
+/**
+ * рекомендуется вместо нее использовать for-ы, потому что форьич предполагает,
+ * что мы будет писать ф-ии с "побочными эффектами"
+ */
 arr.forEach( function(item, index, array) {
-    // ... делать что-то с item
+    console.log(item, index);
 } );
 
 
-// проверь себя
-let newLength = ['a', 'b'].push('c', 'd');
-let removed =   ['a', 'b'].pop();
-let removed =   ['a', 'b'].shift();
-let newLength = ['a', 'b'].unshift('c', 'd');
+const fruits = ['Яблоко', 'Банан'];
+// Добавление элемента в конец массива
+const newLength = fruits.push('Апельсин');
+// ["Яблоко", "Банан", "Апельсин"]
 
-const removedArray = ['a', 'b', 'c', 'd'].splice(-1, 2, "new1", "new2");
-const copyArray =    ['a', 'b', 'c', 'd'].slice(1, -1);
-const unitedArray =            ['a', 'b'].concat( ['c','d'], 'value', ['e','f'] ); 
+// Удаление последнего элемента массива
+const last = fruits.pop(); // удалим Апельсин (из конца)
+// ["Яблоко", "Банан"];
 
-let firstIndex = ['a', 'b', 'c', 'd'].indexOf('c', 1);
-let lastIndex =  ['a', 'b', 'c', 'd'].lastIndexOf('c');
-let bool =       ['a', 'b', 'c', 'd'].includes('c', 1);
+// Удаление первого элемента массива
+const first = fruits.shift(); // удалим Яблоко (из начала)
+// ["Банан"];
 
-const objSoldiers = arrayUsers.find( objArmy.canJoin, objArmy);
-let index =         arrayUsers.findIndex( objArmy.canJoin, objArmy);
-const arrSoldiers = arrayUsers.filter( objArmy.canJoin, objArmy);
+// Добавление элемента в начало массива
+var newLength = fruits.unshift('Клубника') // добавляет в начало
+// ["Клубника", "Банан"];
 
-const lengths = ["Bilbo", "Gandalf", "Nazgul"].map(item => item.length);
+// Поиск номера элемента в массиве
+var pos = fruits.indexOf('Банан');
+// 1
 
-["Bilbo", "Gandalf", "Nazgul"].forEach((word) => {
-  console.log(word)
-  if (word === 'Gandalf') {
-    words.shift()
-  }
-});
 
-const oldArray = oldArray.sort();
-const oldArray = oldArray.reverse();
 
-let str = ['Вася', 'Петя', 'Маша'].join(';');
+// создание копии массива из другого массива
+const arr1 = Array.from(arr);
+const arr1 = Array.from('123', x => parseInt(x));    // [1, 2, 3]
 
-let value = arr.reduce((sum, current) => sum + current, 0);
-let value = arr.reduceRight((sum, current) => sum + current, 0);
 
-let bool = Array.isArray(['ssad', 'wesd']);
+// заполнение массива
 
 
 /**
