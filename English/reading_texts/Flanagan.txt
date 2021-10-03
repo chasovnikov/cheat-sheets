@@ -186,3 +186,4 @@ rather          скорее
 behave          вести себя
 mutable         изменчивый
 immutable       неизменный
+rudimentary     зачаточный

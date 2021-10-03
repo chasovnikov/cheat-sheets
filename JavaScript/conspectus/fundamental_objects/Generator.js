@@ -204,3 +204,88 @@ function* genFn() {
     yield* gen2();
 }
 console.log('[...genFn()] =', [...genFn()]);
+
+
+/**============== Асинхронные итераторы и генераторы =======================
+ * 
+ * Чтобы сделать объект итерируемым асинхронно:
+ *    1) Используется Symbol.asyncIterator вместо Symbol.iterator.
+ *    2) next() должен возвращать промис.
+ *    3) Чтобы перебрать такой объект, используется цикл "for await (let item of iterable)".
+ */
+let range = {
+  from: 1,
+  to: 5,
+
+  // for await..of вызывает этот метод один раз в самом начале
+  [Symbol.asyncIterator]() { // (1)
+    // ...возвращает объект-итератор:
+    // далее for await..of работает только с этим объектом,
+    // запрашивая у него следующие значения вызовом next()
+    return {
+      current: this.from,
+      last: this.to,
+
+      // next() вызывается на каждой итерации цикла for await..of
+      async next() { // (2)
+        // должен возвращать значение как объект {done:.., value :...}
+        // (автоматически оборачивается в промис с помощью async)
+
+        // можно использовать await внутри для асинхронности:
+        await new Promise(resolve => setTimeout(resolve, 1000)); // (3)
+
+        if (this.current <= this.last) {
+          return { done: false, value: this.current++ };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+(async () => {
+
+  for await (let value of range) { // (4)
+    alert(value); // 1,2,3,4,5
+  }
+
+})()
+
+
+// Оператор расширения ... не работает асинхронно
+
+// Асинхронные генераторы
+async function* generateSequence(start, end) {
+
+  for (let i = start; i <= end; i++) {
+
+    // ура, можно использовать await!
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    yield i;
+  }
+
+}
+
+(async () => {
+
+  let generator = generateSequence(1, 5);
+  for await (let value of generator) {
+    alert(value); // 1, потом 2, потом 3, потом 4, потом 5
+  }
+
+})();
+
+
+// Можно использовать синх.ген-р с промисом
+function* ids(...args) {
+    let i = 0;
+    while (args.length > i) {
+        const i = args[i++];
+        if (id === undefined) return Promise.resolve(-1);
+        yield Promise.resolve(id);
+    }
+}
+const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
+Promise.all([...id]).then(console.log);     // здесь можно "...", т.к. синхр.
