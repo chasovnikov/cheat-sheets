@@ -101,3 +101,72 @@ numbers.push(2);        // добавилось успешно
 alert("Длина: " + numbers.length); // 2
 
 numbers.push("тест");   // TypeError (ловушка set на прокси вернула false)
+
+
+/**
+ * Proxy.revocable() 
+ *      используется, чтобы создать отменяемый Proxy объект.
+ * 
+ * Proxy.revocable(target, handler);
+ * 
+ * Отменяемый Proxy - объект со следующими двумя свойствами 
+ *      {proxy: proxy, revoke: revoke}.
+ * proxy
+ *      Объект Proxy, созданный с помощью вызова new Proxy(target, handler).
+ * revoke
+ *      Функция, не принимающая аргументов, которая сделает 
+ *          недействительным (выключит) proxy.
+ */
+const data = { name: 'Marcus'};
+const { proxy, revoke } = Proxy.revocable(data, {
+    get: function(target, key) {
+        return '[[' + target[key] + ']]';
+    }
+});
+console.log(proxy.name);    // 'Marcus'
+revoke();                   // отмена прокси
+console.log(proxy.name);    // будет ошибка
+
+
+/**
+ * Перебор при помощи «ownKeys»
+ */
+let user = {
+  name: "Вася",
+  age: 30,
+  _password: "***"
+};
+
+user = new Proxy(user, {
+  ownKeys(target) {
+    return Object.keys(target).filter(key => !key.startsWith('_'));
+  }
+});
+
+// ownKeys исключил _password
+for(let key in user) alert(key); // name, затем: age
+
+// аналогичный эффект для этих методов:
+alert( Object.keys(user) ); // name,age
+alert( Object.values(user) ); // Вася,30
+
+
+/**
+ * Ловушка has перехватывает вызовы in.
+ * has(target, property)
+ * @param {object} target  Это оригинальный объект
+ * @param property         Имя свойства
+ */
+let range = {
+  start: 1,
+  end: 10
+};
+
+range = new Proxy(range, {
+  has(target, prop) {
+    return prop >= target.start && prop <= target.end
+  }
+});
+
+alert(5 in range);      // true
+alert(50 in range);     // false
