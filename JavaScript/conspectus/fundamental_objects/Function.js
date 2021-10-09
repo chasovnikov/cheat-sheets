@@ -273,3 +273,21 @@ let double = mul.bind(null, 2);
 alert( double(3) ); // = mul(2, 3) = 6
 alert( double(4) ); // = mul(2, 4) = 8
 alert( double(5) ); // = mul(2, 5) = 10
+
+
+/**
+ * Интроспекция
+ */
+const types = [
+    Function,
+    (async () => {}).constructor,        // AsyncFunction
+    (function* () {}).constructor,       // GeneratorFunction
+    (async function* () {}).constructor, // AsyncGeneratorFunction
+];
+const output = types.map(item => ({
+    name: item.name,
+    type: typeof item,                  // у все function
+    ctr: item.constructor.name,         // у все Function
+    item,
+}));
+console.table(output);

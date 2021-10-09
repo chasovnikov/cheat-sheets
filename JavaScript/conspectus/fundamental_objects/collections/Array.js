@@ -30,6 +30,8 @@ const arr1 = Array("Яблоко", "Апельсин", "Груша");
 {
     const array = [];
     array[70] = 100;    // length: 71, создано 70 пустых элементов
+
+    const values = [null, undefined,,];     // length: 3. 3-й элем. - "empty_item"
 }
 
 /**
@@ -398,3 +400,14 @@ let result = arr.reduce((sum, current) => sum + current, 0);
 alert(result); // 15
 
 
+/**
+ * Интроспекция коллекций
+ */
+const types = [Object, Array, Set, Map, WeakSet, WeakMap, Int8Array];
+const output = types.map(item => ({
+    name: item.name,
+    type: typeof item,              // все 'function' (ссылки на конструкторы)
+    ctr: item.constructor.name,     // все 'Function'
+    item,
+}));
+console.table(output);

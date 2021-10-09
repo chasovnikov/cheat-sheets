@@ -29,4 +29,31 @@
     Object.entries(prices).map( ([key, value]) => [key, value * 2] )
   );
   
-  alert(doublePrices.meat); // 8
+alert(doublePrices.meat); // 8
+
+
+const obj = {
+    a: 1,
+    b: 2,
+    c: 3,
+    [Symbol('d')]: 4,
+    [Symbol('e')]: 5,
+};
+const arr = [1, 2, 3];
+/**
+ * Object.getOwnPropertyNames - Возвращает массив, содержащий имена всех свойств.
+ * Object.getOwnPropertyDescriptor - Возвращает дескриптор свойства.
+ */
+const objProp = Object
+    .getOwnPropertyNames(obj)
+    .map(key => ({ key, ...Object.getOwnPropertyDescriptor(obj, key)}));
+
+// Object.getOwnPropertySymbols - возвращающий массив символьных ключей
+const objSymbolProp = Object
+    .getOwnPropertySymbols(obj)
+    .map(key => ({ key, ...Object.getOwnPropertyDescriptor(obj, key)}));
+
+/**
+ * Object.isExtensible(obj)
+ *      Определяет, разрешено ли расширение объекта.
+ */

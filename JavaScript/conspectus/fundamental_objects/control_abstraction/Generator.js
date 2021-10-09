@@ -289,3 +289,22 @@ function* ids(...args) {
 }
 const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
 Promise.all([...id]).then(console.log);     // здесь можно "...", т.к. синхр.
+
+
+/**
+ * Интроспекция
+ */
+const types = [
+    (function* () {}),                  // GeneratorFunction
+    (function* () {})(),                // ''
+    (function* () {})().next(),         // Object
+    (async function* () {}),            // AsyncGeneratorFunction
+    (async function* () {})(),          // ''
+    (async function* () {})()/next(),   // Promise
+];
+const output = types.map(item => ({
+    type: typeof item,                  // function | object
+    ctr: item.constructor.name,         
+    item,
+}));
+console.table(output);
