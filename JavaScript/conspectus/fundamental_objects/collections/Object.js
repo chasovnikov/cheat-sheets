@@ -10,7 +10,9 @@
  * Object.keys/values/entries   - игнорируют символьные свойства
  * 
  * Object.getOwnPropertySymbols - возвращающий массив символьных ключей
- * Reflect.ownKeys(obj)         - возвращает все ключи.
+ * Reflect.ownKeys(obj)         - возвращает все ключи. 
+ * 
+ * Object.keys(obj).length      – берет массив ключей и возр. его длину.
  * 
  * методы вида Object.* возвращают «реальные» массивы, а не итерируемые объекты
  */
@@ -57,3 +59,28 @@ const objSymbolProp = Object
  * Object.isExtensible(obj)
  *      Определяет, разрешено ли расширение объекта.
  */
+
+
+/**
+ * Объединение объектов
+ */
+const objConcat1 = Object.assign({}, obj1, obj2);
+const objConcat2 = { ...obj1, ...obj2};         // с помощью спред-оператора
+
+
+/**
+ * Создание символьного ключа:
+ */
+const SYMBOL_FILENAME = Symbol('filename');
+const hash1 = {
+    key1: value1,
+    [SYMBOL_FILENAME]: './file1.v8',
+    [SYMBOL_FILENAME]: './file2.v8',     // 2-й SYMBOL_FILENAME перезатрёт 1-й
+    [Symbol('filename')]: './file3.v8',  // а здесь добавится (каждый вызов Symbol() создает новый символ)
+};
+
+
+/**
+ * Создание объекта без предков
+ */
+const clearObject = Object.create(null);

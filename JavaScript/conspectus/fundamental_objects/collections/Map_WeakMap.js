@@ -90,4 +90,81 @@ let map2 = Object.fromEntries( map1.entries() );
  * В основном используется в качестве дополнительного хранилища данных
  * Не поддерживает методы и свойства, работающие со всем содержимым сразу или возвращающие информацию о размере коллекции
  * Возможны только операции на отдельном элементе коллекции.
+ * Нельзя итерироваться.
+ * Используется для сопоставления с сылочными типами.
  */
+
+
+
+/**
+ * Простая реализация своего Map
+ */
+ class Dictionary {
+    constructor() {
+        this.map = Object.create(null); // Создание объекта без предков
+    }
+    set(key, value) {
+        this.map[key] = value;
+        return this;
+    }
+    get(key) {
+        return this.map[key];
+    }
+    has(key) {
+        // TODO: handel false, null, undefined, '', 0 and other
+        return!!this.map[key];
+    }
+    delete(key) {
+        delete this.map[key];
+    }
+    get size() {
+        return Object.keys(this.map).length; // Берет массив ключей и возр. его длину
+    }
+    keys() {
+        return Object.keys(this.map);
+    }
+    // Пересоздает объект пустым, а старый удаляется мусоросборщиком
+    clear() {
+        this.map = Object.create(null);
+    }
+    /**
+     * Принимает объект и перебирает его в свой объект
+     */
+    static from(hash) {
+        const instance = new Dictionary();
+        for (const key in hash) {
+            instance.set(key, hash[key]);
+        }
+        return instance;
+    }
+}
+
+const cities = {
+    Delhi: 16787941,
+    Lagos: 16000000,
+};
+
+const cityPopulation = Dictionary.from(cities);
+cityPopulation.set('Shanghai', 20000000);
+cityPopulation.delete('Lagos');
+
+if (cityPopulation.has('Delhi')) {
+    console.log('Delhi', cityPopulation.get('Delhi'));
+}
+console.log('size', cityPopulation.size);
+console.log('keys', cityPopulation.keys());
+
+
+// Пример использования WeakMap
+const cities = {
+    beijing: {name: 'Beijing'},
+    kiev: {name: 'Kiev'},
+    london: {name: 'London'},
+}
+const capitalOf = new WeakMap();
+capitalOf.set(cities.beijing, 'China');
+capitalOf.set(cities.kiev, 'Ukraine');
+capitalOf.set(cities.london, 'Unnited Kingdom');
+
+delete cities.london;
+capitalOf.delete(cities.kiev);
