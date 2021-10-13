@@ -184,3 +184,18 @@ arr[Symbol.iterator] = function() {     // "function" позвол. исполь
         console.log(number);
     }
 })();
+
+
+
+/**
+ * Неблокирующее асинхронное итерирование.
+ * 
+ * Код, который заблокирует выполнение setTimeout(для примера):
+ */
+const numbers = new Array(10000).fill(1);
+setTimeout(() => {
+    console.log('setTimeout 0');
+}, 0);
+numbers.forEach((item, i) => {
+    console.log(i);
+});
