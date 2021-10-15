@@ -1,6 +1,4 @@
 
-const requestURL = 'https://jsonplaceholder.typicode.com/users';
-
 /**
  * XMLHttpRequest.open(method, url[, async[, user[, password]]]);
  * @param {string} method:
@@ -11,6 +9,7 @@ const requestURL = 'https://jsonplaceholder.typicode.com/users';
  *      DELETE  - удаление
  * 
  */
+
 
 
 function sendRequest(method, url, body = null) {
@@ -39,6 +38,8 @@ function sendRequest(method, url, body = null) {
     });
 }
 
+const requestURL = 'https://jsonplaceholder.typicode.com/users';
+
 sendRequest('GET', requestURL)
     .then(data => console.log(data))
     .catch(err => console.log(err));
@@ -47,6 +48,7 @@ const body = {
     name: 'Vasia',
     age: 26,
 };
+
 sendRequest('POST', requestURL, body)
     .then(data => console.log(data))
     .catch(err => console.log(err));
