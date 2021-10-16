@@ -393,3 +393,99 @@ let results = await Promise.all([...fetchJobs, ourJob]);
  * предыдущий дабы не перенагружать лишний раз интернет клиента, тем более 
  * подгружать данные на телефоне более затратно чем с десктопа
  */
+
+
+/**
+ * Fetch: запросы на другие сайты.
+ * fetch на другой веб-сайт завершится неудачей.
+ * Запросы на другой источник – отправленные на другой домен (или даже поддомен), 
+ *      или протокол, или порт – требуют специальных заголовков от удалённой стороны.
+ * Эта политика называется «CORS»: Cross-Origin Resource Sharing 
+ *      («совместное использование ресурсов между разными источниками»).
+ */
+try {
+  await fetch('http://example.com');
+} catch(err) {
+  alert(err); // Failed to fetch
+}
+
+/**
+ * Простые запросы
+ * это запрос, удовлетворяющий следующим условиям:
+Простой метод: GET, POST или HEAD
+Простые заголовки – разрешены только:
+    Accept,
+    Accept-Language,
+    Content-Language,
+    Content-Type со значением application/x-www-form-urlencoded, 
+        multipart/form-data или text/plain.
+
+ * «простой запрос» может быть сделан через <form> или <script>, 
+        без каких-то специальных методов.
+ * Любой другой запрос считается «непростым».
+ */
+/**
+ * Когда мы делаем непростой запрос, браузер посылает 
+ *      предзапрос («preflight»), запрашивая разрешения на запрос.
+ * 
+ * При запросе на другой источник браузер всегда ставит «от себя» заголовок Origin,
+ *      содержащий источник (домен/протокол/порт), без пути.
+ */
+
+
+
+/**
+ * Fetch API
+ */
+let promise = fetch(url, {
+  method: "GET",        // POST, PUT, DELETE, etc.
+  headers: {
+    // значение этого заголовка обычно ставится автоматически,
+    // в зависимости от тела запроса
+    "Content-Type": "text/plain;charset=UTF-8"
+  },
+  body: undefined,      // string, FormData, Blob, BufferSource или URLSearchParams
+  referrer: "about:client", // или "", чтобы не послать заголовок Referer,
+                            // или URL с текущего источника
+  referrerPolicy: "no-referrer-when-downgrade", // no-referrer, origin, same-origin...
+  mode: "cors",         // same-origin, no-cors
+  credentials: "same-origin", // omit, include
+  cache: "default",     // no-store, reload, no-cache, force-cache или only-if-cached
+  redirect: "follow",   // manual, error
+  integrity: "",        // контрольная сумма, например "sha256-abcdef1234567890"
+  keepalive: false,     // true
+  signal: undefined,    // AbortController, чтобы прервать запрос
+  window: window        // null
+});
+/**
+ * HTTP-заголовок Referer - это URL-адрес страницы, с которой пришёл запрос.
+ * Мы можем установить любое значение Referer при условии, что оно принадлежит 
+ *      текущему источнику:
+ * предположим, что мы находимся на странице https://javascript.info, тогда
+ * referrer: "https://javascript.info/anotherpage"
+ * 
+ * Опция referrerPolicy устанавливает общие правила для Referer:
+
+"no-referrer-when-downgrade"(по умолчанию) –  Referer отправляется всегда, 
+    если не отправлять запрос из HTTPS в HTTP.
+"strict-origin-when-cross-origin"  – в пределах текущего источника - полный Referer, 
+    на другой источник - значение источника, 
+    в случае HTTPS→HTTP - не отправлять ничего.
+"origin-when-cross-origin"         – (как выше, кроме случая HTTPS→HTTP)
+"no-referrer"   – не отправлять Referer.
+"origin"        – отправлять в Referer только текущий источник, 
+    например, http://site.com вместо http://site.com/path.
+"same-origin"   – отправлять полный Referer в пределах текущего источника, 
+    а для запросов на другой источник не отправлять его вообще.
+"strict-origin" – отправлять только значение источника, 
+    не отправлять Referer для HTTPS→HTTP запросов.
+"unsafe-url"    – всегда отправлять полный URL-адрес в Referer, 
+    даже при запросах HTTPS→HTTP.
+ */
+/**
+ * mode – это защита от нечаянной отправки запроса на другой источник:
+
+"cors"(по умолчанию) – позволяет делать такие запросы так, как описано в Fetch: запросы на другие сайты,
+"same-origin"        – запросы на другой источник запрещены,
+"no-cors"            – разрешены только простые запросы на другой источник.
+ */
