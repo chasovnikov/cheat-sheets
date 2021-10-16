@@ -9,6 +9,7 @@
  *      method  – HTTP-метод,
  *      headers – объект с запрашиваемыми заголовками (не все заголовки разрешены),
  *      body – тело запроса (текст, FormData, BufferSource, Blob или UrlSearchParams).
+ *      signal - для прерывания запроса.
  * @returns Promise
  * 
  * Два этапа получения ответа:
@@ -18,7 +19,7 @@
  *          response.headers - похожий на Map объект с HTTP-заголовками.
  *          response.status  - HTTP-статус.
  *          response.ok      - возр. true, если если HTTP-статус в диапазоне 200-299.
- * 2. Для получения тела ответа нам нужно использовать дополнительный вызов метода.* 
+ * 2. Для получения тела ответа нам нужно использовать дополнительный вызов метода. 
  * Response предоставляет методы для доступа к телу ответа:
  *  response.text()         – возвращает как обычный текст,
  *  response.json()         – в формате JSON,
@@ -130,10 +131,7 @@ let response = await fetch('/article/fetch/post/user', {
 
 let result = await response.json();
 alert(result.message);
-/**
- * Так как посылаем JSON, то используем правильный Content-Type для JSON: 
- *      application/json (заголовок Content-Type по умолчанию text/plain;charset=UTF-8.)
- */
+
 
 
 async function getUsers(names) {
@@ -189,13 +187,11 @@ fetch('/person')
  * let formData = new FormData([form]);
  * 
  * formData.append(name, value) – добавляет поле с именем name и значением value,
- * formData.append(name, blob, fileName) – добавляет поле, как будто в форме имеется 
- *      элемент <input type="file">, третий аргумент fileName устанавливает имя файла 
- *      (не имя поля формы), как будто это имя из файловой системы пользователя,
+ * formData.append(name, blob, fileName) – добавляет поле для загрузки файла 
+ *      <input type="file">, fileName - имя файла,
  * formData.delete(name) – удаляет поле с заданным именем name,
  * formData.get(name) – получает значение поля с именем name,
- * formData.has(name) – если существует поле с именем name, то возвращает true, 
- *      иначе false
+ * formData.has(name) – проверка наличия поля,
  * formData.set(name, value) - похож на formData.append, 
  *      но гарантирует, что поле будет одно с таким же имменем
  * formData.set(name, blob, fileName) -//-
@@ -212,7 +208,7 @@ fetch('/person')
   </form>
  */
 formElem.onsubmit = async (e) => {
-    e.preventDefault();   // действие по умолчанию не должно выполняться так, как обычно
+    e.preventDefault();   // убирает действие события по умолчанию
 
     let response = await fetch('/article/formdata/post/user', {
       method: 'POST',
@@ -242,7 +238,8 @@ formElem.onsubmit = async (e) => {
     };
 
     async function submit() {
-      let imageBlob = await new Promise(resolve => canvasElem.toBlob(resolve, 'image/png'));
+      let imageBlob = await new Promise(
+          resolve => canvasElem.toBlob(resolve, 'image/png'));
 
       let formData = new FormData();
       formData.append("firstName", "John");
@@ -331,11 +328,15 @@ let blob = new Blob(chunks);
  *      fetch одновременно.
  */
 let controller = new AbortController();
+/**
+ * экземпляр AbortSignal, который может быть использован для 
+ *      коммуникаций/останова DOM запросов.
+ */
 let signal = controller.signal;
 // срабатывает при вызове controller.abort()
 signal.addEventListener('abort', () => alert("отмена!"));
-controller.abort(); // отмена!
-alert(signal.aborted); // true
+controller.abort();     // отмена!
+alert(signal.aborted);  // true
 
 
 // прервать через 1 секунду
@@ -354,7 +355,8 @@ try {
 }
 
 
-let urls = [/*...*/]; // список URL для параллельных fetch
+// Параллельные запросы
+let urls = [/*...*/];       // список URL для параллельных fetch
 let controller = new AbortController();
 let fetchJobs = urls.map(url => fetch(url, {
   signal: controller.signal
