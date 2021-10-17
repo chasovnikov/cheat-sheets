@@ -427,11 +427,90 @@ try {
 /**
  * Когда мы делаем непростой запрос, браузер посылает 
  *      предзапрос («preflight»), запрашивая разрешения на запрос.
+ */
+
+/**
+ * CORS для простых запросов
  * 
  * При запросе на другой источник браузер всегда ставит «от себя» заголовок Origin,
  *      содержащий источник (домен/протокол/порт), без пути.
+ * ответа сервера, который разрешает доступ:
+ *      200 OK
+ *      Content-Type:text/html; charset=UTF-8
+ *      Access-Control-Allow-Origin: https://javascript.info
  */
 
+/**
+ * Заголовки ответа
+ * 
+ * При запросе к другому источнику можно получить доступ только к «простым» заголовкам:
+Cache-Control
+Content-Language
+Content-Type
+Expires
+Last-Modified
+Pragma
+
+Чтобы разрешить другие заголовки, сервер должен указать 
+    Access-Control-Expose-Headers 
+        со списком разрешенных заголовков.
+ */
+
+/**
+ * «Непростые» запросы
+ */
+let response = await fetch('https://site.com/service.json', {
+  method: 'PATCH',                      // 1-я причина "непростого" запроса
+  headers: {
+    'Content-Type': 'application/json', // 2-я причина "непростого" запроса
+    'API-Key': 'secret',                // 3-я причина "непростого" запроса
+  }
+});
+/**
+ * Шаг 1 (предзапрос  от браузера на сервер)
+OPTIONS /service.json
+Host: site.com
+Origin: https://javascript.info
+Access-Control-Request-Method: PATCH
+Access-Control-Request-Headers: Content-Type,API-Key
+ *
+ * Шаг 2 (ответ сервера на предзапрос) 
+ *      сервер перечислит разрешенные методы и заголовки
+200 OK
+Access-Control-Allow-Methods: PUT,PATCH,DELETE
+Access-Control-Allow-Headers: API-Key,Content-Type,If-Modified-Since,Cache-Control
+Access-Control-Max-Age: 86400           (кеширование разрешения на запрос)
+ *
+ * Шаг 3 (основной запрос)
+PATCH /service.json
+Host: site.com
+Content-Type: application/json
+API-Key: secret
+Origin: https://javascript.info
+ *
+ * Шаг 4 (основной ответ)
+Access-Control-Allow-Origin: https://javascript.info    (источник запроса)
+ *
+ * После этого можно прочитать ответ сервера.
+ */
+
+/**
+ * Авторизационные данные 
+ *      (credentials - куки и заголовки HTTP-аутентификации).
+ * 
+ * Запрос на другой источник по умолчанию не содержит авторизационных данных.
+ * 
+ * Включить отправку авторизационных данных:
+ */
+fetch('http://another.com', {
+  credentials: "include"
+});
+/**
+ * Согласие сервера:
+200 OK
+Access-Control-Allow-Origin: https://javascript.info    (источник запроса)
+Access-Control-Allow-Credentials: true
+ */
 
 
 /**
