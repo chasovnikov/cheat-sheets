@@ -266,3 +266,63 @@ const p = {
 const o = {
     [Symbol("my symbol")]: 5,
 };
+
+
+/// СОКРАЩЕННАЯ ЗАПИСЬ МЕТОДОВ
+const METHOD_NAME = "m";
+const symbol = Symbol();
+const o = {
+    area() {                        // без ": function"
+        return 5;
+    },
+    "method With Spaces"(x) {       // с пробелами только в кавычках
+        return x + 1;
+    },
+    [METHOD_NAME](x) {              // вычисляемое выражение в "[]"
+        return x + 2;
+    },
+    [symbol](x) {                   // символьное имя метода
+        return x + 3;
+    },
+};
+
+
+/// ГЕТТЕРЫ И СЕТТЕРЫ           get, set
+// При наличии только "get" св-во может только читаться
+// При наличии только "set" св-во может только записываться
+const obj = {
+    valOnlyGet: 'valOnlyGet',
+    valOnlySet: 'valOnlySet',
+    valBoth:    'valBoth',
+
+    get methOnlyGet() {            // getter без сеттера
+        return this.valOnlyGet;
+    },
+    set methOnlySet(value) {       // setter без геттера
+        this.valOnlySet = value;
+    },
+
+    get methBoth() {               // getter
+        return this.valBoth;
+    },
+    set methBoth(value) {          // setter
+        this.valBoth = value;
+    },
+};
+// только геттер
+console.log(obj.valOnlyGet);               // valOnlyGet - прочиталось по имени св-ва
+console.log(obj.methOnlyGet);              // valOnlyGet - прочиталось по имени геттера
+console.log(obj.valOnlyGet = 'changed');   // changed    - записалось по имени св-ва
+console.log(obj.methOnlyGet = 'changed');  // TypeError  - не записалось по имени геттера
+
+// только сеттер
+console.log(obj.valOnlySet);                // valOnlyGet - прочиталось по имени св-ва
+console.log(obj.methOnlySet);               // undefined  - не прочиталось по имени сеттера
+console.log(obj.valOnlySet = 'changed');    // changed    - записалось по имени св-ва
+console.log(obj.methOnlySet = 'updated');   // updated    - записалось по имени сеттера
+
+// геттер и сеттер (имена методов совпадают)
+console.log(obj.valBoth);                // valBoth - прочиталось по имени св-ва
+console.log(obj.methBoth);               // valBoth  - прочиталось по имени метода
+console.log(obj.valBoth = 'changed');    // changed    - записалось по имени св-ва
+console.log(obj.methBoth = 'updated');   // updated    - записалось по имени метода
