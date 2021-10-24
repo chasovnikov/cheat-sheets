@@ -12,49 +12,41 @@
  * Как и функции, классы можно определять внутри другого выражения,
  *      передавать, возвращать, присваивать и т.д.
  */
- class User {
-    constructor(name) { this.name = name; }
-    sayHi() { alert(this.name); }
+class User {
+    constructor(name) { 
+        this.name = name; 
+    }
+    sayHi() { 
+        alert(this.name); 
+    }
 }
 
 // класс - это функция
-alert(typeof User); // function
+alert(typeof User);         // function
 
 // ...или, если точнее, это метод constructor
-alert(User === User.prototype.constructor); // true
+alert(User === User.prototype.constructor);     // true
 
-// Методы находятся в User.prototype, например:
-alert(User.prototype.sayHi); // alert(this.name);
-
-// в прототипе ровно 2 метода
-alert(Object.getOwnPropertyNames(User.prototype)); // constructor, sayHi
-
-
-/**
- * Аналогично Named Function Expression, Class Expression может иметь имя.
- * Если у Class Expression есть имя, то оно видно только внутри класса:
- */
+// Как Named Function Expression, Class Expression может иметь имя.
+// Если у Class Expression есть имя, то оно видно только внутри класса:
 let User = class MyClass {
     sayHi() {
-      alert(MyClass); // имя MyClass видно только внутри класса
+      alert(MyClass);       // имя MyClass видно только внутри класса
     }
 };
-new User().sayHi(); // работает, выводит определение MyClass
-alert(MyClass); // ошибка, имя MyClass не видно за пределами класса
+new User().sayHi();         // выведет окно с телом ф-ии
+alert(MyClass);             // ошибка, имя MyClass не видно за пределами класса
 
 
-
-/**
- * После extends разрешены любые выражения.
- * Пример вызова функции, которая генерирует родительский класс:
- */
+// После extends разрешены любые выражения.
+// Пример вызова функции, которая генерирует родительский класс:
 function f(phrase) {
     return class {
       sayHi() { alert(phrase) }
     }
 }
 class User extends f("Привет") {}  
-new User().sayHi(); // Привет
+new User().sayHi();                 // Привет
 
 
 /**
@@ -168,10 +160,7 @@ class CoffeeMachine {
     getWaterAmount() {
         return this._waterAmount;
     }
-  
-    /**
-     * Использование функций get.../set... предпочтительнее, чем геттеров/сеттеров:
-     */
+    
     // set waterAmount(value) {
     //   if (value < 0) throw new Error("Отрицательное количество воды");
     //   this._waterAmount = value;

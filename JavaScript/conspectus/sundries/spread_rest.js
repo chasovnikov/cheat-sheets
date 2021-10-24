@@ -51,10 +51,11 @@ sum(numbers);   // 3
 /**
  * Rest-оператор собирает остальные параметры в массив
  */
-function sum(a, b, ...rest) {
-    console.log(rest);      // [3, 4, 5]  - оставшиеся значения
+ function sum(a, b, ...rest) {
+    console.log(rest);  
     return a + b;
 }
+sum(1, 2, 3, 4, 5);      // => 3;  rest -> [3, 4, 5]
 
 function sum1(...rest) {
     console.log(rest);      // [1, 2, 3, 4, 5]  - оставшиеся значения
