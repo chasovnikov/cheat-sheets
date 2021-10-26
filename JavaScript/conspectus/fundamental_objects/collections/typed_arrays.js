@@ -17,6 +17,9 @@
  *      JavaScript, которые выполняют такие действия, как распаковка файлов 
  *      ZIP либо извлечение метаданных из файлов JPEG.
  * 
+ * ArrayBuffer - выделяет память, но доступа к ней не дает.
+ * DataView    - связан с ArrayBuffer. Позволяет доступаться к памяти.
+ * 
  * Виды типизированных массивов:
 
 Int8Array()         байты со знаком
@@ -78,3 +81,36 @@ int = view.getInt32(
 int = view.getInt32(8, true);   // След. ц. число без знака имеет пор. от млад. к стар.
 view.setUint32(8, int, false);  // записать его в формате с пор. от стар. к млад.
 // DataView, кроме геттеров имеет и сеттеры
+
+
+/// от Шемсединова
+const arrayBuffer = new ArrayBuffer(10);        // выделили 10 байт памяти
+
+console.dir(arrayBuffer);                        // ArrayBuffer {byteLength: 10}
+console.log(arrayBuffer.byteLength);             // 10
+console.log(typeof arrayBuffer);                 // Object
+console.log(arrayBuffer instanceof ArrayBuffer); // true
+
+const ui8a = new Uint8Array();
+console.log(ArrayBuffer.isView(ui8a));           // true (ui8a - типизир.массив)
+
+// сделам вьюшку
+const len = 1024;       // выделили памяти 1 кб
+const buffer = new ArrayBuffer(len);
+const view1 = new DataView(buffer);
+const view2 = new DataView(buffer, 8, 24);       // 24 байта со смещением 8
+const view3 = new DataView(buffer, 128, 16);     //
+
+// заполним буфер
+for (let i = 0; i < len; i++) {
+    const value = (i + 7) * 5;
+    view1.setUint8(i, value);
+}
+
+console.log(
+    view1,// DataView {byteLength: 1024, byteOffset: 0,   buffer: ArrayBuffer { byteLength: 1024}}
+    view2,// DataView {byteLength:   24, byteOffset: 8,   buffer: ArrayBuffer { byteLength: 1024}}
+    view3 // DataView {byteLength:   16, byteOffset: 128, buffer: ArrayBuffer { byteLength: 1024}}
+    );
+
+// ...
