@@ -1,3 +1,4 @@
+
 /**
  * В соответствии с объектной моделью документа («Document Object Model», коротко DOM), 
  *      каждый HTML|XML-тег является объектом.
@@ -39,3 +40,4 @@ elem.childNodes[elem.childNodes.length - 1] === elem.lastChild;
 
 // Проверка наличия дочерних узлов
 elem.hasChildNodes();
+
