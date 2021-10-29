@@ -120,3 +120,45 @@ b.addEventListener('click', () => {
 
 // this внтури тела обр-ка ссыл-ся на объект, для кот-го обр-к был зарегисрт-н
 // но для стрелочных ф-й this имеет то же знач, что и обл. видим. в кот. они определены
+
+// обраб-ки соб. ничего не должны возращать (современное поведение)
+
+
+/// РАСПРОСТРАНЕНИЕ СОБЫТИЙ
+// Захватывание событий обратен процессу пузырькового подъема (сверху винз по дереву DOM)
+// ...
+
+
+/// ОТМЕНА СОБЫТИЙ
+// preventDefault() - запрет браузеру реагировать стандартно на пользовательские события
+// stopPropagation() - отменить распространение событий
+// stopImmediatePropagation() - stopPropagetion() плюс отмена последующ. обр-ков того же объекта
+
+
+/// ОТПРАВКА СПЕЦИАЛЬНЫХ СОБЫТИЙ
+// Своё событие:
+// уведомление о том, что мы заняты
+document.dispatchEvent(new CustomEvent(
+    'busy',                 // тип события
+    { 
+        detail: true,
+        // bubbles: true        // поднятие подобно пузырьку
+    }        // 
+));
+
+fetch(url)
+    .then(handleNetworkResponse)
+    .catch(handleNetworkResponse)
+    .finally(() => {
+        // уведомл-е о том, что мы больше не заняты
+        document.dispatchEvent(new CustomEvent('busy', { detail: false }));
+    });
+
+// регистр-я соб-я
+document.addEventListener('busy', (e) => {
+    if (e.detail) {
+        showSpinner();
+    } else {
+        hideSpinner();
+    }
+});
