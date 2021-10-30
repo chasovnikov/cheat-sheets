@@ -80,6 +80,7 @@ function isHeading(e) {
     return e.matches('h1,h2,h3,h4,h5,h6');
 }
 
+
 /// СТАРЫЕ МЕТОДЫ ВЫБОРА ЭЛЕМЕНТОВ
 // Возр. "активный"(длина и содержимое может меняться) NodeList (кроме getElementById())
 // подобен      document.querySelector('#sect1')
@@ -94,3 +95,44 @@ let heading = document.getElementsByTagName('h1');
 // подобен      document.querySelectorAll('.tooltip')
 let tooltips = document.getElementsByClassName('tooltip');
 
+
+/// ПРЕДВАРИТЕЛЬНО ВЫБРАННЫЕ ЭЛЕМЕНТЫ
+// Свойства класса Document:
+//      images      - все <img>
+//      forms       - все  <form>
+//      links       - все <a>, имеющим href
+// Эти св-ва ссылаются на объекты HTMLCollection (в отлич. от NodeList мог. 
+//      индекс-ся по идентиф-ру или по имени элемента)
+let addr = document.forms.address;      // <form id="address">
+
+
+/// СТРУКТУРА И ОБХОД ДОКУМЕНТА
+// Свойства объектов Element:
+//      parentNode   - ссылка на родителя элемента
+//      children     - объект NodeList, содерж-й эл-ты типа Element (но не Text, Comment)
+//      childElementCount   - children.length
+//      firstElementChild
+//      lastElementChild
+//      nextElementSibling      - элементы непосредственно до
+//      previousElementSibling  - элементы непосредственно после
+
+// Оба выражения: 2-й дочерн.эл-т типа Element 1-го дочерн.эл-та объекта Document
+let a = document.children[0].children[1];
+let b = document.firstElementChild.firstElementChild.nextElementSibling;
+
+// рекурс-й обход в глубину док-а с вызовом указ-й ф-и для каждого элемента
+function traverse(e, f) {
+    f(e);
+    for(let child of e.children) {
+        traverse(child, f);
+    }
+}
+function traverse2(e, f) {
+    f(e);
+    let child = e.firstElementChild;
+
+    while(child !== null) {
+        traverse2(child, f);
+        child = child.nextElementSibling;
+    }
+}
