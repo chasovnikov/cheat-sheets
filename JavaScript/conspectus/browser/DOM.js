@@ -86,12 +86,12 @@ let elem = spinner.querySelector('#elem');              // возр. тольк�
 // Найти ближайший объемл-й <a>, кот-й имеет href
 let hyperlink = event.target.closest('a[href]');
 
-// вернуть true, если эл-т е нах-ся внутри спискового HTML-элемента
+// вернуть true, если эл-т "е" нах-ся внутри спискового HTML-элемента
 function insideList(e) {
     return e.closest('ul,ol,dl') !== null;
 }
 
-// Метод matches()
+// matches() - проверка
 // вернуть true, если е - заголовочный HTML-элемент
 function isHeading(e) {
     return e.matches('h1,h2,h3,h4,h5,h6');
@@ -99,6 +99,13 @@ function isHeading(e) {
 
 
 /// СТАРЫЕ МЕТОДЫ ВЫБОРА ЭЛЕМЕНТОВ
+// Строка, указ-я в id - это глобальная переменная (плохой стиль)
+// <div id="elem-content">Элемент</div>
+// <script>
+  // elem - ссылка на элемент с id="elem"
+  elem.style.background = 'red';
+// </script>
+
 // Возр. "активный"(длина и содержимое может меняться) NodeList (кроме getElementById())
 // подобен      document.querySelector('#sect1')
 let sect1 = document.getElementById('sect1');
@@ -153,3 +160,92 @@ function traverse2(e, f) {
         child = child.nextElementSibling;
     }
 }
+
+
+
+/// КЛАССЫ DOM-УЗЛОВ (в порядке наследования от друг друга: от страшего к млад.)
+// EventTarget  - корневой класс. Объекты не создаются. Это основа для событий над эл-ми
+// Node         - основа для DOM-узлов. Объекты не создаются
+// Element      - базовый класс для DOM-элем-в
+// HTMLElement  - баз. класс для всех остальных HTML-элементов
+//      От него наслед.:
+//      HTMLInputElement    - класс для тега <input>
+//      HTMLBodyElement     - класс для <body>
+//      HTMLAnchorElement   - класс для <a>
+
+// Text, Comment - наслед-ся от Node
+
+// SVGElement   - наслед-ся от Element
+
+// Узнать имя класса DOM-узла:
+alert( document.body.constructor.name );    // HTMLBodyElement
+alert( document.body );                     // [object HTMLBodyElement]
+alert( document.body instanceof HTMLBodyElement );  // true
+alert( document.body instanceof HTMLElement );      // true
+alert( document.body instanceof Element );          // true
+alert( document.body instanceof Node );             // true
+alert( document.body instanceof EventTarget );      // true
+
+
+// console.dir(elem) выводит элемент в виде DOM-объекта, что удобно для анализа его свойств.
+
+/// Свойство "nodeType" (устаревш.)
+// elem.nodeType == 1   для узлов-элементов
+// elem.nodeType == 2   для текстовых узлов
+// elem.nodeType == 3   для объектов документа
+// ...
+
+
+// Тег: nodeName и tagName
+alert( document.body.nodeName );    // BODY (nodeName - для любых узлов Node)
+alert( document.body.tagName );     // BODY (tagName - только для элементов Element)
+
+// <body><!-- комментарий -->
+// для комментария
+alert( document.body.firstChild.tagName ); // undefined (не элемент)
+alert( document.body.firstChild.nodeName ); // #comment
+// for document
+alert( document.tagName ); // undefined (не элемент)
+alert( document.nodeName ); // #document
+
+
+/// innerHTML: получает и изменяет содержимое элемента
+// Свойство innerHTML есть только у узлов-элементов.
+document.body.innerHTML = 'Новый BODY!';
+// Вставленный через innerHTML тег <script> не запускается
+
+
+// outerHTML: получает и заменяет HTML элемента целиком
+alert(elem.outerHTML); // <div id="elem">Привет <b>Мир</b></div>
+
+
+// nodeValue/data: содержимое текстового узла
+
+// Привет
+//  <!-- Комментарий -->
+let text = document.body.firstChild;
+alert(text.data);                   // Привет
+let comment = text.nextSibling;
+alert(comment.data);                // Комментарий
+
+
+/// textContent: просто текст (без тегов)
+// в отличие от innerHTML втавляет КАК ЕСТЬ (даже теги могут отображ-ся в тексте)
+// <h1>Срочно в номер!</h1><p>Марсиане атаковали человечество!</p>
+alert(news.textContent);        // Срочно в номер! Марсиане атаковали человечество!
+
+
+/// Свойство hidden (работает как style="display:none")
+// <div id="elem">Мигающий элемент</div>
+setInterval(() => elem.hidden = !elem.hidden, 1000);
+
+
+/// Другие св-ва DOM-элементов:
+// value - значения для <input>,<select>,<textarea> (HTMLInputElement, HTMLSelectElement, ...)
+// href  - адрес ссылки "href" для <a href="..."> (HTMLAnchorElement)
+// id    - значение атрибута id (HTMLElement)
+// ...
+// <input type="text" id="elem" value="значение">
+alert(elem.type);     // "text"
+alert(elem.id);       // "elem"
+alert(elem.value);    // значение
