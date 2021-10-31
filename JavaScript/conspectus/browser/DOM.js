@@ -18,29 +18,46 @@ setTimeout(() => document.body.style.background = '', 3000); // вернуть �
 
 
 /**
- * Навигация по DOM-элементам.
+ * Навигация по DOM-элементам (включая текстовые узлы и комментарии).
  * 
  * Основные ссылки, по которым можно переходить между узлами DOM:
 document
-document.documentElement   <html>
-document.body              <body>
-parentNode
-previousSibling | nextSibling  
-childNodes
-firstChild | lastChild
+document.documentElement        - соответ-ет  <html>
+document.body                   - <body>
+document.head                   - <head>
+parentNode                      - родитель
+previousSibling | nextSibling   - предыдущ. и последующ. сосед
+childNodes                      - содержит список всех детей
+firstChild | lastChild          - первый и последний дочерн. элем-ы
  */
-
-/**
- * document.body может быть равен null.
- * 
- * Коллекция childNodes содержит список всех детей, включая текстовые узлы.
- */
+const childs = document.body.childNodes;
 elem.childNodes[0] === elem.firstChild;
 elem.childNodes[elem.childNodes.length - 1] === elem.lastChild;
-
 // Проверка наличия дочерних узлов
 elem.hasChildNodes();
 
+
+/// НАВИГАЦИЯ ТОЛЬКО ПО ЭЛЕМЕНТАМ (исключая текстовые узлы и комментарии)
+// parentElement
+// previousElementSibling | nextElementSibling
+// firstElementChild      | lastElementChild
+// children
+
+
+/// НАВИГАЦИЯ ПО ТАБЛИЦАМ
+// table.rows                   - коллекция строк <tr>
+// thead/tbody/tfoot.rows       - коллекция строк <tr> секции
+// table.caption/tHead/tFoot    - <caption>, <thead>, <tfoot>
+// table.tBodies                - <tbody>
+// tr.cells             - коллекция <td> и <th> внутри <tr>
+// tr.sectionRowIndex   - номер строки <tr> в текущ.секции <thead>/<tfoot>/<tbody>
+// tr.rowIndex          - номер строки <tr> в таблице
+// td.cellIndex         - номер ячейки в строке <tr>
+
+
+/// DOM-коллекции
+// Коллекция - это не массив, поэтому методы для массива на них раб-ть не будут
+// Не используйте цикл for..in для перебора коллекций
 
 
 /// ВЫБОР ЭЛЕМЕНТОВ ДОКУМЕНТА
