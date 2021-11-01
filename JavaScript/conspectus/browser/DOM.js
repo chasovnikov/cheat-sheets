@@ -341,15 +341,70 @@ function getListContent() {
 ul.append(...getListContent()); // append + оператор "..." = друзья!
 
 
+// elem.className       - соответ-т атрибуту 'class'
+// elem.classList       - объект с методами add/remove/toggle/contains
+// elem.classList.add/remove("class")   – добавить/удалить класс.
+// elem.classList.toggle("class")       – добавить класс, если его нет, иначе удалить.
+// elem.classList.contains("class")     – проверка наличия класса, возвращает true/false.
+document.body.classList.add('article');
+
+for (let name of document.body.classList) {         // итерируемый
+    alert(name);
+}
+
+// Вычисленные стили getComputedStyle(element, [pseudo])
+let computedStyle = getComputedStyle(document.body);
+alert( computedStyle.marginTop );   // margin-top
+alert( computedStyle.color );       // rgb(255, 0, 0)
+
+
 
 /// УСТАРЕВШИЕ МЕТОДЫ
 parentElem.appendChild(node);                // Добавл. node в конец дочерн. элем-ов parentElem
 parentElem.insertBefore(node, nextSibling);  // Встав. node перед nextSibling в parentElem
 parentElem.replaceChild(node, oldChild); //Замен. oldChild на node среди дочерних элементов parentElem
-parentElem.removeChild(node); //Удаляет node из parentElem
+parentElem.removeChild(node);               //Удаляет node из parentElem
 
 // document.write
 //      - добавить HTML на страницу до завершения её загрузки.
 // Вызов document.write работает только во время загрузки страницы.
 /*если нам нужно динамически добавить много текста в HTML, 
 и мы находимся на стадии загрузки, и для нас очень важна скорость, это может помочь*/
+
+
+
+/// РАЗМЕРЫ И ПРОКРУТКА ЭЛЕМЕНТОВ
+
+// elem.offsetParent        - ближайший предок, удовлет-ющий условиям:
+//      1) CSS-позиционирован (position: absolute, relative, fixed или sticky)
+//      2) или <td>, <th>, <table>
+//      3) или <body>
+
+// elem.offsetLeft / offsetTop    - координаты x/y относит. верхн. лево. угла offsetParent
+
+// offsetWidth / offsetHeight   - внешняя ширина/высота элемента
+// clientLeft / clientTop       - ширина левой/верхней рамки
+// clientWidth / clientHeight   - ширина обл-ти содерж-го вместе с внутр.отступ. padding
+// scrollWidth / scrollHeight   - как clientWidth/clientHeight плюс прокрученную 
+//      (которую не видно) часть элемента.
+// scrollLeft / scrollTop       - ширина/высота невидимой(прокрученной) части
+
+// Не стоит брать width/height из CSS
+
+// Чтобы получить ширину/высоту окна
+let height = documentElement.clientHeight;
+
+// window.innerWidth / innerHeight включают в себя полосу прокрутки.
+
+// Чтобы надёжно получить полную высоту документа, 
+//      нам следует взять максимальное из этих свойств:
+let scrollHeight = Math.max(
+  document.body.scrollHeight, document.documentElement.scrollHeight,
+  document.body.offsetHeight, document.documentElement.offsetHeight,
+  document.body.clientHeight, document.documentElement.clientHeight
+);
+alert('Полная высота документа с прокручиваемой частью: ' + scrollHeight);
+
+// текущую прокрутку можно прочитать из свойств window.pageXOffset/pageYOffset:
+alert('Текущая прокрутка сверху: ' + window.pageYOffset);
+alert('Текущая прокрутка слева: ' + window.pageXOffset);
