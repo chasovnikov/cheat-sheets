@@ -358,6 +358,12 @@ alert( computedStyle.marginTop );   // margin-top
 alert( computedStyle.color );       // rgb(255, 0, 0)
 
 
+// Свойство объекта HTMLElement "style" (стили CSS):
+let left = message.style.left;
+// можно задавать текст CSS-кода
+message.style.cssText = "position:fixed; color: red";
+
+
 
 /// УСТАРЕВШИЕ МЕТОДЫ
 parentElem.appendChild(node);                // Добавл. node в конец дочерн. элем-ов parentElem
@@ -391,10 +397,14 @@ parentElem.removeChild(node);               //Удаляет node из parentEle
 
 // Не стоит брать width/height из CSS
 
+
+
+/// РАЗМЕРЫ И ПРОКРУТКА ОКНА
+
 // Чтобы получить ширину/высоту окна
 let height = documentElement.clientHeight;
 
-// window.innerWidth / innerHeight включают в себя полосу прокрутки.
+// window.innerWidth / innerHeight включают в себя еще и полосу прокрутки.
 
 // Чтобы надёжно получить полную высоту документа, 
 //      нам следует взять максимальное из этих свойств:
@@ -408,3 +418,94 @@ alert('Полная высота документа с прокручиваем�
 // текущую прокрутку можно прочитать из свойств window.pageXOffset/pageYOffset:
 alert('Текущая прокрутка сверху: ' + window.pageYOffset);
 alert('Текущая прокрутка слева: ' + window.pageXOffset);
+
+// scrollBy(x,y)            - прокручивает страницу относительно её текущего положения
+// scrollTo(pageX,pageY)    - прокручивает страницу на абсолютные координаты (pageX,pageY)
+// elem.scrollIntoView(top) - прокруч. так, чтобы elem оказ-ся 
+//      в верху (top=true) или внизу (top=false)
+
+// запретить прокрутку страницы:
+document.body.style.overflow = "hidden";
+
+
+/// КООРДИНАТЫ
+// Большинство методов JavaScript работают в одной из двух систем координат:
+// 1. Относительно окна браузера – как position:fixed (будем обозначать их clientX/clientY)
+// 2. Относительно документа – как position:absolute (будем обозначать их pageX/pageY)
+/*
+Две системы координат связаны следующими формулами:
+    pageY = clientY + высота вертикально прокрученной части документа.
+    pageX = clientX + ширина горизонтально прокрученной части документа.*/
+
+// Координаты относительно окна:
+// elem.getBoundingClientRect() 
+//      - возвращает размер элемента и его позицию относительно viewport (окна браузера).
+//      Возвращает объект DOMRect, который является объединением прямоугольников.
+
+// Некоторые св-ва объекта DOMRect:
+//      x/y             - коорд-ы начала прямоуг-ка относит-но окна
+//      width/height    - ширина/высота прямоугольника (могут быть отрицательными).
+//      top/bottom      - Y-координата верхней/нижней границы прямоугольника,
+//      left/right      - left/right – X-координата левой/правой границы прямоугольника.
+
+// document.elementFromPoint(x, y) 
+//      возвращает самый глубоко вложенный элемент в окне, находящийся по координатам (x, y).
+
+// Выводит имя тега элемента, который сейчас в центре окна браузера:
+let centerX = document.documentElement.clientWidth / 2;
+let centerY = document.documentElement.clientHeight / 2;
+let elem = document.elementFromPoint(centerX, centerY);
+alert(elem.tagName);
+
+
+let elem = document.getElementById("coords-show-mark");
+function createMessageUnder(elem, html) {
+  // создаём элемент, который будет содержать сообщение
+  let message = document.createElement('div');
+  // для стилей лучше было бы использовать css-класс здесь
+  message.style.cssText = "position:fixed; color: red";
+
+  // устанавливаем координаты элементу, не забываем про "px"!
+  let coords = elem.getBoundingClientRect();
+
+  message.style.left = coords.left + "px";
+  message.style.top = coords.bottom + "px";
+
+  message.innerHTML = html;
+
+  return message;
+}
+
+
+// Использование:
+// добавим сообщение на страницу на 5 секунд
+let message = createMessageUnder(elem, 'Hello, world!');
+document.body.append(message);
+setTimeout(() => message.remove(), 5000);
+
+
+// получаем координаты элемента в контексте документа
+function getCoords(elem) {
+    let box = elem.getBoundingClientRect();
+  
+    return {
+      top: box.top + window.pageYOffset,
+      right: box.right + window.pageXOffset,
+      bottom: box.bottom + window.pageYOffset,
+      left: box.left + window.pageXOffset
+    };
+}
+
+function createMessageUnder(elem, html) {
+  let message = document.createElement('div');
+  message.style.cssText = "position:absolute; color: red";
+
+  let coords = getCoords(elem);
+
+  message.style.left = coords.left + "px";
+  message.style.top = coords.bottom + "px";
+
+  message.innerHTML = html;
+
+  return message;
+}
