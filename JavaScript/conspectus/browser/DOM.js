@@ -1,71 +1,72 @@
+/**
+ * 1. Навигация по DOM-узлам
+ * 2. Навигация по таблицам
+ * 3. Выбор элементов документа
+ * 4. Старые методы выбора элементов
+ * 5. Предварительно выбранные элементы
+ * 6. Классы DOM-узлов
+ * 7. Содержимое текстового узла
+ * 8. Атрибуты и свойства
+ * 9. Изменение документа
+ * 10. Устаревшие методы изменения документа
+ * 11. Размеры и прокрутка элементов
+ * 12. Размеры и прокрутка окна
+ * 13. Координаты
+ * 14. Консоль
+ * /
+
 
 /**
  * Document Object Model (DOM) - объектная модель документа 
  *      (каждый HTML|XML-тег является объектом)
+ * 
+ * DOM-коллекция - это не массив, поэтому методы для массива на них раб-ть не будут.
+ * Не используйте цикл for..in для перебора коллекций
  */
 
+// Если скрипт подключается в начале док-а, то код нужно обернуть в сдел. ф-ию 
+//      (чтобы JS видел всё DOM-дерево)
+window.onload = function () {
+    let block = document.body.querySelector('#block');
+    // ...
+}
 
-/// НАВИГАЦИЯ ПО ВСЕМ DOM-УЗЛАМ (включая текстовые узлы и комментарии).
+
+
+/// НАВИГАЦИЯ ПО DOM-УЗЛАМ (в скобках указ. навигация по элем-ам, 
+//          исключая текстовые узлы и комментарии)
 
 /* 
 document
-document.documentElement        - соответ-ет  <html>
-document.body                   - <body>
-document.head                   - <head>
-elem.parentNode                      - родитель
-elem.previousSibling
-elem.nextSibling   - предыдущ. и последующ. сосед
-elem.childNodes                      - список всех детей
-elem.firstChild
-elem.lastChild          - первый и последний дочерн. элем-ы
+document.documentElement                      - соответ-ет  <html>
+document.body                                 - <body>
+document.head                                 - <head>
+node.parentNode (parentElement)               - родитель для node
+node.previousSibling (previousElementSibling) - предыдущ. сосед для node
+node.nextSibling (nextElementSibling)         - последующ. сосед для node
+node.childNodes (children)                    - список всех детей для node
+node.firstChild (firstElementChild)
+node.lastChild (lastElementChild)             - первый и последний дочерн. элем-ы для node
+elem.children.length (childElementCount)
  */
 const childs = document.body.childNodes;
-elem.childNodes[0] === elem.firstChild;     // true
-elem.childNodes[elem.childNodes.length - 1] === elem.lastChild;     // true
-// Проверка наличия дочерних узлов
-elem.hasChildNodes();
-
-
-
-/// НАВИГАЦИЯ ТОЛЬКО ПО ЭЛЕМЕНТАМ (исключая текстовые узлы и комментарии)
-
-// elem.parentElement           - родитель
-// elem.previousElementSibling  - предыдущ.
-// elem.nextElementSibling      - следующ.
-// elem.firstElementChild
-// elem.lastElementChild
-// elem.children                - дети
-// elem.childElementCount   - elem.children.length
+node.childNodes[0] === node.firstChild;     // true
+node.childNodes[node.childNodes.length - 1] === node.lastChild;     // true
 
 // Оба выражения: 2-й дочерн.эл-т типа Element 1-го дочерн.эл-та объекта Document
 let a = document.children[0].children[1];
 let b = document.firstElementChild.firstElementChild.nextElementSibling;
 
-// рекурс-й обход в глубину док-а с вызовом указ-й ф-и для каждого элемента
-function traverse(e, f) {
-    f(e);
-    for(let child of e.children) {
-        traverse(child, f);
-    }
-}
-function traverse2(e, f) {
-    f(e);
-    let child = e.firstElementChild;
-
-    while(child !== null) {
-        traverse2(child, f);
-        child = child.nextElementSibling;
-    }
-}
-
+// Проверка наличия дочерних узлов
+node.hasChildNodes();
 
 
 /// НАВИГАЦИЯ ПО ТАБЛИЦАМ
 
 // table.rows                   - коллекция строк <tr>
-// thead/tbody/tfoot.rows       - коллекция строк <tr> секции
 // table.caption/tHead/tFoot    - <caption>, <thead>, <tfoot>
 // table.tBodies                - <tbody>
+// thead/tbody/tfoot.rows       - коллекция строк <tr> секции
 // tr.cells             - коллекция ячеек <td> и <th> внутри <tr>
 // tr.sectionRowIndex   - номер строки <tr> в текущ.секции <thead>/<tfoot>/<tbody>
 // tr.rowIndex          - номер строки <tr> в таблице
@@ -73,45 +74,33 @@ function traverse2(e, f) {
 
 
 
-/// DOM-коллекции
-
-// Коллекция - это не массив, поэтому методы для массива на них раб-ть не будут
-// Не используйте цикл for..in для перебора коллекций
-
-
-
 /// ВЫБОР ЭЛЕМЕНТОВ ДОКУМЕНТА
 
 // Поиск элем-ов в DOM по селекторам CSS:
-//      .querySelector()
-//      .querySelectorAll()     - возр. итерир. объект NodeList
+//      .querySelector(...)
+//      .querySelectorAll(...)     - возр. итерир. объект NodeList
+let spinner = document.querySelector('#spinner');       // возр. первый совпад.эл-т или null
+let titles = document.querySelectorAll('h1, h2, h3');
+
 // В querySelectorAll() NodeList - "пассивный" (длина и содержимое не может изменяться)
 
+// CSS-селекторы:
 // div          - любой элемент <div>
 // #nav         - id="nav"
 // .warning     - class="warning"
 // p[lang="fr"] - <p lang="fr">
-// *[name="x"]  - атрибут name="x"
+// *[name="x"]  - любой элем-т с атрибутом name="x"
 // #long span   - любой потомок <span> внутри элемента c id="long"
 // #long>span   - любой дочерний <span> элемента c id="long"
 // body>h1:first-child - первый дочерний <h1> эл-та <body>
 // img + p.caption     - эл. <p class="caption">, идущий сразу после <img>
 // h2 ~ p       - <p> после <h2> и явл-ся родственным ему
 // button, input[type="button"]     // Все <button> и <input type="button">
-let spinner = document.querySelector('#spinner');       // возр. первый совпад.эл-т или null
-let titles = document.querySelectorAll('h1, h2, h3');
-
-// querySelector() и querySelectorAll() реализ. для классов Document и Element:
-let elem = spinner.querySelector('#elem');              // возр. только потомки эл-та
 
 // closest() - метод в классе Element. В отличие от querySelector() ищет выше по дереву
-// полезен, когда вы регистр. обр-к соб. на высок. уровне в дереве документа
-
+// полезен, когда вы регистр. обраб-к соб-й на высок. уровне в дереве документа
 // Найти ближайший объемл-й <a>, кот-й имеет href
 let hyperlink = event1.target.closest('a[href]');
-
-// вернуть true, если эл-т "е" нах-ся внутри спискового HTML-элемента
-elem.closest('ul,ol,dl') !== null;
 
 // matches() - проверка
 // вернуть true, если е - заголовочный HTML-элемент
@@ -128,12 +117,12 @@ elem.matches('h1,h2,h3,h4,h5,h6');
   elem.style.background = 'red';
 // </script>
 
-// Возр. "активный"(длина и содержимое может меняться) NodeList (кроме getElementById())
 // подобен      document.querySelector('#sect1')
 let sect1 = document.getElementById('sect1');
 
+// Методы ниже возр-ют "активный"(длина и содержимое может меняться) NodeList
 // подобен      document.querySelectorAll('*[name="color"]')
-let colors = document.getElementsByName('color');
+let colors = document.getElementsByName('color');       // поиск по атрибуту "name"
 
 // подобен      document.querySelectorAll('h1')
 let heading = document.getElementsByTagName('h1');
@@ -165,22 +154,25 @@ let addr = document.forms.address;      // <form id="address">
 //      HTMLInputElement    - класс для тега <input>
 //      HTMLBodyElement     - класс для <body>
 //      HTMLAnchorElement   - класс для <a>
-
 // Text, Comment - наслед-ся от Node
-
-// SVGElement   - наслед-ся от Element
+// SVGElement    - наслед-ся от Element
+/*
+                EventTarget
+                /         \
+              Node
+            /   |   \
+       Element  Text  Comment
+       /    \
+HTMLElement  SVGElement
+    |
+HTMLBodyElement, HTMLInputElement, HTMLAnchorElement, ...
+*/
 
 // Узнать имя класса DOM-узла:
 alert( document.body.constructor.name );    // HTMLBodyElement
 alert( document.body );                     // [object HTMLBodyElement]
 alert( document.body instanceof HTMLBodyElement );  // true
 alert( document.body instanceof HTMLElement );      // true
-alert( document.body instanceof Element );          // true
-alert( document.body instanceof Node );             // true
-alert( document.body instanceof EventTarget );      // true
-
-
-// console.dir(elem) выводит элемент в виде DOM-объекта, что удобно для анализа его свойств.
 
 /// Свойство "nodeType" (устаревш.)
 // elem.nodeType == 1   для узлов-элементов
@@ -189,17 +181,9 @@ alert( document.body instanceof EventTarget );      // true
 // ...
 
 
-// Тег: nodeName и tagName
+// Узнать имя узла или элемента
 alert( document.body.nodeName );    // BODY (nodeName - для любых узлов Node)
 alert( document.body.tagName );     // BODY (tagName - только для элементов Element)
-
-// <body><!-- комментарий -->
-// для комментария
-alert( document.body.firstChild.tagName ); // undefined (не элемент)
-alert( document.body.firstChild.nodeName ); // #comment
-// for document
-alert( document.tagName ); // undefined (не элемент)
-alert( document.nodeName ); // #document
 
 
 /// innerHTML: получает и изменяет содержимое элемента
@@ -227,6 +211,9 @@ let comment = text.nextSibling.data;            // Комментарий
 alert(news.textContent);        // Срочно в номер! Марсиане атаковали человечество!
 
 
+
+/// АТРИБУТЫ И СВОЙСТВА
+
 /// Свойство hidden (работает как style="display:none")
 // <div id="elem">Мигающий элемент</div>
 setInterval(() => elem.hidden = !elem.hidden, 1000);
@@ -241,10 +228,6 @@ setInterval(() => elem.hidden = !elem.hidden, 1000);
 alert(elem.type);     // "text"
 alert(elem.id);       // "elem"
 alert(elem.value);    // значение
-
-
-
-/// АТРИБУТЫ И СВОЙСТВА
 
 // можно создавать свои св-ва:
 document.body.myData = {                    
@@ -279,12 +262,12 @@ alert(document.body.dataset.about);     // Elephants
 // document.createElement(tag)      - создать нов. эл-т
 // document.createTextNode(text)    - создать новый текстовый узел
 
-// document.body.append(div)        - вставить div в конец body
-// elem.prepend(...)    - встав. в начало узла elem
-// elem.before(...)     - встав. перед узлом elem
-// elem.after(...)      - встав. после узла elem
-// elem.replaceWith(...)    - заменяет узел elem
-// elem.remove()            - удаляет
+// document.body.append(div)    - вставить div в конец body
+// elem.prepend(...)            - встав. в начало узла elem
+// elem.before(...)             - встав. перед узлом elem
+// elem.after(...)              - встав. после узла elem
+// elem.replaceWith(...)        - заменяет узел elem
+// elem.remove()                - удаляет
 
 // elem.insertAdjacentHTML(where, html) - вставл. узлы как HTML
 //      where: 'beforebegin', 'afterbegin', 'beforeend', 'afterend'
@@ -365,7 +348,7 @@ message.style.cssText = "position:fixed; color: red";
 
 
 
-/// УСТАРЕВШИЕ МЕТОДЫ
+/// УСТАРЕВШИЕ МЕТОДЫ ИЗМЕНЕНИЯ ДОКУМЕНТА
 parentElem.appendChild(node);                // Добавл. node в конец дочерн. элем-ов parentElem
 parentElem.insertBefore(node, nextSibling);  // Встав. node перед nextSibling в parentElem
 parentElem.replaceChild(node, oldChild); //Замен. oldChild на node среди дочерних элементов parentElem
@@ -509,3 +492,14 @@ function createMessageUnder(elem, html) {
 
   return message;
 }
+
+
+
+/// КОНСОЛЬ
+
+// Полезные данные в консоли:
+// Консоль -> Elements -> Properties
+
+// console.dir(elem) выводит элемент в виде DOM-объекта, что удобно для анализа его свойств.
+// в списке св-в можно выбрать, например, style и в нем backgroundColor ...
+block.style.backgroundColor = 'rgba(20, 203, 150)';
