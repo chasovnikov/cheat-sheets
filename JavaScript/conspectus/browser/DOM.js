@@ -43,6 +43,7 @@ document.body                                 - <body>
 document.head                                 - <head>
 node.parentNode (parentElement)               - родитель для node
 node.previousSibling (previousElementSibling) - предыдущ. сосед для node
+// Соседи – это узлы, у которых один и тот же родитель.
 node.nextSibling (nextElementSibling)         - последующ. сосед для node
 node.childNodes (children)                    - список всех детей для node
 node.firstChild (firstElementChild)

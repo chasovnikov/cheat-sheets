@@ -14,8 +14,12 @@
 
 /// КАТЕГОРИИ СОБЫТИЙ
 // Зависимые от устройства события ввода: 
-//      "mousedown"
-//      "mousemove"
+//      "mousedown"     - нажатие мыши (без отпускания)
+//      "mouseup"       - отпускание мыши
+//      "mousemove"     - движение мыши
+//      "mouseover"     - при наведении мыши на элемент
+//      "mouseout"      - уводим мышь от элемента
+//      "contextmenu"   – кликнули на элемент правой кнопкой мыши.
 //      "touchstart"
 //      "touchmove"
 //      "touched"
@@ -66,6 +70,21 @@ window.onload = function() {
         }
     };
 };
+
+// Отмена обработки события более 3-х срабатываний
+window.onload = function() {
+    let block = document.querySelector(".block");
+
+    block.onclick = function() {
+        if (counter == 3) {
+            this.onclick = null;
+            return;
+        }
+        counter++;
+    }
+};
+
+
 // Св-ва для обраб-ов соб-й можно определять в HTML-дескрипторах (атрибутов тегов) (не реком.)
 // Значение атрибута - тело ф-и обработчика событий кода JavaScript.
 // <button onclick="console.log(`Thank you`);">Please Click</button>
@@ -89,23 +108,25 @@ let fn = function(event) {
  *      listener - ф-ия-обработчик, вызываемая при возникновении события
  *      options
  */
-let b = document.querySelector("#mybutton");    // поиск эл-та по id="mybutton"
-b.addEventListener('click', () => { 
-    console.log("Thankc again!"); 
-}, {
+let button = document.querySelector("#mybutton");    // поиск эл-та по id="mybutton"
+
+button.addEventListener('click', clickHandler, {
     capture: true,      // зарег. обраб-к как захватывающий
     once: true,         // однократный запуск (автомат. удаление слушателя соб.)
     passive: true,      // не будет вызывать метод preventDefault() для отмены станд.дейст.
 });
+
+const clickHandler = (event) => console.log("Thankc again!", event);
+
 // Еще вызовы addEventListener() позвол. зарегистр. разные ф-ии для одного типа соб.
 
 /**     Удаление обработчика события
  * target.removeEventListener(type, listener[, options]);
  *      type - тип события,
- *      listener - ф-ия-обработчик
+ *      listener - ф-ия-обработчик (чтобы удалять, применяйте именнованную ф-ию)
  *      options
  */
-
+button.removeEventListener('click', onClick)
 
 /// ОБРАБОТЧИКИ СОБЫТИЙ
 // единственный аргумент - объект Event
@@ -162,3 +183,22 @@ document.addEventListener('busy', (e) => {
         hideSpinner();
     }
 });
+
+
+/// КОНСОЛЬ
+// Узнать какие обработчики навешаны на события можно по пути:
+// Консоль -> Element -> Event Listeners
+
+
+
+/// ДЕЙСТВИЯ БРАУЗЕРА ПО УМОЛЧАНИЮ
+/*два способа отменить действие браузера:
+1. метод event.preventDefault().
+2. Если же обработчик назначен через on<событие> (не через addEventListener), 
+то также можно вернуть false из обработчика.*/ 
+
+// Необязательная опция passive: true для addEventListener сигнализирует браузеру, 
+//      что обработчик не собирается выполнять preventDefault().
+
+// event.defaultPrevented - Возвращает boolean-значение, информирующее о том, 
+//      был ли вызван event.preventDefault() в текущем обработчике события.
