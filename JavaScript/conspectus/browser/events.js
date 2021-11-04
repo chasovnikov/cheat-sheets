@@ -202,3 +202,69 @@ document.addEventListener('busy', (e) => {
 
 // event.defaultPrevented - Возвращает boolean-значение, информирующее о том, 
 //      был ли вызван event.preventDefault() в текущем обработчике события.
+
+
+
+/// ПОЛЬЗОВАТЕЛЬСКИЕ СОБЫТИЯ
+
+// Создание своего события:
+  
+{/* <h1 id="elem">Привет из кода!</h1> */}
+// Для своих событий использ-ся addEventListener, т.к. on<event> - не сработает
+document.addEventListener("hello", function(event) {
+    alert("Привет от " + event.target.tagName);     // Привет от H1
+});
+
+let myEvent = new Event(
+    "hello",                    // тип события (любая строка)
+    {
+        bubbles:    true,       // событие всплывает
+        cancelable: true,       // можно отменить действие по умолчанию
+        composed:   false,      // событие не будет всплывать наружу за пределы Shadow DOM
+        // По умолчанию все три свойства установлены в false
+    }
+);
+elem.dispatchEvent(myEvent);   // запуск события на элементе elem
+
+// Проверка: настоящее (true) событие или сгенерированное (false)
+let checkEvent = myEvent.isTrusted;      // false
+
+// Для конкретных типов событий есть свои конструкторы (имеют свои спец. св-ва)
+UIEvent
+FocusEvent
+MouseEvent      // Св-ва: clientX/clientY и др.
+WheelEvent
+KeyboardEvent
+CustomEvent     // для генер-ии соб-й совершенно новых типов
+
+// Вложенные события обрабатываются синхронно
+{/* <button id="menu">Меню (нажми меня)</button> */}
+  menu.onclick = function() {
+    alert(1);
+
+    // alert("вложенное событие")
+    menu.dispatchEvent(new CustomEvent("menu-open", {
+      bubbles: true
+    }));
+
+    alert(2);
+  };
+
+  document.addEventListener('menu-open', () => alert('вложенное событие'))
+// Порядок вывода: 1 → вложенное событие → 2.
+
+// Чтобы запуст. асинхронно поместить dispatchEvent в конец обраб-ка
+//      или использ. setTimeout с нулевой задержкой:
+menu.onclick = function() {
+    alert(1);
+
+    // alert(2)
+    setTimeout(() => menu.dispatchEvent(new CustomEvent("menu-open", {
+      bubbles: true
+    })));
+
+    alert(2);
+  };
+
+document.addEventListener('menu-open', () => alert('вложенное событие'))
+// Новый порядок вывода: 1 → 2 → вложенное событие.
