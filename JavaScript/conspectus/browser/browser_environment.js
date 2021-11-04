@@ -79,44 +79,6 @@ button.onclick = () => window.open('https://javascript.info');
 // быстрее innerHTML и вставляет текст "как есть" (без корректировки браузером)
 
 
-/// АСИНХРОННЫЕ СКРИПТЫ
-/// Атрибуты defer и async (грузят скрипт в фоновом режиме)
-// <script defer scr="1.js"><script>    - отложит выполнение до полн. готов-ти док-а
-// <script async scr="2.js"><script>    - скрипт абсолютно не зависим
-// сообщают браузеру, что в сценарии не применяетя метод document.write()
-// Когда есть оба атрибута, приоритет имеет async
-// async скрипты запускаются не по порядку расположения в документе (в отличие от defer)
-
-// Скрипты с type="module" по умолч. как с атрибутом defer, но это можно изменить
-//      добавив атрибут async
-
-// Простая альтернатива атрибутам async и defer - размещение скриптов в конце HTML-файла
-
-
-/// ДИНАМИЧЕСКИ ЗАГРУЖАЕМЫЕ СКРИПТЫ
-// по умолч.в ведут себя как async.
-// Для загрузки скрипта по действию польз-ся использ-я import() (для модулей)
-// Если модули не используются, то помещаем <script> в <head> документа:
-function importScripts(url) {
-    return new Promise((resolve, reject) => {
-        let s = document.createElement('script');
-        s.onload = () => resolve();
-        s.onerror = (e) => reject();
-        s.src = url;
-        document.head.append(s);
-    })
-}
-// или
-let script = document.createElement('script');
-script.src = "/article/script-async-defer/long.js";
-document.body.append(script);
-
-// Изменить порядок загрузки на порядок как в документе (async = false)
-let script = document.createElement('script');
-script.src = "/article/script-async-defer/long.js";
-script.async = false;       // !
-document.body.append(script);
-
 
 /// ПРОСТРАНСТВО ИМЕН В СКРИПТАХ
 // Без модульности все скрипты в док-е ведут себя как части одного большого скрипта
