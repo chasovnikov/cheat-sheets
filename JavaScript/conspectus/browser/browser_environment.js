@@ -11,25 +11,24 @@ function sayHi() {
 // глобальные функции доступны как методы глобального объекта:
 window.sayHi();
 
+alert(window.innerHeight);      // внутренняя высота окна браузера
+
 
 /**
- * Document Object Model(DOM) – объектная модель документа, 
- *      которая представляет все содержимое страницы в виде объектов.
- * 
- * DOM – не только для браузеров.
+ * Document Object Model(DOM) – объектная модель документа.
+ *      Описывает структуру документа, манипуляции с контентом и события
  * 
  * Спецификация CSSOM для стилей.
  * CSSOM используется вместе с DOM при изменении стилей документа.
  * 
  * 
- * BOM (Browser Object Model) (является частью общей спецификации HTML)
- *      Объектная модель браузера – это дополнительные объекты, 
- *      предоставляемые браузером (окружением), чтобы работать со всем, кроме документа.
+ * BOM (Browser Object Model) - Объектная модель браузера
+ *       Разные функции браузера: setTimeout, alert, location и так далее
  * 
  * Например:
  *  Объект Navigator даёт информацию о самом браузере и операционной системе. 
  *      navigator.userAgent – информация о текущем браузере,
- *      navigator.platform – информация о платформе (Windows/Linux/Mac и так далее).
+ *      navigator.platform  – информация о платформе (Windows/Linux/Mac и так далее).
  * 
  *  Объект Location (есть как св-во у Window, Document) 
  *      представляет собой адрес (URL) объекта, с которым он связан. 
@@ -49,11 +48,34 @@ window.sayHi();
  * 
  * Location не имеет унаследованных методов, но реализует методы URLUtils.
  */
+
+// Этот пример создаёт ссылку и использует её свойство href
+// Корректная альтернатива - использовать document.location или window.location текущего URL
+var url = document.createElement('a');
+url.href = 'https://developer.mozilla.org/en-US/search?q=URL#search-results-close-container';
+console.log(url.href);      // https://developer.mozilla.org/en-US/search?q=URL#search-results-close-container
+console.log(url.protocol);  // https:
+console.log(url.host);      // developer.mozilla.org
+console.log(url.hostname);  // developer.mozilla.org
+console.log(url.port);      // (пустой - https подразумевает порт 443)
+console.log(url.pathname);  // /en-US/search
+console.log(url.search);    // ?q=URL
+console.log(url.hash);      // #search-results-close-container
+console.log(url.origin);    // https://developer.mozilla.org
+
+
 alert(location.href);                      // показывает текущий URL
 if (confirm("Перейти на Wikipedia?")) {
   location.href = "https://wikipedia.org"; // перенаправляет браузер на другой URL
 }
 
+// Методы Location:
+/*
+*/
+window.location.assign(url);   // загрузку и отображение нового документа по указанному URL
+window.location.reload();      // перезагружает ресурс из текущего URL 
+window.location.replace();     // заменяет текущий ресурс на новый
+window.location.toString();    // Возвращает DOMString, содержащий URL. Синоним URLUtils.href
 
 
 /**
