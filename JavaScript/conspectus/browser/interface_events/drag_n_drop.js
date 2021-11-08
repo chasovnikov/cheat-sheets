@@ -12,10 +12,9 @@
 */
 
 // Перенос мяча:
-ball.onmousedown = function(event) { // (1) отследить нажатие
+ball.onmousedown = function(event) {
 
-    // (2) подготовить к перемещению:
-    // разместить поверх остального содержимого и в абсолютных координатах
+    // подготовить к перемещению:
     ball.style.position = 'absolute';
     ball.style.zIndex = 1000;
     // переместим в body, чтобы мяч был точно не внутри position:relative
@@ -41,12 +40,12 @@ ball.onmousedown = function(event) { // (1) отследить нажатие
       moveAt(event.pageX, event.pageY);
     }
   
-    // (3) перемещать по экрану
+    // перемещать по экрану
     // mousemove отслеживается на document, а не на ball, потому что из-за быстрого 
     // движения указатель может спрыгнуть с мяча и оказаться в середине документа
     document.addEventListener('mousemove', onMouseMove);
   
-    // (4) положить мяч, удалить более ненужные обработчики событий
+    // положить мяч, удалить более ненужные обработчики событий
     ball.onmouseup = function() {
       document.removeEventListener('mousemove', onMouseMove);
       ball.onmouseup = null;
