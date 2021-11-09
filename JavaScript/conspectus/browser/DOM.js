@@ -24,7 +24,7 @@
  * Не используйте цикл for..in для перебора коллекций
  */
 
-// Если скрипт подключается в начале док-а, то код нужно обернуть в сдел. ф-ию 
+// Если скрипт подключается в начале док-а, то код нужно обернуть в след. ф-ию 
 //      (чтобы JS видел всё DOM-дерево)
 window.onload = function () {
     let block = document.body.querySelector('#block');
@@ -38,17 +38,17 @@ window.onload = function () {
 
 /* 
 document
-document.documentElement                      - соответ-ет  <html>
-document.body                                 - <body>
-document.head                                 - <head>
-node.parentNode (parentElement)               - родитель для node
-node.previousSibling (previousElementSibling) - предыдущ. сосед для node
+document.documentElement                            - соответ-ет  <html>
+document.body                                       - <body>
+document.head                                       - <head>
+node.parentNode         (parentElement)             - родитель
+node.previousSibling    (previousElementSibling)    - предыдущ. сосед
 // Соседи – это узлы, у которых один и тот же родитель.
-node.nextSibling (nextElementSibling)         - последующ. сосед для node
-node.childNodes (children)                    - список всех детей для node
-node.firstChild (firstElementChild)
-node.lastChild (lastElementChild)             - первый и последний дочерн. элем-ы для node
-elem.children.length (childElementCount)
+node.nextSibling        (nextElementSibling)        - последующ. сосед
+node.childNodes         (children)                  - список всех детей
+node.firstChild         (firstElementChild)         - первый дочерн. узел/элем-т
+node.lastChild          (lastElementChild)          - последний дочерн. узел/элем-т
+elem.children.length    (childElementCount)
  */
 const childs = document.body.childNodes;
 node.childNodes[0] === node.firstChild;     // true
@@ -60,6 +60,13 @@ let b = document.firstElementChild.firstElementChild.nextElementSibling;
 
 // Проверка наличия дочерних узлов
 node.hasChildNodes();
+
+alert( document.documentElement.parentNode );       // выведет document
+alert( document.documentElement.parentElement );    // выведет null
+
+while(elem = elem.parentElement) {      // идти наверх до <html>
+    alert( elem );
+}
 
 
 /// НАВИГАЦИЯ ПО ТАБЛИЦАМ
@@ -73,6 +80,30 @@ node.hasChildNodes();
 // tr.rowIndex          - номер строки <tr> в таблице
 // td.cellIndex         - номер ячейки в строке <tr>
 
+
+{   // ПРИМЕР:
+/*<html>
+<body>
+  <div>Пользователи:</div>
+  <ul>
+    <li>Джон</li>
+    <li>Пит</li>
+  </ul>
+</body>
+</html>*/
+
+// получить элемент <div>
+let div = document.body.firstElementChild;
+let div = document.body.children[0];
+let div = document.body.childNodes[1];  // первый узел пробел, поэтому выбираем второй
+
+// получить <ul>
+let ul = document.body.lastElementChild;
+let ul = document.body.children[1];
+
+// Второй <li> (с именем Пит):
+let li2 = document.body.lastElementChild.lastElementChild;
+}
 
 
 /// ВЫБОР ЭЛЕМЕНТОВ ДОКУМЕНТА
@@ -131,6 +162,45 @@ let heading = document.getElementsByTagName('h1');
 // подобен      document.querySelectorAll('.tooltip')
 let tooltips = document.getElementsByClassName('tooltip');
 
+/*Когда мы ищем элементы с помощью getElementsBy* , то получаем HTML-коллекцию
+А когда ищем через querySelectorAll , то получаем NodeList
+(у HTML-collection нет метода forEach в отличии от NodeList)
+
+Скопировать путь к любому элементу для JS: кликаете в дереве страницы по любому 
+элементу правой кнопкой --> copy --> copy JS path*/
+
+
+// ПРИМЕР:
+// 1. Таблица с `id="age-table"`.
+let table = document.getElementById('age-table')
+
+// 2. Все label в этой таблице
+table.getElementsByTagName('label')
+// или
+document.querySelectorAll('#age-table label')
+
+// 3. Первый td в этой таблице
+table.rows[0].cells[0]
+// или
+table.getElementsByTagName('td')[0]
+// или
+table.querySelector('td')
+
+// 4. Форма с name="search"
+// предполагаем, что есть только один элемент с таким name в документе
+let form = document.getElementsByName('search')[0]
+// или, именно форма:
+document.querySelector('form[name="search"]')
+
+// 5. Первый input в этой форме
+form.getElementsByTagName('input')[0]
+// или
+form.querySelector('input')
+
+// 6. Последний input в этой форме
+let inputs = form.querySelectorAll('input') // найти все input
+inputs[inputs.length-1] // взять последний
+
 
 
 /// ПРЕДВАРИТЕЛЬНО ВЫБРАННЫЕ ЭЛЕМЕНТЫ
@@ -155,6 +225,7 @@ let addr = document.forms.address;      // <form id="address">
 //      HTMLInputElement    - класс для тега <input>
 //      HTMLBodyElement     - класс для <body>
 //      HTMLAnchorElement   - класс для <a>
+//      ...
 // Text, Comment - наслед-ся от Node
 // SVGElement    - наслед-ся от Element
 /*
@@ -177,9 +248,10 @@ alert( document.body instanceof HTMLElement );      // true
 
 /// Свойство "nodeType" (устаревш.)
 // elem.nodeType == 1   для узлов-элементов
-// elem.nodeType == 2   для текстовых узлов
-// elem.nodeType == 3   для объектов документа
+// elem.nodeType == 3   для текстовых узлов
+// elem.nodeType == 9   для объектов документа
 // ...
+let elemType = document.body.nodeType;   // 1
 
 
 // Узнать имя узла или элемента
@@ -193,12 +265,14 @@ document.body.innerHTML = 'Новый BODY!';
 // Вставленный через innerHTML тег <script> не запускается
 
 
-// outerHTML: получает и заменяет HTML элемента целиком
-alert(elem.outerHTML); // <div id="elem">Привет <b>Мир</b></div>
+// outerHTML: получает и заменяет (не изменяет) HTML элемента целиком
+alert(elem.outerHTML);      // <div id="elem">Привет <b>Мир</b></div>
 
 
 
 /// СОДЕРЖИМОЕ ТЕКСТОВОГО УЗЛА (nodeValue/data)
+
+// Свойство data (или nodeValue) позволяет получить содержимое текст. узла или комментария
 
 // <body>Привет <!-- Комментарий --></body>
 let text = document.body.firstChild.data;       // Привет
@@ -217,7 +291,7 @@ alert(news.textContent);        // Срочно в номер! Марсиане 
 
 /// Свойство hidden (работает как style="display:none")
 // <div id="elem">Мигающий элемент</div>
-setInterval(() => elem.hidden = !elem.hidden, 1000);
+setInterval( () => elem.hidden = !elem.hidden, 1000 );
 
 
 /// Другие св-ва DOM-элементов:
