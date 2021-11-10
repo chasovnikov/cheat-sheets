@@ -100,8 +100,27 @@ let fn = function(event) {
 }
 // код JavaScript в атрибутах HTML-дескрипторов никогда не бывает строгим
 
+// <input type="button" id="button" onclick="sayThanks()">
+// разметка генерирует такое свойство:
+button.onclick = function() {
+  sayThanks();      // содержимое атрибута оборчивается в аноним. ф-ию
+};
+
+// Назначение обработчика строкой elem.onclick = "alert(1)" также сработает. 
+// Это сделано из соображений совместимости, но делать так не рекомендуется.
+
+// Не используйте setAttribute для обработчиков.
+
+// Убрать обработчик можно назначением elem.onclick = null.
+
+// Фундаментальный недостаток описанных выше способов назначения обработчика 
+// – невозможность повесить несколько обработчиков на одно событие.
+
+
 // 2. Передача обработчика методу addEventListener() объекта или элемента
 // Рекомендуемый способ
+// Позвол. зарегистр. РАЗНЫЕ Ф-ИИ для одного типа соб. (в отличие от ".on<событие>")
+
 /**
  * target.addEventListener(type, listener[, options]);
  *      type - тип события,
@@ -111,44 +130,77 @@ let fn = function(event) {
 let button = document.querySelector("#mybutton");    // поиск эл-та по id="mybutton"
 
 button.addEventListener('click', clickHandler, {
-    capture: true,      // зарег. обраб-к как захватывающий
+    capture: true,      // зарег-ть обраб-к как захватывающий
     once: true,         // однократный запуск (автомат. удаление слушателя соб.)
     passive: true,      // не будет вызывать метод preventDefault() для отмены станд.дейст.
 });
 
-const clickHandler = (event) => console.log("Thankc again!", event);
+const clickHandler = (event) => console.log("Thanks again!", event);
 
-// Еще вызовы addEventListener() позвол. зарегистр. разные ф-ии для одного типа соб.
 
 /**     Удаление обработчика события
  * target.removeEventListener(type, listener[, options]);
- *      type - тип события,
- *      listener - ф-ия-обработчик (чтобы удалять, применяйте именнованную ф-ию)
+ *      type       - тип события
+ *      listener   - ф-ия-обработчик (требует ИМЕННО ТУ ЖЕ ФУНКЦИЮ)
  *      options
  */
 button.removeEventListener('click', onClick)
 
 /// ОБРАБОТЧИКИ СОБЫТИЙ
-// единственный аргумент - объект Event
-// Свойства Event:
-//      type - тип события
-//      target - объект, в котором произошло  событие
-//      currentTarget - для распростр. соб-й это объект, в кот. зарег. текущ. обр-к соб-й
-//      timeStamp - отметка времени события
-//      isTrusted - true, если событие отправил браузер, false - событие от JS
-//      clientX (для соб. мыши и указателя) - координата окна, где произошло событие
-//      clientY (для соб. мыши и указателя) - координата окна, где произошло событие
 
-// this внтури тела обр-ка ссыл-ся на объект, для кот-го обр-к был зарегисрт-н
+// единственный аргумент - объект Event
+// Свойства Event (неполный список):
+document.querySelector("body > div").onclick = function(event) {
+    alert(
+        event.type          + ' - тип события \n' +
+        event.target        + ' - ссылка на целевой объект, на котором произошло событие. \n' +
+        event.currentTarget + ' - объект, которому планируется отправка события \n' +
+        event.timeStamp     + ' - отметка времени события \n' +
+        event.isTrusted     + ' - true: инициировано браузером, false: из скрипта \n' +
+        event.clientX       + ' - координата окна, где произошло событие (для указ-ля) \n' +
+        event.clientY       + ' - координата окна, где произошло событие (для указ-ля) \n' +
+        event.bubbles       + ' -  всплыло ли событие вверх по DOM или нет \n' + 
+        ' и другие (смотри сайт MDN)'
+        );
+    alert("Координаты: " + event.clientX + ":" + event.clientY);
+};
+
+// this внтури тела обр-ка ссыл-ся на объект/элемент, для кот-го обр-к был зарегисрт-н
 // но для стрелочных ф-й this имеет то же знач, что и обл. видим. в кот. они определены
+/*
+В коде ниже button выводит своё содержимое, используя this.innerHTML:
+<button onclick="alert(this.innerHTML)">Нажми меня</button>*/
 
 // обраб-ки соб. ничего не должны возращать (современное поведение)
+
+// Обработчики некоторых событий можно назначать только через addEventListener
+// Например: DOMContentLoaded
+
+// Обработчиком можно назначить объект или класс с обязательным методом handleEvent:
+class Menu {
+    handleEvent(event) {
+      // mousedown -> onMousedown
+      let method = 'on' + event.type[0].toUpperCase() + event.type.slice(1);
+      this[method](event);
+    }
+
+    onMousedown() {
+      elem.innerHTML = "Кнопка мыши нажата";
+    }
+
+    onMouseup() {
+      elem.innerHTML += "...и отжата.";
+    }
+}
+let menu = new Menu();
+elem.addEventListener('mousedown', menu);
+elem.addEventListener('mouseup', menu);
 
 
 /// РАСПРОСТРАНЕНИЕ СОБЫТИЙ
 // Захватывание событий обратен процессу пузырькового подъема (сверху винз по дереву DOM)
 // ...
-
+// Почти все события всплывают. Например, событие focus не всплывает.
 
 /// ОТМЕНА СОБЫТИЙ
 // preventDefault() - запрет браузеру реагировать стандартно на пользовательские события
