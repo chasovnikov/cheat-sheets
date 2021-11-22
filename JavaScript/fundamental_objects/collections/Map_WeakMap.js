@@ -1,14 +1,27 @@
 
 /**
- *  Map - коллекция значений с КЛЮЧАМИ ЛЮБОГО ТИПА
- *     (у обычного объекта ключи - строки и символы)
- *  В ключах Мар 
- *      NaN === NaN (обычно NaN != NaN)
+ *  Map
+ * 
+ *  Ключи любого типа
+ * 
+ *  В ключах NaN === NaN
+ * 
  *  Перебор в том же порядке, в каком и добавление
+ * 
  *  Для перебора можно использовать for..of и forEach(fn)
- *  Отличия от обычного объекта Object:
-       Что угодно может быть ключом, в том числе и объекты.
-       Есть дополнительные методы, свойство size.
+ * 
+ *  Методы и свойства: 
+ *      get(), set(), has(), delete(), clear(), size, forEach()
+ * 
+interface Map<K, V> {
+    clear(): void;
+    delete(key: K): boolean;
+    forEach(callbackfn: (value: V, key: K, map: Map<K, V>) => void, thisArg?: any): void;
+    get(key: K): V | undefined;
+    has(key: K): boolean;
+    set(key: K, value: V): this;
+    readonly size: number;
+}
  */
 
 let map = new Map([
@@ -16,37 +29,30 @@ let map = new Map([
     [NaN, 'num2'],
 ]); 
 
-// добавить элементы и вернуть объект Map
-map.set(true, 'bool1')
-   .set(2, false);
+map.set(true, 'bool1').set(2, false);   // добавить элементы и вернуть объект Map
 
-// Spread syntax
-console.log( [...map] );
+const elem = map.get(NaN);      // вернуть значение по ключу
 
-// вернуть значение по ключу
-alert( map.get(NaN) );
+let bool = map.has(NaN);        // проверка наличия элемента по ключу
 
-// удалить элемент по ключу
-map.delete(NaN);
+let bool1 = map.delete(NaN);    // удалить элемент по ключу
 
-// проверка наличия элемента по ключу
-alert( map.has(NaN) );
+map.clear();                    // очистить всю коллекцию 
 
-// очистить всю коллекцию
-map.clear();         
+let size = map.size;            // показать кол-во элементов
 
-// показать кол-во элементов
-alert( map.size );
+console.log( [...map] );        // Spread syntax
 
 
 
 /**
  * Три метода для перебора:
+ * 
  * map.keys() – перебор по ключам,
  * map.values() – перебор по значениям,
- * map.entries() – перебор по парам вида [ключ, значение], 
-       этот вариант используется по умолчанию в for..of.
+ * map.entries() – перебор по парам вида [ключ, значение] (по умолчанию в for..of)
  */
+
 // перебор по ключам
 for (let key of map.keys()) {
        alert(key);
@@ -67,38 +73,55 @@ map.forEach( (value, key, map) => {
        alert(`${key}: ${value}`);
      } );
 
-
-
-/**
- * Создать Мар из обычного объекта
- */
+// Создать Мар из обычного объекта
 let map1 = new Map( Object.entries( {name: 'alex'} ) );
 
-
-/**
- * Создать обычный объект из Мар
- */
+// Создать обычный объект из Мар
 let map2 = Object.fromEntries( map1.entries() );
+
+// Массив из Мар
+const arr = Array.from( map.values() );
 
 
 
 /**=================================
  *            WeakMap
- *  – это Map-подобная коллекция
- * Ключи должны быть объектами
- * При сборке мусора ключи удаляются
- * В основном используется в качестве дополнительного хранилища данных
- * Не поддерживает методы и свойства, работающие со всем содержимым сразу или возвращающие информацию о размере коллекции
- * Возможны только операции на отдельном элементе коллекции.
- * Нельзя итерироваться.
- * Используется для сопоставления с сылочными типами.
+ * 
+ * Ключи только объекты
+ * 
+ * При сборке мусора элементы удаляются, если больше не достижимы в коде
+ * 
+ * Не поддерживает перебор, size и методы keys(), values(), entries()
+ * 
+ * Используется 
+ *      в качестве дополнительного хранилища данных,
+ *      для кеширования
  */
 
+// Присутствуют  только следующие методы:
+weakMap.get(key)
+weakMap.set(key, value)
+weakMap.delete(key)
+weakMap.has(key)
 
 
-/**
- * Простая реализация своего Map
- */
+// Пример использования WeakMap
+const cities = {
+    beijing: {name: 'Beijing'},
+    kiev: {name: 'Kiev'},
+    london: {name: 'London'},
+}
+const capitalOf = new WeakMap();
+capitalOf.set(cities.beijing, 'China');
+capitalOf.set(cities.kiev, 'Ukraine');
+capitalOf.set(cities.london, 'Unnited Kingdom');
+
+delete cities.london;
+capitalOf.delete(cities.kiev);
+
+
+
+// Простая реализация своего Map
  class Dictionary {
     constructor() {
         this.map = Object.create(null); // Создание объекта без предков
@@ -153,18 +176,3 @@ if (cityPopulation.has('Delhi')) {
 }
 console.log('size', cityPopulation.size);
 console.log('keys', cityPopulation.keys());
-
-
-// Пример использования WeakMap
-const cities = {
-    beijing: {name: 'Beijing'},
-    kiev: {name: 'Kiev'},
-    london: {name: 'London'},
-}
-const capitalOf = new WeakMap();
-capitalOf.set(cities.beijing, 'China');
-capitalOf.set(cities.kiev, 'Ukraine');
-capitalOf.set(cities.london, 'Unnited Kingdom');
-
-delete cities.london;
-capitalOf.delete(cities.kiev);
