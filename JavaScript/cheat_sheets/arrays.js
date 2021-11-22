@@ -94,3 +94,7 @@ let chars = Array.from(str);
 const sum = users.reduce( (accum, user) => accum + user.age, 0 )
 // Уменьшить до единственного значения (справа на лево)
 [2, 3, 4].reduceRight((a, b) => a + b)      // 9
+
+
+// вернёт массив уникальных, не повторяющихся значений массива arr
+const unique = Array.from( new Set(arr) );
