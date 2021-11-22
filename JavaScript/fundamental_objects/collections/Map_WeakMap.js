@@ -176,3 +176,12 @@ if (cityPopulation.has('Delhi')) {
 }
 console.log('size', cityPopulation.size);
 console.log('keys', cityPopulation.keys());
+
+
+// Протестить сбор мусора
+let range = {name: "John"}
+let weakMap = new WeakMap ();
+weakMap.set(range, "polimorf");
+range = null;
+weakMap.set({}, "OK");
+let a = setInterval(()=>console.log(weakMap), 5000);

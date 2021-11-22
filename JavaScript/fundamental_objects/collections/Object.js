@@ -2,11 +2,6 @@
 /**
  * Объекты JS описаны в \data_types\objects.js
  * 
- * Object.keys(obj)             – возвращает массив ключей.
- * Object.values(obj)           – возвращает массив значений.
- * 
- * Object.entries(obj)          – создает массив массивов [ключ, значение].
- * Array.from(obj)              - создает массив из итерируемого объекта или строки
  * Object.fromEntries(array)    - создает объект из массива
  * 
  * Object.keys/values/entries   - игнорируют символьные свойства
@@ -18,6 +13,27 @@
  * 
  * методы вида Object.* возвращают «реальные» массивы, а не итерируемые объекты
  */
+
+let user = {
+  name: "John",
+  age: 30
+};
+// Возращают массив ключей/значений/пар "ключ значение" (игнорируют символьные свойства)
+const arrKeys = Object.keys(user);          // ["name", "age"]
+const arrValues = Object.values(user);      // ["John", 30]
+const arrEntries = Object.entries(user);    // [ ["name","John"], ["age",30] ]
+
+// перебор значений
+for (let value of Object.values(user)) {
+  alert(value);     // John, затем 30
+}
+
+
+const arrSymbols = Object.getOwnPropertySymbols(object1);   // массив всех символьных свойст
+
+const arrKeysAll = Reflect.ownKeys(object1);    // массив все св-в (и символьных)
+
+
 
 /**
  * Создание объекта через замыкания и стрелочную ф-ию.
@@ -89,21 +105,17 @@ JSON.stringify([point]);        // '["(1, 2)"]'
 
 
 
-/**
- * Применение методов массива к объектам:
- */
- let prices = {
-    banana: 1,
-    orange: 2,
-    meat: 4,
-  };
-  
-  let doublePrices = Object.fromEntries(
-    // преобразовать в массив, затем map, затем fromEntries обратно объект
-    Object.entries(prices).map( ([key, value]) => [key, value * 2] )
-  );
-  
-alert(doublePrices.meat); // 8
+// Работа с объектом как с массивом (преобразование в массив и обратно)
+// Удвоить цены
+let prices = {
+  banana: 1,
+  orange: 2,
+  meat: 4,
+};
+let doublePrices = Object.fromEntries(
+  Object.entries(prices).map( ([key, value]) => [key, value * 2] )
+);
+alert(doublePrices.meat);   // 8
 
 
 const obj = {
