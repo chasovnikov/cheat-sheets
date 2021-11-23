@@ -23,11 +23,10 @@ const arrKeys = Object.keys(user);          // ["name", "age"]
 const arrValues = Object.values(user);      // ["John", 30]
 const arrEntries = Object.entries(user);    // [ ["name","John"], ["age",30] ]
 
-// перебор значений
-for (let value of Object.values(user)) {
-  alert(value);     // John, затем 30
-}
 
+for (let [key, value] of Object.entries(user)) {
+    alert(`${key}:${value}`); // name:John, затем age:30
+}
 
 const arrSymbols = Object.getOwnPropertySymbols(object1);   // массив всех символьных свойст
 
@@ -145,16 +144,17 @@ const objSymbolProp = Object
  */
 
 
-/**
- * Объединение объектов
- */
+// Копия объекта
+const {...copy} = obj;
+const copy1 = Object.assign({}, obj1);
+
+
+// Объединение объектов
+const objConcat2 = { ...obj1, ...obj2};
 const objConcat1 = Object.assign({}, obj1, obj2);
-const objConcat2 = { ...obj1, ...obj2};         // с помощью спред-оператора
 
 
-/**
- * Создание символьного ключа:
- */
+// Создание символьного ключа:
 const SYMBOL_FILENAME = Symbol('filename');
 const hash1 = {
     key1: value1,
