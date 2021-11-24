@@ -1,7 +1,6 @@
 
 /**
  * JSON (JavaScript Object Notation)
- * – это общий формат для представления значений и объектов
  * 
  * 1) Строки и имена свойств д.б. в двойных кавычках.
  * 2) Пропускает:
@@ -10,86 +9,68 @@
  *      свойства с undefined.
  * 
  * 3) Не должно быть циклических ссылок 
- *          (исправляется с помощью дополнительных аргументов в JSON.stringify() )
+ *          (исправляется с помощью второго аргумента в JSON.stringify() )
  * 4) Не поддерживает комментарии
  * 
  * JSON не способен представлять все значения JavaScript.
+ * 
  * Поддерживается сериализация и восстановление:
  *      объеков, массивов, строк, конечных чисел, true, false, null.
- * NaN, Infinity, -Infinity сериал-ся в null.
+ * 
+ * NaN, Infinity, -Infinity сериализуются в null.
+ * 
  * Объекты Date сериал-ся в строки дат формата ISO, но JSON.parse() оставляет
  *      их в строковой форме.
+ * 
  * Объекты Function, RegExp, Error и undefined не сериал-ся и не восстан-ся.
  */
 
-/**
- * Преобразование объектов в JSON.
- * Сериализует только ПЕРЕЧИСЛИМЫЕ СОБСТВЕННЫЕ св-ва.
- * 
- * JSON.stringify(value[, replacer, space])
- *      value    - значение для кодирования.
- *      replacer - массив свойств объекта для кодирования 
- *                  или функция соответствия function(key, value)
- *      space    - дополнительное пространство (отступы), используемое для форматирования
- * 
- * @returns String
- */
+
+// Преобразование объектов в JSON (Сериализует только ПЕРЕЧИСЛИМЫЕ СОБСТВЕННЫЕ св-ва)
+// JSON.stringify(value[, replacer, space])
+//      replacer    - для выбора/исключения св-в, 
+//      space       - для логирования и красивого вывода
 let json = JSON.stringify({name: "John", age: 30});  
 
 
-/**
- * Преобразование JSON в объект
- * 
- * JSON.parse(str, [reviver])
- *      str     - JSON для преобразования в объект
- *      reviver - функция для преобразования каждого значения
- * 
- * @returns Object
- */
+// Преобразование JSON в объект
+// JSON.parse(str, [reviver]) 
+//      reviver     - ф-ия для преобраз-я каждой пары
 const obj = JSON.parse(`{"name": "John","age": 30}`);
 
 
+// Реализация метода toJSON (для сериализации по своим правилам)
+ let room = {
+    number: 23,
+    toJSON() {
+        return this.number;
+    }
+};  
+alert( JSON.stringify(room) ); // 23
 
 
 
-// Пример ограничения: не должно быть циклических ссылок
+// ПРИМЕРЫ
+
+// Исключение циклических ссылок
 let room = {
     number: 23
 };
-
 let meetup = {
     title: "Conference",
     participants: [{ name: "John" }, { name: "Alice" }],
-    place: room // meetup ссылается на room
+    place: room     // meetup ссылается на room
 };
-
 room.occupiedBy = meetup; // room ссылается на meetup
-
-JSON.stringify(meetup); // Ошибка: Преобразование цикличной структуры в JSON
-
-/**
- * Исправим с помощью дополнительных аргументов
- * Вывод: {"title":"Conference","participants":[{},{}]}
- * Но нет свойств participants 
- */
-alert(JSON.stringify(meetup, ['title', 'participants']));
-
-/**
- * Включим в список все свойства, кроме room.occupiedBy
- * Вывод:
-    {
-    "title":"Conference",
-    "participants":[{"name":"John"},{"name":"Alice"}],
-    "place":{"number":23}
-    }
- */
 alert(JSON.stringify(meetup, ['title', 'participants', 'place', 'name', 'number']));
 
-/**
- * С применение функции в replacer
- * Функция применяется рекурсивно. 
- * Значение this внутри replacer – это объект, который содержит текущее свойство.
- * Пары ключ:значение, которые приходят в replacer:
+
+// Использование ф-ии в качестве replacer, а не массив
+alert(JSON.stringify(meetup, function replacer(key, value) {
+    alert(`${key}: ${value}`);
+    return (key == 'occupiedBy') ? undefined : value;
+}));
+/*
     :             [object Object]
     title:        Conference
     participants: [object Object],[object Object]
@@ -100,86 +81,49 @@ alert(JSON.stringify(meetup, ['title', 'participants', 'place', 'name', 'number'
     place:        [object Object]
     number:       23
 
- * Первый вызов – особенный. Ему передаётся специальный «объект-обёртка»: {"": meetup}. 
- * Другими словами, первая (key, value) пара имеет пустой ключ, 
- * а значением является целевой объект в общем. 
- * Вот почему первая строка из примера выше будет ":[object Object]"
+Первый вызов: {"": meetup}.
+Первая (key, value) пара имеет пустой ключ, а значением является целевой объект
 */
-alert(JSON.stringify(meetup, function replacer(key, value) {
-    alert(`${key}: ${value}`);
-    return (key == 'occupiedBy') ? undefined : value;
-}));
 
 
-/**
- * Форматирование: space
- * Применяется для логирования и красивого вывода
- */
-let user = {
-    name: "John",
-    age: 25,
-    roles: {
-        isAdmin: false,
-        isEditor: true
-    }
+// Проверять свойство по значению ф-ии replacer
+let room = {
+  number: 23
 };
+let meetup = {
+  title: "Совещание",
+  occupiedBy: [{name: "Иванов"}, {name: "Петров"}],
+  place: room
+};
+room.occupiedBy = meetup;
+meetup.self = meetup;
 
-alert(JSON.stringify(user, null, 2));
-  /* отступ в 2 пробела:
+alert( JSON.stringify(meetup, function replacer(key, value) {
+  return (key != "" && value == meetup) ? undefined : value;
+}));
+/*
+(key =="") чтобы исключить первый вызов, где {"": meetup}
+
 {
-    "name": "John",
-    "age": 25,
-    "roles": {
-      "isAdmin": false,
-      "isEditor": true
-    }
+  "title":"Совещание",
+  "occupiedBy":[{"name":"Иванов"},{"name":"Петров"}],
+  "place":{"number":23}
 }
 */
 
-/* для JSON.stringify(user, null, 4) результат содержит больше отступов:
-{
-    "name": "John",
-    "age": 25,
-    "roles": {
-        "isAdmin": false,
-        "isEditor": true
+
+// JSON.parse
+numbers = JSON.parse("[0, 1, 2, 3]");
+alert( numbers[1] ); // 1
+
+
+// Для дат нужна функция с new Date()
+let json = '{"title":"Conference","date":"2017-11-30T12:00:00.000Z"}';
+const meetup = JSON.parse(json, (key, value) => {
+    if (key == 'date') {
+        return new Date(value);
     }
-}
-*/
+    return value;
+});
 
-
-/**
- * Пользовательский «toJSON».
- * Объект может предоставлять метод toJSON для преобразования в JSON. 
- * JSON.stringify автоматически вызывает его, если он есть
- */
- let room = {
-    number: 23,
-    toJSON() {
-        return this.number;
-    }
-  };
-  
-  alert( JSON.stringify(room) ); // 23
-
-
-/**===================================================================
- * JSON.parse
- */
- let numbers = "[0, 1, 2, 3]";
-
- numbers = JSON.parse(numbers);
- 
- alert( numbers[1] ); // 1
-
-/**
- * Для дат нужна функция с new Date()
- */
- let str = '{"title":"Conference","date":"2017-11-30T12:00:00.000Z"}';
-
- let meetup = JSON.parse(str, function(key, value) {
-   if (key == 'date') return new Date(value);
-   return value;
- });
- 
- alert( meetup.date.getDate() ); // 30 - теперь работает!
+alert( meetup.date.getDate() ); // 30 - теперь работает!
