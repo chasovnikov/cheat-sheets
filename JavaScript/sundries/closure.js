@@ -83,20 +83,16 @@ alert(message); // Ошибка: переменная message не опреде�
 }();
 
 
-
-let c = 34;
-function asd() {
-    let a = 'df';
-    return function fg() {
-        let b = 'cv';
-        return function vbf() {
-            return c + 1;
-        }
+// колбэк для arr.filter(callback)
+function inBetween(a, b) {
+    return function (item) {
+        return item >= a && item <= b;
     }
 }
-console.log( asd()()() );   // 35
+alert( [1, 2, 3, 4, 5, 6, 7].filter(inBetween(3, 6)) ); // 3,4,5,6
 
 
+// пример замыкания
 let c = 34;
 function asd() {
     let a = 'df';
@@ -110,3 +106,18 @@ function asd() {
     return fg();
 }
 console.log( asd() );   // 35
+console.log( fg()() );      // Uncaught ReferenceError: fg is not defined
+
+
+// пример замыкания
+let c = 34;
+function asd() {
+    let a = 'df';
+    return function fg() {
+        let b = 'cv';
+        return function vbf() {
+            return c + 1;
+        }
+    }
+}
+console.log( asd()()() );   // 35

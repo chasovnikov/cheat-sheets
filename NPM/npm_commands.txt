@@ -1,0 +1,61 @@
+https://github.com/sindresorhus/awesome-npm#tips
+
+В node_modules/.bin локально установленные пакеты размещают свои исполняемые модули.
+Запускаем ./node_modules/.bin/mocha в директории проекта...
+
+./node_modules/.bin/<команда>       запустить локально установленный исполняемый модуль.
+
+
+npm install pkg     установить пакет pkg
+npm i pkg           ТОЖЕ
+
+npm i --global pkg      установить пакет глобально
+npm i -g pkg            ТОЖЕ
+
+npm i --save pkg        установить пакет и сохранить как зависимость
+npm i -S pkg            ТОЖЕ
+
+npm i --save-dev pkg    установить пакет только для использования в разработке (devDependency)
+npm i -D pkg            ТОЖЕ
+
+npm init        Инициализация нового пакета
+npm init -y       проскочить вопросы во время иниц-ии
+npm init -f       тоже
+
+npm test    тестирование
+npm t
+
+npm it → npm install && npm test
+npm r → npm uninstall
+npm un → npm uninstall
+npm up → npm update
+
+npm run
+
+npm i -g ntl    установить интерактивное меню
+ntl
+
+npm ls --depth 0        проверка зависимостей
+npm ls -g --depth 0     проверка зависимостей глобально
+
+npm run env | grep "$PATH"      найти дополн-ую папку к PATH, <директория проекта>/node_modules/.bin
+npm run env             увидеть все доступные переменные окружения
+
+npm repo        открыть соответствующий репозиторий в браузере
+npm home        выполняет ту же функцию для записи homepage
+npm docs        открыть пакет на официальном сайте
+
+npm version patch       обновить версию пакета
+npm version minor       тоже
+npm version major       тоже
+
+alias ni='npm install'
+alias nid='npm install --save-dev'
+alias nig='npm install --global'
+alias nt='npm test'
+alias nit='npm install && npm test'
+alias nk='npm link'
+alias nr='npm run'
+alias ns='npm start'
+alias nf='npm cache clean && rm -rf node_modules && npm install'
+alias nlg='npm list --global --depth=0'
