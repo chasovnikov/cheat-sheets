@@ -155,23 +155,13 @@ sayHi(); // Hello, Guest
 func(); // Ошибка, func не определена (недоступна вне функции)
 
 
-/**
- * Синтаксис "new Function"
- * let func = new Function([arg1, arg2, ...argN], functionBody);
- *      arg1...argN     - аргументы
- *      functionBody    - тело функции
- * 
- * Они не могут использовать внешние локальные переменные (только через аргументы).
- * new Function позволяет превратить любую строку в функцию. 
- * Например, можно получить новую функцию с сервера и затем выполнить её.
- */
+
+// new Function('аргумент1', 'аргумент2', '...', 'тело функции')
 let sum = new Function('a', 'b', 'return a + b');
 alert( sum(1, 2) ); // 3
 
-let str = 'return a + b';     // код, полученный с сервера динамически ...
-let func = new Function(str);
-func();
 
+// имеет доступ только к глобальным переменным
 function getFunc() {
   let value = "test";
 
@@ -180,6 +170,7 @@ function getFunc() {
   return func;
 }
 getFunc()(); // ошибка: value не определен
+
 
 // Эти объявления ниже эквивалентны:
 new Function('a', 'b', 'return a + b'); // стандартный синтаксис
