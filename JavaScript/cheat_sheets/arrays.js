@@ -98,3 +98,7 @@ const sum = users.reduce( (accum, user) => accum + user.age, 0 )
 
 // вернёт массив уникальных, не повторяющихся значений массива arr
 const unique = Array.from( new Set(arr) );
+
+
+// склеить в строку элементы псевдомассива arguments
+[].join.call(arguments)
