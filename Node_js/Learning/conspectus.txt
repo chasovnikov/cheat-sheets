@@ -31,3 +31,11 @@ console.log(process.argv);
 process.exit();
 
 Стандартн. модуль "path" позволяет удобно взаимодействовать с путями
+
+Запустить nodemon (перезапускает сервер при изменениях в коде):
+В package.json: 
+"scripts": {
+    "start": "nodemon index.js"
+  },
+В консоли:
+• npm start
