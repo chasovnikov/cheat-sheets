@@ -184,6 +184,17 @@ function merge(target, ...sources) {
     return target;
 }
 
+
+/**
+ * Глубокое клонирование - вложенное копирование
+ * Object.assign() - не подходит
+ * Подойдёт:
+ *  _.cloneDeep(obj) из JavaScript-библиотеки lodash
+ * 
+ * Клонирование с дескрипторами свойств:
+ */
+let clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(obj));
+
 // Функция копирования объекта
 function copy(o) {
     var copy = Object.create(Object.getPrototypeOf(o));
@@ -195,14 +206,7 @@ function copy(o) {
     });
   
     return copy;
-  }
-
-/**
- * Глубокое клонирование - вложенное копирование
- * Object.assign() - не подходит
- * Подойдёт:
- *  _.cloneDeep(obj) из JavaScript-библиотеки lodash
- */
+}
 
 
 /// СЕРИАЛИЗАЦИЯ ОБЪЕКТОВ       JSON.stringify(), JSON.parse()
