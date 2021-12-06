@@ -41,3 +41,7 @@ Rabbit.prototype = {
 
 let rabbit = new Rabbit();
 alert(rabbit.constructor === Rabbit); // false
+
+// ----------------------- // По задачам
+// Присвоение нового значения свойству prototype влияет на [[Prototype]]
+//      вновь создаваемых объектов, но не на прототип уже существующих.
