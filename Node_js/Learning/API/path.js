@@ -1,3 +1,4 @@
+//  Модуль предоставляет утилиты для работы с путями к файлам и каталогам
 const path = require('path');
 
 let p = '';
@@ -8,9 +9,8 @@ __dirname; // путь к текущей папке
 p = path.dirname(__filename); // путь к текущей папке
 
 // Название файла
-p = path.basename(__filename, '.js'); // path
 p = path.basename(__filename); // path.js
-p = path.basename(__filename, '.php'); // path.js
+p = path.basename(__filename, '.js'); // path
 p = path.win32.basename('C:\\temp\\myfile.html'); // myfile.html
 p = path.posix.basename('/tmp/myfile.html'); // myfile.html
 
@@ -18,6 +18,10 @@ p = path.posix.basename('/tmp/myfile.html'); // myfile.html
 p = path.extname(__filename); // .js
 p = path.extname('index.coffee.md'); // .md
 p = path.extname('index.'); // .
+
+// Объединить строки в путь и нормализовать
+p = path.join('/foo', 'bar', 'baz/asdf', 'quux', '..'); // \foo\bar\baz\asdf
+p = path.join('/foo', 'bar', 'baz/asdf', 'quux'); // \foo\bar\baz\asdf\quux
 
 // Разделитель пути для конкретной платформы
 p = path.sep; // \
@@ -37,10 +41,6 @@ p = path.format({
 // Проверка абсолютного пути
 p = path.isAbsolute('/baz/..'); // true
 p = path.isAbsolute('qux/'); // false
-
-// Объединить строки в путь и нормализовать
-p = path.join('/foo', 'bar', 'baz/asdf', 'quux', '..'); // \foo\bar\baz\asdf
-p = path.join('/foo', 'bar', 'baz/asdf', 'quux'); // \foo\bar\baz\asdf\quux
 
 // Нормализовать путь
 p = path.normalize('/foo/bar//baz/asdf/quux/..'); // \foo\bar\baz\asdf
