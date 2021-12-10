@@ -8,7 +8,8 @@ __filename; // путь к текущему файлу
 __dirname; // путь к текущей папке
 p = path.dirname(__filename); // путь к текущей папке
 
-// Название файла
+// Название файла или папки
+p = path.basename(__dirname); // node_js
 p = path.basename(__filename); // path.js
 p = path.basename(__filename, '.js'); // path
 p = path.win32.basename('C:\\temp\\myfile.html'); // myfile.html

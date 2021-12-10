@@ -1,47 +1,23 @@
-import { square, cube } from './math.js';
-import fs from 'fs';
-// import _ from 'underscore';
-import _ from 'lodash';
+// import { square, cube } from './math.js';
+// import fs from 'fs';
+// // import _ from 'underscore';
+// import _ from 'lodash';
 // const _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
+const fsPromises = require('fs/promises');
 
-// let text = fs.readFileSync('../readme.md', 'utf8');
-// console.log(text);
+const log = a => console.log(a);
 
+const text = process.env.TEXT || 'sdsdd sds sdgg';
 
-// function printNumbers(from, to) {
-//     // let n = from;
-//     // let timerId = setInterval(n => {
-//     //     console.log(n);
-//     //     return n++;
-//     // }, 1000, n);
-
-//     // setTimeout(() => { clearInterval(timerId) }, to * 1000);
-
-//     let timerId = setTimeout(function tick(from, to) {
-//         let n = from;
-//         console.log(n);
-//         if (n < to) {
-//             timerId = setTimeout(tick, 1000, ++n, to);
-//         }
-//       }, 1000, from, to);
-
-// }
-
-// // clearInterval( printNumbers(1, 5));
-// printNumbers(1, 5);
-
-function printNumbers(from, to) {
-    let n = from;
-    let timerId = setInterval(() => {
-        console.log(n);
-        if (n >= to) {
-            clearInterval(timerId);
-        }
-        n++;
-    }, 1000);
-
-
-}
-
-// clearInterval( printNumbers(1, 5));
-printNumbers(1, 5);
+fsPromises
+    .writeFile(path.resolve(__dirname, 'terxt.txt'), text)
+    .then(() => fsPromises.readFile(path.resolve(__dirname, 'terxt.txt'), { encoding: 'utf-8' }))
+    .then(data => data.split(' ').length)
+    .then(count =>
+        fsPromises.writeFile(path.resolve(__dirname, 'count.txt'), `Кол-во слов${count}`)
+    )
+    .then(() => fsPromises.rm(path.resolve(__dirname, 'terxt.txt')))
+    .then(() => fsPromises.rm(path.resolve(__dirname, 'count.txt')));
+// fsPromises.readFile(path.resolve(__dirname, 'terxt.txt')).then(data => console.log(data));
