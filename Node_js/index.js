@@ -6,18 +6,14 @@
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
+const Emitter = require('events');
 
-const log = a => console.log(a);
+const emitter = new Emitter();
 
-const text = process.env.TEXT || 'sdsdd sds sdgg';
+emitter.on('message', (data, second, third) => {
+    console.log('Сообщение: ' + data);
+    console.log('Второе сообщение: ' + second);
+});
 
-fsPromises
-    .writeFile(path.resolve(__dirname, 'terxt.txt'), text)
-    .then(() => fsPromises.readFile(path.resolve(__dirname, 'terxt.txt'), { encoding: 'utf-8' }))
-    .then(data => data.split(' ').length)
-    .then(count =>
-        fsPromises.writeFile(path.resolve(__dirname, 'count.txt'), `Кол-во слов${count}`)
-    )
-    .then(() => fsPromises.rm(path.resolve(__dirname, 'terxt.txt')))
-    .then(() => fsPromises.rm(path.resolve(__dirname, 'count.txt')));
-// fsPromises.readFile(path.resolve(__dirname, 'terxt.txt')).then(data => console.log(data));
+let MESSAGE = 'hello';
+emitter.emit('message', MESSAGE, 1234);
