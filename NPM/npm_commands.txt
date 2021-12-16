@@ -1,4 +1,4 @@
-https://github.com/sindresorhus/awesome-npm#tips
+﻿https://github.com/sindresorhus/awesome-npm#tips
 
 В node_modules/.bin локально установленные пакеты размещают свои исполняемые модули.
 Запускаем ./node_modules/.bin/mocha в директории проекта...
@@ -60,3 +60,5 @@ alias nr='npm run'
 alias ns='npm start'
 alias nf='npm cache clean && rm -rf node_modules && npm install'
 alias nlg='npm list --global --depth=0'
+
+npm uninstall eslint	- удалить пакет
