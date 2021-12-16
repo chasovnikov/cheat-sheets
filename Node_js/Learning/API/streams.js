@@ -14,6 +14,15 @@ const pathFile = path.resolve(__dirname, 'test.txt');
 const readStream = fs.createReadStream(pathFile, { encoding: 'utf-8' });
 
 // Стримы работают по принципу событий
+// readable -  доступны данные для чтения или когда достигнут конец потока
+readStream.on('readable', () => {
+    console.log('readable');
+    const buffer = rs.read(); // получить буфер
+    if (buffer) {
+        console.log(buffer);
+    }
+});
+
 // "data" позволяет считывать данные
 // Один чанк по дефолту 64кб
 readStream.on('data', chunk => console.log(chunk));
@@ -67,3 +76,86 @@ http.createServer((req, res) => {
     // readable не начинает читать нов. порцию, пока writable не закончил писать предыдущ.
     stream.pipe(res);
 });
+
+// Считываение файлов через промисы и потоки
+const main = async () => {
+    const stream = fs.createReadStream('path', 'utf-8');
+
+    // ждёт пока не случится событие у стрима
+    for await (const chunk of stream) {
+        console.log(chunk);
+    }
+
+    const data = await fs.promises.readFile('path', 'utf-8');
+    console.log(data);
+};
+main().catch(console.error);
+
+// Считываем с одного файла, пишем в другой
+const rs = fs.createReadStream('path1', 'utf-8');
+const ws = fs.createReadStream('path2', 'utf-8');
+// rs.on('data', buffer => {
+//     console.log('Copy' + buffer.length + ' chars');
+//     ws.write(buffer);
+// });
+rs.pipe(ws);
+rs.on('end', () => {
+    console.log('Done');
+});
+
+// transform-stream
+const zlib = require('zlib');
+const rs = fs.createReadStream('path1', 'utf-8');
+const ws = fs.createReadStream('path2', 'utf-8');
+const gs = zlib.createGzip();
+rs.pipe(gs).pipe(ws);
+rs.on('end', () => {
+    console.log('Done');
+});
+
+// Передача по сети (например, отображение HTML-страницы)
+const prepareCache = callback => {
+    let buffer = null;
+
+    const rs = fs.createReadStream('path1', 'utf-8');
+    const gs = zlib.createGzip();
+
+    const buffers = []; // Если большой файл, то буфер будет из кусков
+
+    gs.on('data', buffer => {
+        buffers.push(buffer);
+    });
+    gs.on('end', () => {
+        buffer = Buffer.concat(buffers);
+        // Вместо if можно использовать ф-ию-обёртку util.once() ?
+        if (callback) {
+            callback(null, buffer);
+            callback = null;
+        }
+    });
+    rs.on('error', error => {
+        if (callback) {
+            callback(error);
+            callback = null;
+        }
+    });
+    gs.on('error', error => {
+        if (callback) {
+            callback(error);
+            callback = null;
+        }
+    });
+    rs.pipe(gs);
+};
+const startServer = (err, buffer) => {
+    if (err) {
+        throw err;
+    }
+    const server = hhtp.createServer((request, response) => {
+        console.log(request.url);
+        response.writeHead(200, { 'Content-Encoding': 'gzip' });
+        response.end(buffer);
+    });
+    server.listen(8000);
+};
+prepareCache(startServer);

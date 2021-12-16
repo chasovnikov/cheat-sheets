@@ -122,17 +122,3 @@ removeFileAsync(pathFile).then(() => console.log('файл удалён'));
 fs.watch('./log.js', (event, file) => {
     console.dir({ event, file });
 }); // { event: 'change', file: '6-watch.js' }
-
-// Считываение файлов через промисы и потоки
-const main = async () => {
-    const stream = fs.createReadStream('path', 'utf-8');
-
-    // ждёт пока не случится событие у стрима
-    for await (const chunk of stream) {
-        console.log(chunk);
-    }
-
-    const data = await fs.promises.readFile('path', 'utf-8');
-    console.log(data);
-};
-main().catch(console.error);
