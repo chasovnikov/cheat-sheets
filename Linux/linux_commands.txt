@@ -6,3 +6,5 @@ mkdir repos            - создать каталог "repos"
 cd ~/repos             - перейти в новый каталог
 ls                     - вывести содержимого список каталога
 cat package.json       - просмотреть содержимое файла package.json
+
+echo word >> file.js   - записать слово "word" в файл file.js
