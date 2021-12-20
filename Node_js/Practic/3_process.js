@@ -17,16 +17,20 @@ process.on('exit', code => {
 });
 
 // Events:
-('beforeExit');
-('disconnect');
-('exit');
-('message');
-('multipleResolves');
-('rejectionHandled');
-('uncaughtException');
-('uncaughtExceptionMonitor');
-('unhandledRejection');
-('warning');
+('beforeExit'); // цикл событий очищен и нет дополн-й работы для планирования перед завершением
+('disconnect'); // при закрытии канала IPC
+('exit'); // завершение процесса
+('message'); // дочерний процесс получает сообщение от родит. процесса с помощью childprocess.send()
+('multipleResolves'); // промис был либо:
+// • Решалось не раз.
+// • Отклонено более одного раза.
+// • Отклонено после разрешения.
+// • Решено после отклонения
+('rejectionHandled'); // промис был отклонен и к нему был прикреплен обработчик ошибок
+('uncaughtException'); // неперехваченное исключение возвращается обратно в цикл обработки событий
+('uncaughtExceptionMonitor'); //  перед событием uncaughtException или перед process.setUncaughtExceptionCaptureCallback()
+('unhandledRejection'); // промис отклоняется, и обработчик ошибок не прикрепляется к промису
+('warning'); // когда выдает предупреждение процесса
 
 // Процессы
 process.pid; // PID процесса
