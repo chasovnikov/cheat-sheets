@@ -5,8 +5,10 @@ const path = require('path');
 
 // Readable     - чтение
 // Writable     - запись
-// Duplex       - чтение и запись
+// Duplex       - чтение и запись (объединяют поток Readable и поток W ritable в один объект)
 // Transform    - чтение, запись и может изменять данные по мере чтения
+
+// По умолчанию потоки читают и записывают буферы
 
 const pathFile = path.resolve(__dirname, 'test.txt');
 
