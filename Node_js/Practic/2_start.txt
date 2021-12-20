@@ -1,0 +1,31 @@
+---------- Установка и настройка рабочей среды
+
+• Скачать:  https://nodejs.org/en/
+Для других операционных систем: https://nodejs.org/en/download/
+
+• node -v       (проверить установку/версию)
+• npm -v
+• npm init      (инициал-ия проекта, появится package.json)
+    main        - точка входа (часто app.js или index.js)
+    scripts     - частые команды (упрощает их использование)
+    keywords    - ключевые слова для поиска модуля на сайте npm (если он там опубликован)
+
+• npm install   (устан. пакеты, прописанные в package.json и созд. package-lock.json)
+
+Модули устан-ся в папку node_modules той директории, откуда была вызвана команда npm i
+• npm i express     (установить express)
+• npm i cross-env   (Чтобы прописывать переменные окружения в файле package.json)
+• npm i dotenv      (Чтобы читать файл .env)
+
+Установить и запустить nodemon (перезапускает сервер при изменениях в коде):
+• npm i --save-dev nodemon      
+    -dev        - только для разработки
+    --save      - внести данный модуль в список зависимостей в файл package.json
+• В package.json: 
+    "scripts": {
+        "start": "nodemon index.js"
+    },
+• npm start     (запускает команду в свойстве "start" объекта "scripts" в package.json)
+
+Запуск файла app.js
+• node app.js

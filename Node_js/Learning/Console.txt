@@ -39,3 +39,6 @@ process.exit();
   },
 В консоли:
 • npm start
+
+// Очистить экран
+• cls
