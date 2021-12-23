@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
+// Стрим — это концепция, c помощью которой можно обрабатывать данные частями,
+//      что позволяет задействовать небольшой объем оперативной памяти
+// memory-stream - когда origin и distination чтения и записи в буфер может быть кусок памяти
+// stdin, stdout - тоже потоки
 // Потоки позвол. раб. с устр-вами ввода/вывода или с памятью
-// Стримы позволяют считывать файлы по кусочкам
 
 // Readable     - чтение
 // Writable     - запись
@@ -12,36 +15,54 @@ const path = require('path');
 // По умолчанию потоки читают и записывают буферы
 
 // Стримы работают по принципу событий:
-// data     - поток передает право владения фрагментом данных потребителю (есть данные)
+// data     - поток передает право владения фрагментом данных потребителю (если есть данные)
 // end      - из потока больше нет данных, которые нужно потреблять
 // open     - открытие дескриптора файла <fs.ReadStream>
 // close    - дескриптор файла <fs.ReadStream> закрывается
 // error
 // pause    - вызывается stream.pause () и readableFlowing - true
-// readable -  данные доступны для чтения или когда достигнут конец потока
+// readable -  данные доступны для чтения или когда достигнут конец потока (случ-ся в любом случ.)
 // ready    - <fs.ReadStream> готов к использованию
 // resume   - вызывается stream.resume (), а readableFlowing - false
 
 // -------------- Стрим для чтения (Readable)
+// Есть два режима чтения на основе событий
+//      (подходят, если нельзя использовать каналы или асинхронную итерацию)
+//      Их нельзя смешивать
+// 1. Режим извлечения данных (flowing mode)
+//      Читабельные данные выпускаются в форме события "data"
+//      Вызывать метод read () в этом режиме не нужно
+// 2. Режим ожидания (paused mode)
+//      Если вы не регистр-ли обработчик событий "data” и не вызывали pipe()
+//      Выпускает события "readable"
+//      Используется read()
 
 const pathFile = path.resolve(__dirname, 'test.txt');
 const readStream = fs.createReadStream(pathFile, { encoding: 'utf-8' });
+// Режим ожидания (paused mode):
 readStream.on('readable', () => {
     console.log('readable');
-    const buffer = readStream.read(); // получить буфер
+    const buffer = readStream.read(); // читаем в буфер
     if (buffer) {
         console.log(buffer);
     }
 });
-readStream.on('data', chunk => console.log(chunk)); // Один чанк по дефолту 64кб
+// Режим извлечения данных (flowing mode):
+// Один чанк по дефолту 64кб
+readStream.on('data', chunk => {
+    console.log('data');
+    console.log(chunk);
+});
 
 // На события можно подпис-ся в любом порядке - они работают АСИНХРОННО
 readStream.on('end', () => console.log('Закончили читать'));
 readStream.on('open', () => console.log('Начали читать'));
 readStream.on('error', e => console.log(e)); // Важно делать обработку ошибок
 
-// -------------- Стрим для четния через промисы (Readable)
-
+// -------------- Стрим для чтения через промисы (Readable)
+// Потоки Readable являются асинхронными итераторами, т.е. внутри функции async можно
+//      применять цикл fo r / aw ait для чтения строки и порций буфера из потока, используя код,
+//      который структурирован как синхронный код.
 const main = async () => {
     const stream = fs.createReadStream('path', 'utf-8');
 
@@ -54,6 +75,80 @@ const main = async () => {
     console.log(data);
 };
 main().catch(console.error);
+
+// из книги Флэнагана:
+// как применять поток Readable в качестве асинхронного итератора
+// не обрабатываем противодавление (необходимо дописать)
+async function grep(source, destination, pattern, encoding = 'utf8') {
+    source.setEncoding(encoding);
+    destination.on('error', err => process.exit());
+    let incompleteLine = '';
+    for await (let chunk of source) {
+        let lines = (incompleteLine + chunk).split('\n'); // Разбить конец последней и этой порции на строки
+        incompleteLine = lines.pop(); // Последняя строка неполная
+        for (let line of lines) {
+            if (pattern.test(line)) {
+                destination.write(line + '\n', encoding);
+            }
+        }
+    }
+    // Наконец, проверить на предмет совпадения хвостовой текст
+    if (pattern.test(incompleteLine)) {
+        destination.write(incompleteLine + '\n', encoding);
+    }
+}
+let pattern = new RegExp(process.argv[2]); // Получить регулярное выражение из командной строки.
+grep(process.stdin, process.stdout, pattern) // Вызвать асинхронную функцию grep()
+    .catch(err => {
+        // Обработать асинхронные исключения,
+        console.error(err);
+        process.exit();
+    });
+
+// ПРОТИВОДАВЛЕНИЕ
+// write() возращает true, если внутренний буфер пока еще не полон
+// Если же буфер уже полон или переполнен, тогда write() возвращает false.
+// false метода write() является формой противодавления
+//      (или обратного давления; backpressure), т.е. сообщением от потока о
+//      том, что вы записали данные быстрее, чем они могут быть обработаны
+//      Надлежащая реакция на противодавление такого рода предусматривает прекращение вызова
+//      write() до тех пор, пока поток не выпустит событие "drain"
+//      (опустошен), сигнализирующее о том, что в буфере снова есть место
+// Отсутствие реакции на противодавление может привести к тому, что ваша
+//      программа станет потреблять больше памяти, чем должна, когда внутренний
+//      буфер потока Writable переполняется и продолжает свой рост
+function write(stream, chunk, callback) {
+    let hasMoreRoom = stream.write(chunk); // Записать указанную порцию в указанный поток
+    // Проверить возвращаемое значение метода write() :
+    if (hasMoreRoom) {
+        setImmediate(callback); // асинхронно вызвать обратный вызов.
+    } else {
+        stream.once('drain', callback); // вызвать обратный вызов
+    }
+}
+
+// когда вы применяете pipe(), среда Node обрабатывает противодавление автоматически
+
+// Основанная на Promise версия служебной функции write(),
+//      чтобы должным образом обрабатывать противодавление
+function write(stream, chunk) {
+    let hasMoreRoom = stream.write(chunk);
+    if (hasMoreRoom) {
+        return Promise.resolve(null);
+    } else {
+        return new Promise(resolve => {
+            stream.once('drain', resolve);
+        });
+    }
+}
+async function copy(source, destination) {
+    destination.on('error', err => process.exit());
+    for await (let chunk of source) {
+        // Записать порцию и ожидать, пока не появится больше места в буфере.
+        await write(destination, chunk);
+    }
+}
+copy(process.stdin, process.stdout); // Копировать стандартный ввод в стандартный вывод
 
 // -------------- Стрим для записи (Writable)
 
@@ -77,22 +172,19 @@ const ws = fs.createReadStream('path2', 'utf-8');
 //     console.log('Copy' + buffer.length + ' chars');
 //     ws.write(buffer);
 // });
-rs.pipe(ws);
-rs.on('end', () => {
-    console.log('Done');
-});
+rs.pipe(ws); // автом-ки навесит событие "data"
+rs.on('end', () => console.log('Done'));
 
-// ---------------- transform-stream
+// ---------------- Transform-stream
 const zlib = require('zlib');
 
 const rs = fs.createReadStream('path1', 'utf-8');
 const ws = fs.createReadStream('path2', 'utf-8');
 const gs = zlib.createGzip();
 
-rs.pipe(gs).pipe(ws);
-rs.on('end', () => {
-    console.log('Done');
-});
+rs.pipe(gs) // читаем и изменяем данные
+    .pipe(ws); // записываем
+rs.on('end', () => console.log('Done'));
 
 // ------------------------- Создание сервера
 const http = require('http');
