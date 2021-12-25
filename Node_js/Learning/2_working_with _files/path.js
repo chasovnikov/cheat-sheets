@@ -3,12 +3,15 @@ const path = require('path');
 
 let p = '';
 
-__filename; // путь к текущему файлу
-
-__dirname; // путь к текущей папке
+process.cwd(); // Абсолютный путь к текущему рабочему каталогу
+__filename; // Абсолютный путь к текущему файлу
+__dirname; // Абсолютный путь к текущей папке
+os.homedir(); // Домашний каталог пользователя
 p = path.dirname(__filename); // путь к текущей папке
 
 // Название файла или папки
+p = path.basename(path.dirname('src/pkg/test. js')); // pkg
+p = path.dirname(path.dirname('src/pkg/test. js')); // src
 p = path.basename(__dirname); // node_js
 p = path.basename(__filename); // path.js
 p = path.basename(__filename, '.js'); // path
@@ -56,6 +59,7 @@ p = path.relative('/data/orandea/test/aaa', '/data/orandea/impl/bbb'); // ..\..\
 // Преобразует в абсолютный путь
 p = path.resolve('/foo/bar', './baz'); // E:\foo\bar\baz
 p = path.resolve('/foo/bar', '/tmp/file/'); // E:\tmp\file
+path.resolve(); // => process.cwdO
 
 // Только в Windows возвращает эквивалент путь с префиксом пространства имен для данного path
 p = path.toNamespacedPath(__filename); // \\?\E:\!ВЕБ-Разработка\!!Node_js\Node_Minin\path.js

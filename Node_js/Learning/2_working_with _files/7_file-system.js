@@ -5,11 +5,14 @@ const { Http2ServerRequest } = require('http2');
 
 let pathDirRecursive = path.resolve(__dirname, 'dir', 'dir2', 'dir3');
 
-// Создать папку синхронно (рекурсивно со вложенными папками)
-fs.mkdirSync(pathDirRecursive, { recursive: true });
+// ============ Работа с каталогами
+// -------- Создать папку
+
+// Создать папку синхронно в текущей папке (рекурсивно со вложенными папками)
+fs.mkdirSync(path.resolve(__dirname, 'dir', 'dir2', 'dir3'), { recursive: true });
 
 // Создать папку асинхронно (рекурсивно со вложенными папками)
-fs.mkdir(pathDirRecursive, { recursive: true }, err => {
+fs.mkdir(path.resolve(__dirname, 'dir', 'dir2', 'dir3'), { recursive: true }, err => {
     if (err) {
         console.log(err);
         return;
@@ -17,14 +20,25 @@ fs.mkdir(pathDirRecursive, { recursive: true }, err => {
 });
 
 // Создать папку через промисы (рекурсивно со вложенными папками)
-fsPromises.mkdir(pathDirRecursive, { recursive: true });
+fsPromises
+    .mkdir(path.resolve(__dirname, 'dir', 'dir2', 'dir3'), { recursive: true })
+    .then(processFileText)
+    .catch(handleReadError);
 
-// Удалить папку через колбэки (рекурсивно)
+// ---------- Удалить папку
+
+// Удалить папку асинхронно через колбэки (рекурсивно)
 fs.rm(path.resolve(__dirname, 'dir'), { recursive: true }, err => {
     if (err) {
         throw err;
     }
 });
+
+// Удаление папки на промисах
+fsPromises.rm('path', options).then().catch();
+fsPromises.rmdir('path', options).then().catch();
+
+// ============
 
 let pathFile = path.resolve(__dirname, 'test.txt');
 let data = 'df sd w78sjd js';
@@ -46,15 +60,8 @@ fs.writeFile(pathFile, data, err => {
     });
 });
 
-// Работа с fs с помощью промисов:
-fsPromises.mkdir('path', options).then().catch();
-fsPromises.readFile('path', options).then().catch();
 fsPromises.writeFile('path', data, options).then().catch();
 fsPromises.appendFile('path', data, options).then().catch();
-fsPromises.rm('path', options).then().catch();
-fsPromises.rmdir('path', options).then().catch();
-
-/// ------------- Для старых версий Node.js замена колбэков на промисы:
 
 // Запись (перезапись) в файл
 const writeFileAsync = async (path, data) => {
@@ -76,18 +83,6 @@ const appendFileAsync = async (path, data) => {
                 return reject(err.mesage);
             }
             resolve();
-        });
-    });
-};
-
-// Чтение файла
-const readFileAsync = async path => {
-    return new Promise((resolve, reject) => {
-        fs.readFile(path, { encoding: 'utf-8 ' }, (err, data) => {
-            if (err) {
-                return reject(err.mesage);
-            }
-            resolve(data);
         });
     });
 };
@@ -211,3 +206,6 @@ http.createServer((req, res) => {
     if (data) res.end(data);
     else res.end('File' + url + 'not found');
 }).listen(8000);
+
+// =========================
+// ========================= Practic
