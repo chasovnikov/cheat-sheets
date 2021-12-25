@@ -93,3 +93,7 @@ npm install express@latest              последняя версия
 
 ^    последний минорный релиз
 ~    последний патч-релиз
+
+	ДЛЯ ПОЧИНКИ NODEMON:
+npm -g uninstall nodemon
+npm -g install nodemon
