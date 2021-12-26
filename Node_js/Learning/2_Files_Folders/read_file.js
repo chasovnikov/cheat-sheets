@@ -1,30 +1,43 @@
 const fs = require('fs');
+const { resolve } = require('path');
 
-// Синхронно
-let buffer = fs.readFileSync('test.data'); // синхронно вернет буфер
+// ---- Sync
+
+let buffer = fs.readFileSync('test.txt'); // синхронно вернет буфер
 let text = fs.readFileSync('data.csv', 'utf8'); // синхронно вернёт строку
 
-// Асинхронно
-fs.readFile('test.data', (err, buffer) => {
-    if (err) {
-    } else {
-    }
+// ---- Async
+
+fs.readFile('test.txt', (err, buffer) => {
+    if (err) throw err;
 });
 
-// Через промисы
-fs.promises.readFile('data.csv', 'utf8').then(processFileText).catch(handleReadError);
-// или так
-let text = await fs.promises.readFile(filename, 'utf8');
+// ---- Promises
 
-// Через потоки
-fs.createReadStream(filename, 'utf8').pipe(process.stdout);
+fs.promises
+    .readFile(pathFile, 'utf8')
+    .then(data => console.log(data))
+    .catch(console.error);
 
-// Низкоуровневый контроль + асинхронно
+// ---- Полифил промисов
+
+const readFileAsync = async path => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(path, 'utf8', (err, data) => {
+            if (err) return reject(err.message);
+            resolve(data);
+        });
+    });
+};
+// использование
+readFileAsync(pathFile)
+    .then(data => console.log(data))
+    .catch(console.error);
+
+// ---- Низкоуровневый контроль + асинхронно
+
 fs.open('data', (err, fd) => {
-    if (err) {
-        // Сообщить об ошибке
-        return;
-    }
+    if (err) throw err;
     try {
         fs.read(fd, Buffer.alloc(400), 0, 400, 20, (err, n, b) => {
             // ...
@@ -34,7 +47,8 @@ fs.open('data', (err, fd) => {
     }
 });
 
-// Низкоуровневый контроль + синхронно
+// ---- Низкоуровневый контроль + синхронно
+
 function readData(filename) {
     let fd = fs.openSync(filename); // получить файловый дескриптор
     try {
