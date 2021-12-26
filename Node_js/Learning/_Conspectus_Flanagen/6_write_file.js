@@ -1,4 +1,5 @@
-const fs = require('fs');
+import * as fs from 'fs/promises';
+import * as fs from 'fs';
 // Файл автоматически создается при записи
 
 // 3 способа записи файла:
