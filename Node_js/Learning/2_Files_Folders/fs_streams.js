@@ -37,6 +37,10 @@ const path = require('path');
 //      Выпускает события "readable"
 //      Используется read()
 
+let pathFile = path.resolve(__dirname, 'test.txt');
+let data = 'df sd w78sjd js';
+let data2 = ' ДОБАВИЛИ В КОНЕЦ';
+
 const pathFile = path.resolve(__dirname, 'test.txt');
 const readStream = fs.createReadStream(pathFile, { encoding: 'utf-8' });
 // Режим ожидания (paused mode):
@@ -59,6 +63,7 @@ readStream.on('end', () => console.log('Закончили читать'));
 readStream.on('open', () => console.log('Начали читать'));
 readStream.on('error', e => console.log(e)); // Важно делать обработку ошибок
 
+// ------------------------------------------------------------------------
 // -------------- Стрим для чтения через промисы (Readable)
 // Потоки Readable являются асинхронными итераторами, т.е. внутри функции async можно
 //      применять цикл fo r / aw ait для чтения строки и порций буфера из потока, используя код,
@@ -76,6 +81,7 @@ const main = async () => {
 };
 main().catch(console.error);
 
+// ------------------------------------------------------------------------
 // из книги Флэнагана:
 // как применять поток Readable в качестве асинхронного итератора
 // не обрабатываем противодавление (необходимо дописать)
@@ -105,6 +111,7 @@ grep(process.stdin, process.stdout, pattern) // Вызвать асинхрон�
         process.exit();
     });
 
+// ------------------------------------------------------------------------
 // ПРОТИВОДАВЛЕНИЕ
 // write() возращает true, если внутренний буфер пока еще не полон
 // Если же буфер уже полон или переполнен, тогда write() возвращает false.
@@ -126,7 +133,6 @@ function write(stream, chunk, callback) {
         stream.once('drain', callback); // вызвать обратный вызов
     }
 }
-
 // когда вы применяете pipe(), среда Node обрабатывает противодавление автоматически
 
 // Основанная на Promise версия служебной функции write(),
@@ -150,8 +156,8 @@ async function copy(source, destination) {
 }
 copy(process.stdin, process.stdout); // Копировать стандартный ввод в стандартный вывод
 
+// ------------------------------------------------------------------------
 // -------------- Стрим для записи (Writable)
-
 const writeStream = fs.createWriteStream(pathFile, { encoding: 'utf-8' });
 for (let i = 0; i < 20; i++) {
     // 20 кусочков
@@ -164,8 +170,8 @@ writeStream.destroy(); // аналог writeStream.end(). Вызывает со�
 // Не забываем про обработку ошибок
 // writeStream.on('error');
 
+// ------------------------------------------------------------------------
 // -------------- Стримы: чтение и запись (Duplex)
-
 const rs = fs.createReadStream('path1', 'utf-8');
 const ws = fs.createReadStream('path2', 'utf-8');
 // rs.on('data', buffer => {
@@ -175,6 +181,7 @@ const ws = fs.createReadStream('path2', 'utf-8');
 rs.pipe(ws); // автом-ки навесит событие "data"
 rs.on('end', () => console.log('Done'));
 
+// ------------------------------------------------------------------------
 // ---------------- Transform-stream
 const zlib = require('zlib');
 
@@ -186,6 +193,70 @@ rs.pipe(gs) // читаем и изменяем данные
     .pipe(ws); // записываем
 rs.on('end', () => console.log('Done'));
 
+// ------------------------------------------------------------------------
+// Чтение файла кусками
+const stream = fs.createReadStream(pathFile, { encoding: 'utf8' });
+stream.on('data', chunk => {
+    console.log(chunk);
+});
+stream.on('end', () => console.log('End'));
+stream.on('open', () => console.log('Open'));
+stream.on('error', console.error);
+
+// ---------------------------------------------
+// Записать в файл 20 кусков данных
+const writeStream = fs.createWriteStream(pathFile);
+for (let i = 0; i < 20; i++) {
+    writeStream.write(i + '\n');
+}
+writeStream.end();
+
+// ---------------------------------------------
+var stream = fs.createWriteStream('my_file.txt');
+stream.once('open', function (fd) {
+    stream.write('My first row\n');
+    stream.write('My second row\n');
+    stream.end();
+});
+
+// ---------------------------------------------
+// ? (от Флэнагана)
+function printFile(filename, encoding = 'utf8') {
+    fs.createReadStream(filename, encoding).pipe(process.stdout);
+}
+
+// ---------------------------------------------
+function pipe(readable, writable, callback) {
+    function handleError(err) {
+        readable.close();
+        writable.close();
+        callback(err);
+    }
+
+    readable
+        .on('error', handleError)
+        .pipe(writable)
+        .on('error', handleError)
+        .on('finish', callback);
+}
+
+// ---------------------------------------------
+// Заархивировать файл
+function gzip(filename, callback) {
+    // Создать потоки.
+    let source = fs.createReadStream(filename);
+    let destination = fs.createWriteStream(filename + '.gz');
+    let gzipper = zlib.createGzip();
+    // Настроить канал,
+    source
+        .on('error', callback) // Вызвать callback при ошибке чтения,
+        .pipe(gzipper)
+        .pipe(destination)
+        .on('error', callback) // Вызвать callback при ошибке записи.
+        .on('finish', callback);
+}
+gzip(pathFile, err => console.error);
+// ------------------------------------------------------------------------
 // ------------------------- Создание сервера
 const http = require('http');
 
@@ -204,8 +275,8 @@ http.createServer((req, res) => {
     stream.pipe(res);
 });
 
+// ------------------------------------------------------------------------
 // -------------------  Передача по сети (например, отображение HTML-страницы)
-
 const prepareCache = callback => {
     let buffer = null;
 
@@ -251,3 +322,5 @@ const startServer = (err, buffer) => {
     server.listen(8000);
 };
 prepareCache(startServer);
+
+// ------------------------------------------------------------------------

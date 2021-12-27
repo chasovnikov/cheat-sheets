@@ -6,9 +6,11 @@ let pathFile = path.resolve(__dirname, 'test.txt');
 let data = 'df sd w78sjd js';
 let data2 = ' ДОБАВИЛИ В КОНЕЦ';
 
+// ---------------------------------------------
 // синхронно
-fs.writeFileSync(pathFile, JSON.stringify(data));
+fs.writeFileSync(pathFile, data);
 
+// ---------------------------------------------
 // Создать файл и записать в него данные. Перезатирает данные
 fs.writeFile(pathFile, data, err => {
     if (err) throw err;
@@ -21,6 +23,17 @@ fs.writeFile(pathFile, data, err => {
     });
 });
 
+// ---------------------------------------------
+// Работает подобно fs.appendFileSync() .
+fs.writeFileSync('messages.log', 'hello', { flag: 'a' });
+
+// ---------------------------------------------
+// Открыть поток записи, но генерировать ошибку, если файл уже существует.
+// Мы не хотим случайно что-то перезаписать!
+// Обратите внимание, что параметром выше был flag, а здесь - flags.
+fs.createWriteStream('messages.log', { flags: 'wx' });
+
+// ---------------------------------------------
 // Аналоги на промисах
 fsPromises
     .writeFile(pathFile, data)
@@ -29,6 +42,13 @@ fsPromises
     })
     .catch(console.error);
 
+// ---------------------------------------------
+// Усечь файл
+fs.truncate();
+fs.truncateSync();
+fsPromises.truncate();
+
+// ---------------------------------------------
 // ============ Полифилы, если Node без промисов:
 // Запись (перезапись) в файл
 const writeFileAsync = async (path, data) => {
@@ -42,6 +62,7 @@ const writeFileAsync = async (path, data) => {
     });
 };
 
+// ---------------------------------------------
 // Запись в конец файла (без перезаписи)
 const appendFileAsync = async (path, data) => {
     return new Promise((resolve, reject) => {
@@ -54,6 +75,7 @@ const appendFileAsync = async (path, data) => {
     });
 };
 
+// ---------------------------------------------
 // Пример использования (запись, добавление, чтение)
 const pathFile = path.resolve(__dirname, 'test.txt');
 writeFileAsync(pathFile, 'data')
@@ -64,8 +86,8 @@ writeFileAsync(pathFile, 'data')
     .then(data => console.log(data))
     .catch(err => console.log('err'));
 
+// ---------------------------------------------
 // ------ Копировать файл. Не потоковая (и потому неэффективная) функция
-
 function copyFile(sourceFilename, destinationFilename, callback) {
     fs.readFile(sourceFilename, (err, buffer) => {
         if (err) {

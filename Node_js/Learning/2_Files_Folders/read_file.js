@@ -1,26 +1,26 @@
 const fs = require('fs');
 const { resolve } = require('path');
 
+// ---------------------------------------------
 // ---- Sync
-
 let buffer = fs.readFileSync('test.txt'); // синхронно вернет буфер
 let text = fs.readFileSync('data.csv', 'utf8'); // синхронно вернёт строку
 
+// ---------------------------------------------
 // ---- Async
-
 fs.readFile('test.txt', (err, buffer) => {
     if (err) throw err;
 });
 
+// ---------------------------------------------
 // ---- Promises
-
 fs.promises
     .readFile(pathFile, 'utf8')
     .then(data => console.log(data))
     .catch(console.error);
 
+// ---------------------------------------------
 // ---- Полифил промисов
-
 const readFileAsync = async path => {
     return new Promise((resolve, reject) => {
         fs.readFile(path, 'utf8', (err, data) => {
@@ -34,8 +34,8 @@ readFileAsync(pathFile)
     .then(data => console.log(data))
     .catch(console.error);
 
+// ---------------------------------------------
 // ---- Низкоуровневый контроль + асинхронно
-
 fs.open('data', (err, fd) => {
     if (err) throw err;
     try {
@@ -47,8 +47,8 @@ fs.open('data', (err, fd) => {
     }
 });
 
+// ---------------------------------------------
 // ---- Низкоуровневый контроль + синхронно
-
 function readData(filename) {
     let fd = fs.openSync(filename); // получить файловый дескриптор
     try {
