@@ -1,13 +1,8 @@
-const fs = require('fs');
-const fsPromises = require('fs/promises');
 const path = require('path');
+// const fs = require('fs');
+// const fsPromises = require('fs/promises');
+// const zlib = require('zlib');
 
-// fsPromises
-//     .mkdir(path.resolve(__dirname, 'dir'), { recursive: true })
-//     .catch(err => console.log(err));
+const a = process.execPath;
 
-// fs.mkdirSync(path.resolve(__dirname, 'dist/lib'), { recursive: true });
-
-// fs.rmSync(path.resolve(__dirname, 'dir'), { recursive: true });
-
-fsPromises.mkdir(path.resolve(__dirname, 'dist/lib')).catch(console.error);
+console.log(a);
