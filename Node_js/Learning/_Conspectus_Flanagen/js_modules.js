@@ -131,3 +131,43 @@ module.exports = { mean, stddev };
 
 // импортирования именно тех функций, которые мы хотим
 const { stddev } = require('./stats.js');
+
+// в коде модулей нельзя использовать оператор w ith , объект
+//      arguments или необъявленные переменные
+
+// ---------- Экспортирование в ES6
+export const PI = Math.PI;
+export function degreesToRadians(d) {
+    return (d * PI) / 180;
+}
+export class Circle {
+    constructor(r) {
+        this.r = r;
+    }
+    area() {
+        return PI * this.r * this.r;
+    }
+}
+// Но можно и так вместо множества "export"
+export { Circle, degreesToRadians, PI };
+
+// Так экспортируют только одно значение (как правило, функцию или класс)
+export default class BitSet {
+    // ...
+}
+
+// Экспортировать значение изнутри класса, функции, цикла или условного оператора нельзя
+
+// ------------ Импортирование в ES6
+import BitSet from './bitset.js';
+
+// Идентификатор, которому присваивается импортированное значение, является константой
+// Подобно экспорту импорт не разрешен внутри классов, функций, циклов или условных операторов
+// подобно объявлениям функций операторы импорта поднимаются” в начало
+
+import { mean, stddev } from './stats.js';
+import * as stats from './stats.js';
+import Histogram, { mean, stddev } from ' ./histogram-stats.js';
+import ' ./analytics.js';
+
+// Импортирование и экспортирование с переименованием
