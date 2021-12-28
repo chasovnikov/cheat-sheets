@@ -11,22 +11,33 @@ let data2 = ' ДОБАВИЛИ В КОНЕЦ';
 fs.writeFileSync(pathFile, data);
 
 // ---------------------------------------------
-// Создать файл и записать в него данные. Перезатирает данные
-fs.writeFile(pathFile, data, err => {
-    if (err) throw err;
-    console.log('Файл записан');
-
-    // Добавить данные в конец файла сразу после создания файла
-    fs.appendFile(pathFile, data2, err => {
+if (!fs.existsSync(pathFile)) {
+    // Создать файл и записать в него данные. Перезатирает данные
+    fs.writeFile(pathFile, data, err => {
         if (err) throw err;
-        console.log('Добавили в конец');
+        console.log('Файл записан');
+
+        // Добавить данные в конец файла сразу после создания файла
+        fs.appendFile(pathFile, data2, err => {
+            if (err) throw err;
+            console.log('Добавили в конец');
+        });
     });
-});
+}
 
 // ---------------------------------------------
 // Работает подобно fs.appendFileSync() .
 fs.writeFileSync('messages.log', 'hello', { flag: 'a' });
 
+// ---------------------------------------------
+// Скопировать файл с созданием папки
+fs.readFile('.test.txt', 'unf8', (error, data) => {
+    fs.mkdir('./files', () => {
+        fs.writeFile('./files/test2.txt', data, error => {
+            if (error) throw error;
+        });
+    });
+});
 // ---------------------------------------------
 // Открыть поток записи, но генерировать ошибку, если файл уже существует.
 // Мы не хотим случайно что-то перезаписать!

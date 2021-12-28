@@ -32,14 +32,17 @@ try {
 }
 
 // ---------- Удалить папку
+let pathDir = path.resolve(__dirname, 'dir');
 
-// Удалить каталог синхронно (рекурсивно)
-fs.rmSync(path.resolve(__dirname, 'dir'), { recursive: true });
+if (fs.existsSync(pathDir)) {
+    // Удалить папку асинхронно через колбэки (рекурсивно)
+    fs.rm(pathDir, { recursive: true }, err => {
+        if (err) throw err;
+    });
 
-// Удалить папку асинхронно через колбэки (рекурсивно)
-fs.rm(path.resolve(__dirname, 'dir'), { recursive: true }, err => {
-    if (err) throw err;
-});
+    // Удалить каталог синхронно (рекурсивно)
+    fs.rmSync(pathDir, { recursive: true });
+}
 
 // Удаление папки на промисах
 fsPromises.rm(path.resolve(__dirname, 'dir'), { recursive: true }).catch(console.error);

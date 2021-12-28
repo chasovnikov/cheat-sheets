@@ -172,26 +172,40 @@ writeStream.destroy(); // аналог writeStream.end(). Вызывает со�
 
 // ------------------------------------------------------------------------
 // -------------- Стримы: чтение и запись (Duplex)
-const rs = fs.createReadStream('path1', 'utf-8');
-const ws = fs.createReadStream('path2', 'utf-8');
-// rs.on('data', buffer => {
+const readStream = fs.createReadStream('path1', 'utf-8');
+const writeStream = fs.createReadStream('path2', 'utf-8');
+// readStream.on('data', buffer => {
 //     console.log('Copy' + buffer.length + ' chars');
-//     ws.write(buffer);
+//     writeStream.write(buffer);
 // });
-rs.pipe(ws); // автом-ки навесит событие "data"
-rs.on('end', () => console.log('Done'));
+const handleError = () => {
+    console.log('Error');
+    readStream.destroy;
+    writeStream.end('Finished with error...');
+};
+
+readStream
+    .on('error', handleError) // обраб-ка ошибок при чтении
+    .pipe(writeStream) // автом-ки навесит событие "data"
+    .on('error', handleError); // обраб-ка ошибок при записи
+
+readStream.on('end', () => console.log('Done'));
 
 // ------------------------------------------------------------------------
 // ---------------- Transform-stream
 const zlib = require('zlib');
 
-const rs = fs.createReadStream('path1', 'utf-8');
-const ws = fs.createReadStream('path2', 'utf-8');
-const gs = zlib.createGzip();
+const readStream = fs.createReadStream('path1', 'utf-8');
+const writeStream = fs.createReadStream('path2', 'utf-8');
+const compressStream = zlib.createGzip();
 
-rs.pipe(gs) // читаем и изменяем данные
-    .pipe(ws); // записываем
-rs.on('end', () => console.log('Done'));
+readStream
+    .on('error', handleError) // обраб-ка ошибок при чтении
+    .pipe(compressStream)
+    .pipe(writeStream) // автом-ки навесит событие "data"
+    .on('error', handleError); // обраб-ка ошибок при записи
+
+readStream.on('end', () => console.log('Done'));
 
 // ------------------------------------------------------------------------
 // Чтение файла кусками
