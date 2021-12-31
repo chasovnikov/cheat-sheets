@@ -1,8 +1,43 @@
-const path = require('path');
+// const path = require('path');
 // const fs = require('fs');
 // const fsPromises = require('fs/promises');
 // const zlib = require('zlib');
 
-const a = process.execPath;
+const mixin = {
+    sayCool() {
+        return 'Cool!';
+    },
+};
 
-console.log(a);
+class EventUser {
+    constructor(event) {
+        this.event = event;
+    }
+
+    sayHi() {
+        return this.event;
+    }
+}
+
+class User extends EventUser {
+    constructor(event, name) {
+        super(event);
+        this.name = name;
+    }
+
+    sayBi() {
+        return 'Bi, ' + this.name;
+    }
+
+    sayHi() {
+        return super.sayHi() + ', ' + this.name;
+    }
+}
+
+Object.assign(User.prototype, mixin);
+
+const user = new User('hi', 'Вася');
+
+// console.log(user.sayCool());
+// console.dir(User.prototype);
+console.log(user.sayHi());

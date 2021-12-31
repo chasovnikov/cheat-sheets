@@ -1,4 +1,6 @@
 
+cherry-pick, interactive rebase, fixup commits, squash, изменение remote ??
+
 clone                  - создает связанную с целевым репозиторием копию
 fork     (вилка)       - создает независимую копию
 branch   (ветка)       - параллельная версия репозитория

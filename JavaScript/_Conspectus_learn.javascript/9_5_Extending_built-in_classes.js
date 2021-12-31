@@ -21,4 +21,4 @@ let filteredArr = arr.filter(item => item >= 10);
 // filteredArr не является PowerArray, это Array
 alert(filteredArr.isEmpty()); // Error: filteredArr.isEmpty is not a function
 
-// Отсутствие статического наследования встроенных классов
+// Встроенные классы не наследуют статические методы друг друга (в отличие то невстроенных)
