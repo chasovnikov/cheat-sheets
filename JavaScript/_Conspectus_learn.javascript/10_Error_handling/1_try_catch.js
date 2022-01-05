@@ -1,7 +1,25 @@
+// ПРАКТИКА:
+
+// 1. Обернуть необъявленную переменную в try..catch и вывести в консоль имя ошибки, сообщение ошибки,
+//      стэк вызовов
+// 2. Дан JSON: { "age": 30 }. Распарсить его и съгенерировать собственную ошибку SyntaxError
+//      'Данные неполны: нет имени' при проверке несуществующего его свойства "name".
+//      Сделать проброс исключения. Вывести в консоль сообщение ошибки ошибку.
+//      Добавить блок finally с выводом сообщения "finally"
+// 3. Написать метод перехвата глобального catch для браузера, для Node.js
+
+// ТЕОРИЯ -------------------------------------------------------
+
 try {
-  // код...
-} catch (err) {
-  // обработка ошибки
+  noSuchVariable; // скрипт упадёт тут
+} catch (e) {
+  // Имя ошибки:
+  console.log(e.name); // ReferenceError
+  // Текстовое сообщение о деталях ошибки:
+  console.log(e.message); // noSuchVariable is not defined
+  // Стэк вызовов:
+  console.log(e.stack); // ReferenceError: noSuchVariable is not defined ...
+  console.log(e); // ReferenceError: noSuchVariable is not defined ...
 } finally {
   // выполнится в любом случае
 }
@@ -10,8 +28,8 @@ try {
 // Он не сработает, если код синтаксически неверен
 
 // try..catch работает синхронно
-// функция выполняется позже, когда движок уже покинул конструкцию try..catch
 try {
+  // функция выполняется позже, когда движок уже покинул конструкцию try..catch
   setTimeout(function () {
     noSuchVariable; // скрипт упадёт тут
   }, 1000);
@@ -19,22 +37,6 @@ try {
   console.log(e); // не сработает
 }
 
-// Объект ошибки -----------------
-
-// Для всех встроенных ошибок этот объект имеет свойства:
-//  name     - Имя ошибки. Например, для неопределённой переменной это "ReferenceError".
-//  message  - Текстовое сообщение о деталях ошибки.
-//  stack    - Стэк вызовов
-try {
-  noSuchVariable; // скрипт упадёт тут
-} catch (e) {
-  console.log(e.name); // ReferenceError
-  console.log(e.message); // noSuchVariable is not defined
-  console.log(e.stack); // ReferenceError: noSuchVariable is not defined ...
-  console.log(e); // ReferenceError: noSuchVariable is not defined ...
-}
-
-// Блок «catch» без переменной ----------------
 // Если нам не нужны детали ошибки, в catch можно её пропустить:
 try {
   // ...
@@ -135,7 +137,8 @@ function func() {
 
 // Глобальный catch --------------------------
 
-// в Node.js для этого есть process.on("uncaughtException")
+// в Node.js для этого есть:
+process.on('uncaughtException');
 // А в браузере мы можем присвоить функцию специальному свойству window.onerror,
 // которая будет вызвана в случае необработанной ошибки.
 window.onerror = function (message, url, line, col, error) {
@@ -143,7 +146,7 @@ window.onerror = function (message, url, line, col, error) {
 };
 
 /*
-Существуют также веб-сервисы, которые предоставляют логирование ошибок для таких случаев, 
+Существуют также веб-сервисы, которые предоставляют логирование ошибок, 
 такие как https://errorception.com или http://www.muscula.com.
 Они работают так:
 1. Мы регистрируемся в сервисе и получаем небольшой JS-скрипт (или URL скрипта) от них для 
