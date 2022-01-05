@@ -1,0 +1,117 @@
+MongoDB:
+• NoSQL БД
+• Документо-ориентированныя система управления БД
+• JSON-подобный формат данных
+• Не требует описания схем таблиц
+• Данные хранятся в виде коллекций документов
+
+Установить сервер MongoDB на компьютер:
+mongodb.com -> Community Server -> on-premise (на территории)
+
+Консоль БД:
+show database;          // посмотреть список имеющихся БД
+show dbs;               // посмотреть список имеющихся БД
+use mongo;              // выбрать\создать БД с именем "mongo"
+db.createCollection("users") // создать коллекцию "users"
+show collections;       // посмотреть список коллекций
+db.dropDatabase()       // удалить текущую БД
+db.users.insert({ name: "shurik", age: "30" }) // созд. документ в коллекции "users"
+db.users.find()         // получить данные
+db.users.insertMany([   // добавить много сущностей сразу
+{ name: "shurik", age: "30" },
+{ name: "vasia", age: "31" },
+{ name: "anton", age: "32" },
+])
+db.users.findOne({_id:ObjectId("5fgewc3dgg53f32f3fh32")}) // поиск по ID
+db.users.findOne({age:25)})     // поиск по критерию
+db.users.find({$or:[{name: "vasia"}, {age:25}]}) // поиск по 2-м критериям
+db.users.find({age:{$lt:35}})   // поиск по условию "<35"
+db.users.find({age:{$lte:35}})  // поиск по условию "<=35"
+db.users.find({age:{$gt:35}})   // поиск по условию ">35"
+db.users.find({age:{$gte:35}})  // поиск по условию ">=35"
+db.users.find({age:{$ne:35}})   // поиск по условию "!=35"
+db.users.find().sort({age:1})   // сорт. по "age" в прямом порядке (1)
+db.users.find().sort({age:-1})  // сорт. по "age" в обратном порядке (-1)
+db.users.find().limit(2)        // не более 2-х записей
+db.users.find().distinct()      // только уникальные записи
+
+db.users.findOneAndDelete()
+db.users.findOneAndUpdate()
+db.users.findAndModify()
+...
+
+// замена многих данных
+// "vasia" заменить на "fedia", а age -> 23
+db.users.updateMany(        
+    {name: "vasia"},        
+    {
+        $set:{
+            name: "fedia",
+            age: "23"
+        }
+    }
+)
+
+// обновить одну запись
+// заменить название поля "name" на "fullname"
+db.users.updateOne(         
+    {name: "vasia"},
+    {
+        $rename: {          
+            name: "fullname"
+        }
+    }
+)
+
+db.users.deleteOne({age:23}) // удалить по критерию
+
+// несколько операций
+db.users.bulkWrite([         
+    {
+        insertOne: {        // вставить новую запись
+            document: { name: "naastya", age: 18}
+        }
+    },
+    {
+        deleteOne: {        // удалить запись
+            filter: {fullname: "vasia"}
+        }
+    }
+])
+
+// Сделать связь 1 ко многим:
+db.users.update(
+    {fullname: "petya"},
+    {
+        $set: {
+            posts: [
+                {title: "javascript", text: "js top"},
+                {title: "mongo", text: "mongo database"},
+            ]
+        }
+    }
+)
+
+// получить только посты пользователя?
+db.users.findOne(       
+    {fullname: "petya"},
+    {posts:1},
+)
+
+// найти польз-ля по конкретному посту
+db.users.find(
+    {
+        posts: {
+            $elemMatch: {           
+                title: "javascript"
+            }
+        }
+    }
+)
+
+// найти тех, у кого есть посты
+db.users.find({posts: {$exists: true}})
+
+// Оптимизация связей:
+свойства, которые содержат массивы с объектами - выносить в отдельную коллекцию, а
+    в массив свойства добавлять идентификаторы связанных коллекций
