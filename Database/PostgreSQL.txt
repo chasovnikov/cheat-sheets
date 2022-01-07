@@ -1,0 +1,22 @@
+Установить с сайта: https://www.postgresql.org/download/
+npm install pg
+
+Файл db.js:
+const Pool = require('pg').Pool;
+const pool = new Pool({
+  user: 'postgres',
+  password: 'root',
+  host: 'localhost',
+  port: 5432,
+});
+
+Открыть PowerShell в папке установки PostgreSQL:
+c:\Program Files\PostgreSQL\14\bin\
+
+psql --version      // проверить установку
+psql -U postgres    // заходим в СУБД под пользователем
+\l                  // список существующих БД
+create database node_postgres;    // создать БД
+\connect node_postgres            // подключиться к БД
+psql \! chcp 1251       // сменить кодировку в консоле
+\dt                     // список таблиц в текущей БД

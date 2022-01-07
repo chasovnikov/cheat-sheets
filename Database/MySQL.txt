@@ -1,0 +1,5 @@
+Консоль:
+cd MySQL
+cd bin
+mysql -u root p
+пароль

@@ -3,41 +3,10 @@
 // const fsPromises = require('fs/promises');
 // const zlib = require('zlib');
 
-const mixin = {
-    sayCool() {
-        return 'Cool!';
-    },
-};
+// const { reject } = require("lodash");
 
-class EventUser {
-    constructor(event) {
-        this.event = event;
-    }
-
-    sayHi() {
-        return this.event;
-    }
+function delay(ms) {
+  return new Promise(resolve => setTimeout(() => resolve(), ms));
 }
 
-class User extends EventUser {
-    constructor(event, name) {
-        super(event);
-        this.name = name;
-    }
-
-    sayBi() {
-        return 'Bi, ' + this.name;
-    }
-
-    sayHi() {
-        return super.sayHi() + ', ' + this.name;
-    }
-}
-
-Object.assign(User.prototype, mixin);
-
-const user = new User('hi', 'Вася');
-
-// console.log(user.sayCool());
-// console.dir(User.prototype);
-console.log(user.sayHi());
+delay(3000).then(() => console.log('выполнилось через 3 секунды'));

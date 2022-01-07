@@ -1,0 +1,45 @@
+SHOW DATABASES;               // смотреть список БД
+CREATE DATABESE sql_course;   // создать БД sql_course
+DROP DATABASE sql_course;     // удалить БД sql_course
+USE sql_course;               // использовать БД sql_course
+CREATE TABLE teacher(
+  id INT AUTO_INCREMENT PRIMARY KEY,    // первичный ключ
+  surname VARCHAR(255) NOT NULL
+);
+SHOW TABLES;                  // смотреть список таблиц
+SHOW COLUMNS FROM teacher;    // смотреть все колонки из таблицы
+CREATE TABLE lesson(
+  id INT AUTO_INCREMENT PRIMARY KEY,    // первичный ключ
+  name VARCHAR(255) NOT NULL,
+  teacher_id INT NOT NULL,
+  FOREIGN KEY (teacher_id) references teacher(id)   // внешний ключ
+);
+INSERT INTO teacher (surname) values ("Иванов");    // Добавить запись в талицу
+SELECT * FROM teacher;       // получить все записи из таблицы
+SELECT id FROM teacher;      // получить id всех записей из таблицы
+SELECT id, surname, surname FROM teacher;   // можно дублировать поля
+SELECT  DISTINCT surname FROM teacher;      // уникальный значения
+SELECT * FROM teacher WHERE id = 1;         // все записи, где id = 1
+SELECT * FROM teacher WHERE surname = "Петров";
+SELECT * FROM teacher LIMIT 2;              // не более 2 записей
+SELECT surname AS 'Фамилия' FROM teacher;   // подставить другое имя поля при выводе
+SELECT * FROM teacher ORDER BY surname;     // сортировка по полю "surname"
+SELECT * FROM teacher ORDER BY id DESC;     // сортировка в обратном порядке
+ALTER TABLE teacher ADD age INT;            // добавить поле "age"
+UPDATE teacher SET age = 20 where id=1;     // изменить значение в ячейке
+SELECT * FROM teacher WHERE surname LIKE "%ов";   // все записи, кончающиеся на "ов"
+SELECT * FROM teacher WHERE id > 3 AND age < 45;
+SELECT * FROM teacher WHERE id > 3 OR age < 45;
+SELECT * FROM teacher WHERE NOT id=2;
+SELECT * FROM teacher WHERE id BETWEEN 35 and 45;
+DELETE FROM teacher;                // удалить ВСЕ записи таблицы
+DELETE FROM teacher WHERE id=5;     // удалить только с id=5
+
+// Multiple INSERT:
+INSERT INTO lesson (name, teacher_id) VALUES ("Математика", 1), ("Русский", 2), ("Физика", 3);
+
+SELECT * FROM teacher UNION SELECT * FROM lesson;
+SELECT AVG(age) FROM teacher;
+SELECT MAX(age), MIN(age) FROM teacher;
+SELECT SUM(age) FROM teacher;
+SELECT age, COUNT(age) FROM teacher GROUP BY age;   // получить количество записей, группируя по age

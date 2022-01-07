@@ -1,7 +1,6 @@
-Preface
+﻿Preface - Предисловие
 This book covers the JavaScript language and the JavaScript APIs
 implemented by web browsers and by Node. 
-Предисловие
 В настоящей книге рассматривается язык JavaScript и API-интерфейсы
 JavaScript, реализованные в веб-браузерах и Node.
 
@@ -11,15 +10,16 @@ for programmers who already use JavaScript but want to take their
 understanding to a new level and really master the language. 
 Я написал ее для читателей, которые имеют определенный опыт программирования и хотят изучить
 JavaScript, а также для программистов, которые уже используют JavaScript, но
-стремятся повысить уровень своих знаний и мастерства владения языком. 
+стремятся повысить уровень своих знаний и мастерства владения языком.
 
+comprehensively - всесторонне
+definitively    - исчерпывающе
 My goal with
 this book is to document the JavaScript language comprehensively and
 definitively and to provide an in-depth introduction to the most important
 client-side and server-side APIs available to JavaScript programs. As a
 result, this is a long and detailed book. 
-comprehensively - всесторонне
-definitively    - исчерпывающе
+
 Моя цель в этой книге — исчерпывающе и всесторонне документировать язык
 JavaScript, чтобы предоставить подробное введение в наиболее важные APIинтерфейсы стороны 
 клиента и сервера, доступные программам на JavaScript
@@ -41,29 +41,30 @@ makes sense - имеет смыл
 Я больше не считаю, что имеет смысл включать такой материал в печатный вариант, когда 
 настолько легко и быстро найти актуальную справочную информацию в Интернете.
 
-Supplemental material (code examples, exercises, etc.) for this book is
-available for download at:
 Supplemental - дополнительный
 exercises    - упражнения
+Supplemental material (code examples, exercises, etc.) for this book is
+available for download at:
 Дополнительные материалы (примеры кода, упражнения и т.п.) для этой книги доступны 
 для загрузки по ссылке
 
 This book is here to help you get your job done.
 Данная книга призвана помочь вам делать свою работу
 
+offered - предложенный
 In general, if example
 code is offered with this book, you may use it in your programs and
 documentation. 
-offered - предложенный
 В общем случае вы
 можете применять приведенный здесь код примеров в своих программах и документации.
 
-You do not need to contact us for permission unless you’re
-reproducing a significant portion of the code. 
+offered - предложенный
 permission  - разрешение
 unless      - пока не
 significant - значительный
 portion     - часть, порция
+You do not need to contact us for permission unless you’re
+reproducing a significant portion of the code. 
 Вы не обязаны спрашивать у нас разрешения, если только не воспроизводите 
 значительную часть кода.
 
@@ -75,22 +76,22 @@ permission.
 Например, для написания программы, в
 которой встречаются многие фрагменты кода из этой книги, разрешение не требуется.
 
+Selling - продажа
 Selling or distributing examples from O’Reilly books does
 require permission.
-Selling - продажа
 Продажа или распростарнение примеров из книги O’Reilly требует разрешения.
 
-Answering a question by citing this book and quoting
-example code does not require permission. 
 Answering - отвечая
 citing - ссылаясь
 quoting - ссылаясь
+Answering a question by citing this book and quoting
+example code does not require permission. 
 Ответ на вопрос путем ссылки на эту книгу и цитирования кода из примера разрешения не требует. 
 
+Incorporating - внедрение
 Incorporating a significant
 amount of example code from this book into your product’s
 documentation does require permission.
-Incorporating - внедрение
 Внедрение существенного объема кода примеров из этой книге, в
 документацию по вашему продукту требует разрешения.
 
