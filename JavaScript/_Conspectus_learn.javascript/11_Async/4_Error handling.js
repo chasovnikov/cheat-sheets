@@ -14,9 +14,9 @@ new Promise((resolve, reject) => {
 
   setTimeout(() => {
     reject(new Error('Сработает!')); // .catch() сработает
-    // throw new Error('Не сработает!'); // .catch() не сработает
+    // throw new Error('Не сработает!'); // .catch() не сработает с alert в браузере
   }, 1000);
-}).catch(console.error);
+}).catch(alert); // alert!!
 
 // throw работает и в .then
 // .then может быть после .catch
