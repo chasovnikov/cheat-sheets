@@ -24,7 +24,7 @@ const myEmitter = new MyEmitter();
 
 // связывает событие с функцией-обработчиком
 myEmitter.on('event', (a, b) => {
-    console.log(a, b, this);
+  console.log(a, b, this);
 });
 
 // генерир. событие
@@ -33,9 +33,9 @@ myEmitter.emit('event', 'a', 'b');
 // EventEmitter вызывает всех слушателей синхронно (в порядке регистрации)
 // Можно переключаться в асинх. режим с помощью методов setImmediate() или process.nextTick():
 myEmitter.on('event', (a, b) => {
-    setImmediate(() => {
-        console.log('this happens asynchronously');
-    });
+  setImmediate(() => {
+    console.log('this happens asynchronously');
+  });
 });
 
 // Вызов события не более одного раза
@@ -43,33 +43,33 @@ myEmitter.on('event', (a, b) => {
 const myEmitter = new MyEmitter();
 let m = 0;
 myEmitter.once('event', () => {
-    console.log(++m);
+  console.log(++m);
 });
 myEmitter.emit('event'); // Prints: 1
 myEmitter.emit('event'); // Ignored
 
 // Рекомендуется всегда добавлять слушателей для событий «ошибки»
 myEmitter.on('error', err => {
-    console.error('whoops! there was an error');
+  console.error('whoops! there was an error');
 });
 myEmitter.emit('error', new Error('whoops!')); // Prints: whoops! there was an error
 
 // Не поглощая выданную ошибку, установив прослушиватель с помощью символа events.errorMonitor
 myEmitter.on(errorMonitor, err => {
-    MyMonitoringTool.log(err);
+  MyMonitoringTool.log(err);
 });
 myEmitter.emit('error', new Error('whoops!')); // По-прежнему выкидывает и вылетает Node.js
 
 // Асинх. обработчик может привести к необработ. отклонению в случае сгенерир. исключения
 myEmitter.on('something', async value => {
-    throw new Error('kaboom');
+  throw new Error('kaboom');
 });
 
 // {captureRejections: true} направляет исключение в метод [Symbol.for('nodejs.rejection')]
 // или в обработчик события error, если его нет
 const ee1 = new EventEmitter({ captureRejections: true });
 ee1.on('something', async value => {
-    throw new Error('kaboom');
+  throw new Error('kaboom');
 });
 
 ee1[Symbol.for('nodejs.rejection')] = console.log;
@@ -104,6 +104,7 @@ emitter.removeAllListeners(eventName); // Удаляет всех слушате
 // По умолчанию для одного события можно зарегистрировать не более 10 слушателей
 emitter.getMaxListeners(); // текущее максимальное значение прослушивателя для EventEmitter
 emitter.setMaxListeners(n); // позволяет изменять ограничение для этого конкретного экземпляра
+// По умолчанию EventEmitters выводит предупреждение, если для определенного события добавлено более 10 слушателей
 events.setMaxListeners(n, ...eventTargets); // Максимальное кол-во слушателей на событие EventTarget
 events.defaultMaxListeners; // изменить значение по умолчанию для всех экземпляров EventEmitter
 emitter.listenerCount(eventName); // Возвращает количество слушателей для соб. eventName
