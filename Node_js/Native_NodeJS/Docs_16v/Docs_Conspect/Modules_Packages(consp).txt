@@ -1,0 +1,73 @@
+Рассматриваются как модули ES (import..from):
+  • Файлы .mjs
+  • Файлы .js, когда в ближайшем родительском package.json: "type":"module"
+  • Строки в аргументе --eval
+  • Строки, передаваемые через STDIN с --input-type=module.
+
+Как модули CommonJS (require)
+  • Файлы .cjs
+  • По умолчанию все файлы .js
+  (но реком-ся задавать в package.json: "type":"commonjs")
+  • Строки в аргументе --eval или --print
+  • Строки, передаваемые через STDIN с --input-type=commonjs.
+
+Точки входа в файле package.json:
+  • "main" - только основнаяя точка входа
+  • "exports" - альтернативная т.вх. для инкапсуляции пакета
+  ("exports" имеет приоритет над "main"
+  "exports" не относится к модулям ES или CommonJS)
+
+Экспорт каждой ранее поддерживаемой точки входа:
+(ранее экспортировал main, lib, feature и package.json)
+{
+  "name": "my-mod",
+  "exports": {
+    ".": "./lib/index.js",
+    "./lib": "./lib/index.js",
+    "./lib/index": "./lib/index.js",
+    "./lib/index.js": "./lib/index.js",
+    "./feature": "./feature/index.js",
+    "./feature/index.js": "./feature/index.js",
+    "./package.json": "./package.json"
+  }
+}
+
+Можно экспортировать целые папки:
+"./lib/_": "./lib/_.js",
+"./feature/_": "./feature/_.js",
+
+инкапсуляцию пакета можно полностью отключить:
+"./_": "./_"
+
+установить основную точку входа для пакета:
+{
+  "main": "./main.js",
+  "exports": "./main.js"
+}
+
+Что бы можно импортировать только определенный подпуть:
+(например:
+import submodule from 'es-module-package/submodule';)
+{
+  "main": "./main.js",
+  "exports": {
+    ".": "./main.js",
+    "./submodule": "./src/submodule.js"
+  }
+}
+
+для пакетов с большим количеством подпутей:
+{
+  "exports": {
+    "./features/*": "./src/features/*.js"
+  },
+  "imports": {
+    "#internal/*": "./src/internal/*.js"
+  }
+}
+Примеры:
+import featureY from 'es-module-package/features/y/y';
+// Loads ./node_modules/es-module-package/src/features/y/y.js
+
+import internalZ from '#internal/z';
+// Loads ./node_modules/es-module-package/src/internal/z.js

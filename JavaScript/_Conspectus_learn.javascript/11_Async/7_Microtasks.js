@@ -23,3 +23,20 @@ window.addEventListener('unhandledrejection', event => alert(event.reason));
 // событие unhandledrejection возникает, когда очередь микрозадач завершена:
 //    движок проверяет все промисы и, если какой-либо из них в состоянии «rejected»,
 //    то генерируется это событие
+
+// Комментарии ---------------------------------
+
+// Вот простой пример, чтобы потестить самостоятельно. Цифры в комментах - порядок выполнения
+function checkMicroTasks() {
+  setTimeout(() => {
+    console.log('timeout-0'); // 4
+  }, 0);
+
+  let promise = Promise.resolve();
+  promise
+    .then(() => console.log('then1')) // 2
+    .then(() => console.log('then2')); // 3
+
+  console.log('sync-console-log'); // 1
+}
+checkMicroTasks();
