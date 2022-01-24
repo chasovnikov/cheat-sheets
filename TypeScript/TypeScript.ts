@@ -50,6 +50,7 @@ function func5 (): Fish | Bird {
 }
 
 // Перегрузка функции
+// это возможность создавать несколько одноименных функций с разными реализациями
 
 function pickCard(x: {suit: string; card: number; }[]): number;
 function pickCard(x: number): {suit: string; card: number; };
@@ -90,7 +91,7 @@ const rect1: IRect = {
 
 interface IOne {
   str?: string;
-  [index: number]: string;
+  [index: number]: string; // number - тип имени св-ва, string - тип значения (54: 'hello')
   func (a: number): number;
 }
 
@@ -100,7 +101,7 @@ interface ITwo extends IOne {
  new (hour: number, minute: number);
 }
 
-interface RectWithArea extends Rect {
+interface RectWithArea extends IRect {
   getArea: () => number;  // return number
   setTime(date: Date): void;
 }
