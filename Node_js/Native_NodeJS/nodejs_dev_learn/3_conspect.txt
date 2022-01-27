@@ -1,0 +1,19 @@
+Чтобы использовать перменные окружения как
+process.env.USER_ID // "239482"
+process.env.USER_KEY // "foobar"
+
+Варианты передачи переменных окружения в наш файл:
+
+1) Передать через консоль:
+> USER_ID=239482 USER_KEY=foobar node app.js
+
+2) Использовать свой конфигурационные файл с именем ".env":
+
+• Установить пакет "dotenv":
+  npm install dotenv --save
+
+• Подключить пакет в файле app.js:
+  require('dotenv').config();
+
+Eсли вы не хотите импортировать пакет в свой код:
+node -r dotenv/config index.js 

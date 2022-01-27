@@ -1,0 +1,34 @@
+
+Немедленно принудительно завершить процесс:
+process.exit(code);
+
+0 <= code <= 255
+code === 0  - успешное завершение (по умолчанию)
+code !== 0  - что-то пошло не так
+
+Подробнее о кодах: Node_js\Native_NodeJS\Docs_16v\Exit_codes.txt
+
+Задать код заранее:
+process.exitCode = 1
+
+Здесь при process.exit() программа никогда не закончится, поэтому исполь-ся SIGTERM:
+
+const express = require('express');
+const app = express();
+app.get('/', (req, res) => {
+  res.send('Hi!')
+});
+const server = app.listen(3000, () => console.log('Server ready'));
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('Process terminated')
+  });
+});
+
+Сигналы - это система связи POSIX: уведомление, отправленное процессу, 
+чтобы уведомить его о произошедшем событии.
+
+SIGTERM - запрос на завершение работы процесса
+SIGKILL - это сигнал, который сообщает процессу о немедленном завершении, и в идеале он должен 
+действовать как process.exit()
