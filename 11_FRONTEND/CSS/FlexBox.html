@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>FlexBox</title>
+	<style>
+		body{
+			background: #fefefe;
+			margin: 0;
+			padding: 0;
+			font: large Arial, Tahoma, "Trebuchet MS", sans-serif;
+			color: #272727;
+		}
+		img{
+			margin: 0;
+			padding: 0;
+			vertical-align: middle;
+			border: none;			
+		}
+		.main{			
+			margin: 20px;
+			padding: 20px;
+			border: 1px solid #ccc;
+			background: #fff;
+			border-radius: 3px;			
+		}
+		.bl{
+			padding: 5px 10px;
+			border: 1px solid #ddd;
+			background: #fff888;
+			border-radius: 3px;
+			margin: 20px;
+		}
+
+	/*-----FlexBox-----*/
+		.main{			
+			height: 500px;
+			max-width: 1000px;
+			margin: 20px auto;
+			padding: 0;
+			background: #EEB4B4;
+
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: -ms-flexbox;
+			display: flex;
+
+			flex-direction: row; /* Направление главной оси */
+
+				justify-content: center; /* Выравнивание по главной */
+
+				align-items: stretch; /* Выравнивание по поперечной оси */
+
+			flex-wrap: wrap; /* Запрещает или разрешает новые ряды */
+
+				align-content: stretch;
+
+			/* flex-flow = flex-direction + flex-wrap */
+		}
+
+		.bl{
+			flex-basis: 200px;  /* Размер высоты или ширины (зависит от направления главной оси) */
+
+			flex-grow: 1; /* Приоритет захвата свободного пространства (если есть свободное пространство)(жадность) */
+
+			flex-shrink: 1; /* Если нет свободного пространства. Приоритет отдачи своего личного пространства (ужимаемость)*/
+
+			/* flex =  grow + shrink + basis */
+		}
+
+		.fl1{background: #7cd2dd; align-self: center} /* Выравнивание отдельного блока по поперечной оси */
+		.fl2{background: #95d051; order: 1;} /* Порядок следования (от 0) */
+		.fl3{background: #FFFFFF; align-self: flex-start;}
+		.fl4{background: #F30A3B; align-self: flex-end;}
+		.fl5{background: #E9F70A; }
+		.fl6{background: #0A0FED; } 
+
+	</style>
+</head>
+
+<body>
+
+	<div class="main">
+		<div class="bl fl1">1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae atque, quia ipsa ea non amet, dolore voluptatum assumenda voluptatibus animi.</div>
+		<div class="bl fl2">2 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae atque, quia ipsa ea non amet, dolore voluptatum assumenda voluptatibus animi.</div>
+		<div class="bl fl3">3 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque deleniti repellendus temporibus facilis at reprehenderit, non omnis in voluptatum dolore?</div>
+		<div class="bl fl4">4 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum fuga explicabo aliquid architecto dicta facilis nihil, enim. Maiores quia, deleniti.</div>
+		<div class="bl fl5">5 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis atque qui accusamus quidem possimus, alias quaerat quae provident facere iure?</div>
+		<div class="bl fl6">6 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium maiores velit porro nobis! Laborum, saepe, numquam. Cupiditate tempora similique enim.</div>
+	</div>
+
+</body>
+</html>
