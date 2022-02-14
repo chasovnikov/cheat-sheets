@@ -1,0 +1,35 @@
+
+
+• 
+
+• Sys-admin: UNIX, WEB, Internet, FHS, terminal
+
+• Databases: SQL, MySQL, PostgreSQL, MemCache, Redis, ElasticSearch
+
+• HTML, CSS
+
+• 
+
+• 
+
+• PHP: Docs
+
+• Laravel:
+
+• ComputerScience: SOLID, GRASP, AntiPatterns
+
+• 
+
+• JavaScript: AJAX, jQuery
+
+• 
+
+• 
+
+• 
+
+• 
+
+• 
+
+• 
