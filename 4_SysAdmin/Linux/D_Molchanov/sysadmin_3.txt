@@ -86,4 +86,42 @@ useradd -m -g new_user group123
 Пользователи и группы 
 Периодические задачи
 
-usermod     - редактирование пользователя
+Управление польз-ями и группами:
+    useradd/adduser
+    usermod     - редактирование пользователя
+    groupadd
+    groupdel
+    vipw        - редактирование в ручную файлов /etc/passwd
+    vipw -s     - редактирование в ручную файлов /etc/shadow
+    файлы/каталоги:
+        /etc/passwd, /etc/shadow
+        /etc/group 
+        /etc/login.defs 
+        /etc/skel
+
+Периодические задачи:
+    crontab      - файлы, где описыв. период. задачи
+        user 
+        system
+    at           - более удобн. утилита, чем cron
+
+crontab -e      - редакт./созд. файла расписания для тек.польз-я
+crontab -l	    - содерж. расписания текущего пользователя
+crontab -r	    - Удаление файла расписания тек.польз.
+crontab -u user	 - Работа с расписаниями конкретных пользователей. Доступно только суперпользователю<
+
+Каждая запись в crontab состоит из шести полей, 
+указываемых в следующем порядке:
+
+user:
+minute(s) hour(s) day(s) month(s) weekday(s) command(s)
+Пример: 5 1 12 6 * echo test > /dev/null    (12 июня 1:05)
+        * * * * *       - каждую минуту
+        1 * * * *       - первую минуту каждого часа
+*  - каждый интервал (для weekday(s))
+
+system:
+minute(s) hour(s) day(s) month(s) weekday(s) user command(s)
+
+date    - показ. дату и время
+date --date "1 day ago" +%Y/%d/%m    - показ. другое время
