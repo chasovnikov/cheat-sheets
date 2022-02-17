@@ -1,0 +1,26 @@
+#my aliases
+# git
+alias gs='git status'
+alias ga='git add $*'
+alias gaa='git add -A'
+alias gpl='git pull'
+alias gps='git push'
+alias gc='git commit $*'
+alias gcm='git commit -m $*'
+alias gch='git checkout $*'
+alias gbr='git branch'
+
+# other
+alias up='sudo apt update && sudo apt upgrade'
+alias h='history'
+alias c='clear'
+alias t='touch $*'
+alias aa='sudo nano /etc/bash.bashrc'
+
+# only linux (/etc/bash.bashrc или ~/.bashrc)
+alias cddev='cd ~/DEVELOP/'
+alias cd_endl='cd ~/DEVELOP/GitHub/EndlessLearning/'
+
+# only windows (~/aliases.bat)
+alias cddev='cd ~/Documents/'
+alias endl='cd ~/Documents/GitHub/EndlessLearning/'
