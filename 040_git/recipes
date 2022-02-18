@@ -1,0 +1,47 @@
+# Создание пустого репозитория на сервере
+repo="repo.git" 
+mkdir $repo
+cd $repo
+git init --bare
+chown git. -R ./
+cd ../
+
+# Импорт svn репозитория на Git-сервер
+repo="repo.svn" 
+svnserver="http://svn.calculate.ru" 
+git svn clone -s $svnserver/$repo $repo
+mv $repo/.git/refs/remotes/tags $repo/.git/refs/tags
+rm -rf $repo/.git/refs/remotes
+rm -rf $repo/.git/svn
+mv $repo/.git $repo.git
+rm -rf $repo
+cd $repo.git
+chown git. -R ./
+cd ../
+
+# Связка локальной и удаленной ветки
+git push -u origin local  # Отправление и установка локальной ветки local отслеживаемой с origin/local
+git branch --set-upstream-to=origin/local  # Пометка локальной ветки как отслеживаемой с origin/local
+
+# Создание новой пустой ветки
+git checkout --orphan newbranch  # Создание пустой ветки с именем newbranch
+git rm -rf .  # Удаление файлов
+
+
+# Замена автора коммита
+#!/bin/sh
+git filter-branch --env-filter '
+OLD_EMAIL="username@examole.com"
+CORRECT_NAME="Andrey Rodionov"
+CORRECT_EMAIL="roand@inbox.ru"
+if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]
+then
+    export GIT_COMMITTER_NAME="$CORRECT_NAME"
+    export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
+fi
+if [ "$GIT_AUTHOR_EMAIL" = "$OLD_EMAIL" ]
+then
+    export GIT_AUTHOR_NAME="$CORRECT_NAME"
+    export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"
+fi
+' --tag-name-filter cat -- --branches --tags

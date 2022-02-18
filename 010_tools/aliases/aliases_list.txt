@@ -9,6 +9,8 @@ alias gc='git commit $*'
 alias gcm='git commit -m $*'
 alias gch='git checkout $*'
 alias gbr='git branch'
+alias gl='git log'
+alias glpo='git log --pretty=oneline'
 
 # other
 alias up='sudo apt update && sudo apt upgrade'
@@ -18,8 +20,8 @@ alias t='touch $*'
 alias aa='sudo nano /etc/bash.bashrc'
 
 # only linux (/etc/bash.bashrc или ~/.bashrc)
-alias cddev='cd ~/DEVELOP/'
-alias cd_endl='cd ~/DEVELOP/GitHub/EndlessLearning/'
+alias dev='cd ~/develop/'
+alias pcs='cd ~/develop/github/programmers-cheat-sheets/'
 
 # only windows (~/aliases.bat)
 alias cddev='cd ~/Documents/'
