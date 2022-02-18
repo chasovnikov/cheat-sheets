@@ -1,0 +1,26 @@
+
+Файл .config/user-dirs.locale:
+
+en_SU
+
+
+Файл .config/user-dirs.dirs:
+
+XDG_DESKTOP_DIR="$HOME/desktop"
+XDG_DOWNLOAD_DIR="$HOME/download"
+XDG_DOCUMENTS_DIR="$HOME/others"
+XDG_TEMPLATES_DIR="$HOME/others/templates"
+XDG_PUBLICSHARE_DIR="$HOME/others/public"
+XDG_MUSIC_DIR="$HOME/others/music"
+XDG_PICTURES_DIR="$HOME/others/pictures"
+XDG_VIDEOS_DIR="$HOME/others/videos"
+# my dirs
+XDG_DEVELOP_DIR="$HOME/develop"
+XDG_GITHUB_DIR="$HOME/develop/github"
+XDG_BOOKS_DIR="$HOME/others/books"
+
+
+перед ребутом ВРУЧНУЮ УДАЛИЛ РУССКОЯЗЫЧНЫЕ папки 
+и ЗАПИЛИЛ НОВЫЕ с соответствующими названиями.
+Больше ничего не делал, в т.ч. не юзал chattr 
+и xdg-usr-dirs-update из автозагрузки не убирал
