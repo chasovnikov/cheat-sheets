@@ -19,10 +19,12 @@ alias gps='git push'
 alias gc='git commit $*'
 alias gca='git commit -a $*'
 alias gcm='git commit -m $*'
+alias gcam='git commit -am $*'
 alias gch='git checkout $*'
 alias gbr='git branch'
 alias gl='git log'
 alias glpo='git log --pretty=oneline'
+alias glpon='git log --pretty=oneline -n $*'
 
 # other
 alias h='history'
