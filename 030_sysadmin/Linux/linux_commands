@@ -10,6 +10,7 @@ timedatectl 	;Вывод и изменение даты и времени
 cal 	        ;Вывод календаря
 
 ; 2) Железо
+sudo lspci -vnn | grep -i VGA -A 12 ;инф. о видеокарте
 dmesg 	            ;Вывод сообщений системы при загрузке
 cat /proc/cpuinfo 	;Информация о CPU
 cat /proc/meminfo 	;Информация об ОЗУ
@@ -45,6 +46,7 @@ cp file1 file2 	        ;Копировать содержимое файла fi
 cp -r dir1 dir2 	    ;Рекурсивное копирование директории dir1 в dir2. dir2 будет создана, если не существует.
 mv file1 file2 	        ;Переименовать file1 в file2
 ln -s /path/to/file_name;Создать символическую ссылку к файлу file_name
+ln /path/to/file_name   ;Создать жёсткую ссылку к файлу file_name
 touch file_name 	    ;Создать пустой файл file_name
 cat > file_name 	    ;Поместить STDIN в файл
 more file_name 	        ;Выводить содержимое файла частями
@@ -72,6 +74,8 @@ pgrep firefox 	        ;find Firefox process ID
 pstree 	                ;Древовидное представление процессов
 
 ; 6) Права файлов или директорий
+chown -R chas:chas /var/www  ;назн. владельцем
+chgrp chasgroup12 /var/www   ;назнач. группу
 chmod +x index.html     ;Сделать файл выполнимым для тек.польз-ля
 chmod octal filename 	;Изменить права файла или директории
 chmod 777 /data/test.c 	;Права rwx для всех, кто имеет доступ к серверу (владельца, группу, остальные)
