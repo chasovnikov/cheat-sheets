@@ -11,6 +11,7 @@ fi
 
 #my aliases
 # git
+alias git_commands='less /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
 alias gs='git status'
 alias ga='git add $*'
 alias gaa='git add -A'
