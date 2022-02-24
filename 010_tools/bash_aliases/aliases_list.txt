@@ -11,7 +11,7 @@ fi
 
 #my aliases
 # git
-alias git_commands='less /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
+alias gcommands='less /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
 alias gs='git status'
 alias ga='git add $*'
 alias gaa='git add -A'
@@ -30,16 +30,24 @@ alias glpon='git log --pretty=oneline -n $*'
 # other
 alias h='history'
 alias c='clear'
-alias t='touch $*'
 
 # only linux (/etc/bash.bashrc или ~/.bashrc)
+
 alias up='sudo apt update && sudo apt upgrade'
-alias snb='sudo nano /etc/bash.bashrc'
 alias sn='sudo nano -m $*'
-alias dev='cd ~/develop/'
-alias cdg='cd ~/develop/github/'
-alias pcs='cd ~/develop/github/programmers-cheat-sheets/'
-alias ta='tail -n 30 /etc/bash.bashrc'
+
+alias snbashrc='sudo nano /etc/bash.bashrc'      # edit aliases
+alias tailbashrc35='tail -n 35 /etc/bash.bashrc' # print aliases
+
+# cd ...
+alias cddevelop='cd ~/develop/'
+alias cdgithub='cd ~/develop/github/'
+alias cdprogrammers_cheat_sheets='cd ~/develop/github/programmers-cheat-sheets/'
+
+alias nanotech_stack='nano ~/develop/github/programmers-cheat-sheets/tech_stack'
+alias nano1234='cat /home/chas/others/documents/3/1234'
+alias cat1234='cat /home/chas/others/documents/3/1234'
+
 
 # only windows (~/aliases.bat)
 alias docs='cd ~/Documents/'
