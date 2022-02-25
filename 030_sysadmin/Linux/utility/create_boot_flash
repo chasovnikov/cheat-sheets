@@ -1,0 +1,17 @@
+
+1) Отмонтировать и отформатировать: 
+/utility/formatting_flash.txt
+
+2) sudo dd bs=4M if=/path/to/ISOfile of=/dev/sdx status=progress oflag=sync 
+
+bs - считывание и запись байтов за раз, 
+if - это входной файл, 
+of - это выходной файл. 
+conv=fdatasync - очень важен, так как dd может вернуться до завершения операции записи
+
+
+Вариант:
+dd bs=4M if=/home/chas/others/os_distribs/orel-current.iso of=/dev/sdd conv=fdatasync
+
+Для просмотра прогресса требуется использовать командуpv:
+dd if=/tmp/ubuntu-18.04-desktop-amd64.iso | pv | sudo dd of=/dev/sdc bs=4M conv=fdatasync
