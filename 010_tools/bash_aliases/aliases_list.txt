@@ -36,6 +36,7 @@ alias c='clear'
 alias up='sudo apt update && sudo apt upgrade'
 alias sn='sudo nano -m $*'
 
+alias nanoaliases_list='nano /home/chas/develop/github/programmers-cheat-sheets/010_tools/bash_aliases/aliases_list.txt'
 alias snbashrc='sudo nano /etc/bash.bashrc'      # edit aliases
 alias tailbashrc35='tail -n 35 /etc/bash.bashrc' # print aliases
 
@@ -47,6 +48,8 @@ alias cdprogrammers_cheat_sheets='cd ~/develop/github/programmers-cheat-sheets/'
 alias nanotech_stack='nano ~/develop/github/programmers-cheat-sheets/tech_stack'
 alias nano1234='cat /home/chas/others/documents/3/1234'
 alias cat1234='cat /home/chas/others/documents/3/1234'
+alias catlinux_commands='cat /home/chas/develop/github/programmers-cheat-sheets/030_sysadmin/Linux/linux_commands'
+alias catgit_commands='cat /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
 
 
 # only windows (~/aliases.bat)
