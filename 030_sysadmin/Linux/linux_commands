@@ -48,7 +48,7 @@ mv file1 file2 	        ;Переименовать file1 в file2
 ln -s /path/to/file_name;Создать символическую ссылку к файлу file_name
 ln /path/to/file_name   ;Создать жёсткую ссылку к файлу file_name
 touch file_name 	    ;Создать пустой файл file_name
-cat > file_name 	    ;Поместить STDIN в файл
+cat > file_name 	    ;Запись в файл из консоли
 more file_name 	        ;Выводить содержимое файла частями
 head file_name 	        ;Вывод первых 10 строк файла
 tail file_name 	        ;Вывод последних 10 строк файла
@@ -125,7 +125,9 @@ grep 'pattern' files 	    ;Поиск по паттерну в файлах
 grep -r pattern dir 	    ;Искать рекурсивно во всех файлах, которые находятся в директории dir
 locate file 	            ;Показать все местонахождения файла
 find /home/ -name "index"  	;Найти файлы с именем, которое начинается с ‘index’ в директории /home folder
-find /home -size +10000k 	;Найти файлы больше 10000k в директории /home
+find /home/ -iname "index"  ; i - игнор. регистр букв
+find / -user chas           ; фильтр по польз-лю
+find / -type p              ; фильтр по типу
 
 ; 12) Удаленное подключение
 ssh user@host 	                ;Подключиться к удаленному хосту по ssh под пользователем user

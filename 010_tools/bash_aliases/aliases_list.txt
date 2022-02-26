@@ -35,11 +35,15 @@ alias t='touch $*'
 # only linux (/etc/bash.bashrc или ~/.bashrc)
 alias up='sudo apt update && sudo apt upgrade'
 alias snb='sudo nano /etc/bash.bashrc'
+alias nanoaliases_list='nano /home/ch/develop/github/programmers-cheat-sheets/010_tools/bash_aliases/aliases_list.txt'
 alias sn='sudo nano -m $*'
 alias dev='cd ~/develop/'
 alias cdg='cd ~/develop/github/'
 alias pcs='cd ~/develop/github/programmers-cheat-sheets/'
 alias ta='tail -n 30 /etc/bash.bashrc'
+alias cat12='cat ~/Документы/3/12'
+alias catgit_commands='cat /home/ch/develop/github/programmers-cheat-sheets/040_git/git_commands'
+alias catlinux_commands='cat /home/ch/develop/github/programmers-cheat-sheets/030_sysadmin/Linux/linux_commands'
 
 # only windows (~/aliases.bat)
 alias docs='cd ~/Documents/'
