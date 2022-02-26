@@ -11,7 +11,7 @@ fi
 
 #my aliases
 # git
-alias gcommands='less /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
+alias git_commands='less /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
 alias gs='git status'
 alias ga='git add $*'
 alias gaa='git add -A'
@@ -32,38 +32,18 @@ alias h='history'
 alias c='clear'
 
 # only linux (/etc/bash.bashrc или ~/.bashrc)
-
 alias up='sudo apt update && sudo apt upgrade'
-<<<<<<< HEAD
 alias snb='sudo nano /etc/bash.bashrc'
 alias nanoaliases_list='nano /home/ch/develop/github/programmers-cheat-sheets/010_tools/bash_aliases/aliases_list.txt'
 alias sn='sudo nano -m $*'
 alias dev='cd ~/develop/'
+alias cddev='cd ~/develop/'
 alias cdg='cd ~/develop/github/'
 alias pcs='cd ~/develop/github/programmers-cheat-sheets/'
-alias ta='tail -n 30 /etc/bash.bashrc'
-alias cat12='cat ~/Документы/3/12'
+alias ta='tail -n 45 /etc/bash.bashrc'
+alias cat12='sudo cat ~/Документы/3/12'
 alias catgit_commands='cat /home/ch/develop/github/programmers-cheat-sheets/040_git/git_commands'
 alias catlinux_commands='cat /home/ch/develop/github/programmers-cheat-sheets/030_sysadmin/Linux/linux_commands'
-=======
-alias sn='sudo nano -m $*'
-
-alias nanoaliases_list='nano /home/chas/develop/github/programmers-cheat-sheets/010_tools/bash_aliases/aliases_list.txt'
-alias snbashrc='sudo nano /etc/bash.bashrc'      # edit aliases
-alias tailbashrc35='tail -n 35 /etc/bash.bashrc' # print aliases
-
-# cd ...
-alias cddevelop='cd ~/develop/'
-alias cdgithub='cd ~/develop/github/'
-alias cdprogrammers_cheat_sheets='cd ~/develop/github/programmers-cheat-sheets/'
-
-alias nanotech_stack='nano ~/develop/github/programmers-cheat-sheets/tech_stack'
-alias nano1234='cat /home/chas/others/documents/3/1234'
-alias cat1234='cat /home/chas/others/documents/3/1234'
-alias catlinux_commands='cat /home/chas/develop/github/programmers-cheat-sheets/030_sysadmin/Linux/linux_commands'
-alias catgit_commands='cat /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
-
->>>>>>> edd57e5c65e03d86bb10a35b04275c9ea7156499
 
 # only windows (~/aliases.bat)
 alias docs='cd ~/Documents/'
