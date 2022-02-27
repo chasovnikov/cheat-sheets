@@ -4,6 +4,8 @@ SYS ADMIN:
         команды
         права доступа
         putty
+        мьютексы, семафоры
+        threads
 
     Протоколы: TCP, UDP, SMTP, FTP, Telnet, IP
 
@@ -82,5 +84,7 @@ Computer Science:
     Патерны проектирования
     Антипатерны
     Алгоритмы
-    GRASP
-    SOLID
+    GRASP, SOLID, DDD, LoD, GoF
+    Принцип информационный эксперт / Information Expert
+    Зацепление и связность / coupling and cohesion
+    Чистая выдумка / Pure Fabrication
