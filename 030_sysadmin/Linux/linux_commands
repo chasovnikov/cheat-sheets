@@ -93,16 +93,16 @@ pgrep firefox 	        ;find Firefox process ID
 pstree 	                ;Древовидное представление процессов
 
 ; 6) Права файлов или директорий
-chown -R chas:chas /var/www  ;назн. владельцем
-chgrp chasgroup12 /var/www   ;назнач. группу
 chmod +x index.html     ;Сделать файл выполнимым для тек.польз-ля
 chmod octal filename 	;Изменить права файла или директории
 chmod 777 /data/test.c 	;Права rwx для всех, кто имеет доступ к серверу (владельца, группу, остальные)
 chmod 755 /data/test.c 	;Права rwx на владельца и r_x на группу и остальных
 chmod 766 /data/test.c 	;Права rwx для владельца, rw для групп и остальных
+chown -R chas:chas /var/www  ;назн. владельцем
 chown owner user-file 	;Изменить владельца для файла
 chown owner-user:owner-group file_name 	;Изменить владельца и группу-владельца для файла
 chown owner-user:owner-group directory 	;Изменить владельца и группу-владельца для директории
+chgrp chasgroup12 /var/www   ;назнач. группу
 
 ; 7) Сеть
 ip address add 192.168.0.1/24 dev eth0 	;Назначить адрес 192.168.0.1 на интерфейс eth0
