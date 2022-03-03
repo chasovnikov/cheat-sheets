@@ -40,8 +40,8 @@ sudo gedit /etc/apache2/apache2.conf
 
 <Directory /home/ch/develop/sites/>
         Options Indexes FollowSymLinks
-        AllowOverride None
-        Require all granted
+        AllowOverride All               # Разрешает использование .htaccess
+        Require all granted             # Общий доступ к сайту (еще может быть Require all denied)
 </Directory>
 
 2)  Каталог webroot всегда должен иметь разрешения EXECUTE, а файл index.html должен иметь разрешения READ.
