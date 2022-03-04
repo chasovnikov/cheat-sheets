@@ -1,0 +1,65 @@
+виртуальный хост создать:
+
+1. cd /etc/apache2/sites-available
+Перемещаемся в директорию, где хранятся конфигурационные файлы Apache для хостов.
+
+2. sudo gedit yourhost.com.conf
+Создаем конфигурационный файл и пишем в нем следующее:
+
+<VirtualHost *:80>
+   ServerName yourhost.com
+   DocumentRoot /home/youruser/public_html
+</VirtualHost>
+Это минимум информации, который необходимо указать для виртуального хоста.
+
+3. sudo gedit /etc/hosts
+Указываем где можно найти наш хост, для этого добавляем в файл hosts следующую строчку:
+
+127.0.0.1 yourhost.com
+4. sudo a2ensite yourhost.com.conf
+Команда a2ensite активирует хост, по сути дела она создает символическую ссылку 
+из sites-available/ в sites-enabled/.
+Примечание: Существует обратная команда a2dissite.
+
+5. Перезапуск apache2: 
+sudo systemctl reload apache2
+
+или
+
+sudo /etc/init.d/apache2 reload
+Перегружаем Apache для вступления настроек в силу.
+Примечание: команда apache2ctl graceful мягко перезагружает Apache без полной остановки.
+
+или
+
+sudo systemctl restart apache2
+
+6. Если ошибка: Forbidden:
+1)
+sudo gedit /etc/apache2/apache2.conf 
+
+<Directory /home/ch/develop/sites/>
+        Options Indexes FollowSymLinks
+        AllowOverride All               # Разрешает использование .htaccess
+        Require all granted             # Общий доступ к сайту (еще может быть Require all denied)
+</Directory>
+
+2)  Каталог webroot всегда должен иметь разрешения EXECUTE, а файл index.html должен иметь разрешения READ.
+
+$ sudo chmod -R 775 /path/to/webroot/directory
+
+Кроме того, настройте владельца каталога, как показано далее:
+
+$ sudo chown -R user:group /path/to/webroot/directory
+
+Где user является обычным вошедшим в систему пользователем, а группа – www-data или apache.
+
+Наконец, перезапустите веб-сервер Apache, чтобы изменения вступили в силу.
+
+$ sudo systemctl restart apache2
+
+Проверить права на каждую родительску папки рекусивно!!!
+Если не сработало, то на каждую папку выполняем отдельно:
+sudo chmod 775 /home
+sudo chmod 775 /home/user
+и так далее.
