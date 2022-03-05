@@ -7,25 +7,32 @@
         Создать (лучше новую) резервную копию /etc/apache2/apache2.conf:
         sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2_OLD.conf
 
-        Редактировать /etc/apache2/apache2.conf
+        Редактировать /etc/apache2/apache2.confca
         Рядом с аналогичными блоками добавить блок:
 
-<Directory /home/ch/develop/sites/mysite.local/>
-        Options Indexes FollowSymLinks
-        AllowOverride All
-        Require all granted
-</Directory>
+        <Directory /home/ch/develop/sites/mysite.local/>
+                Options Indexes FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
 
 * Создаем конфиг файл для своего сайта
 
         cd /etc/apache2/sites-available
-        sudo gedit yourhost.com.conf
+        sudo gedit mysite.local
 
         Содержание файла:
+
         <VirtualHost *:80>
-        ServerName yourhost.com
-        DocumentRoot /home/youruser/public_html
+                ServerName mysite.local
+                ServerAlias www.mysite.local supersite.ru
+                ServerAdmin admin@site.ru
+                DocumentRoot /home/ch/develop/sites/mysite.local
+                <Directory "~/develop/sites/mysite.local/htdocs">
+                        # Директивы настройки папки
+                </Directory>
         </VirtualHost>
+
         Это минимум информации, который необходимо указать для виртуального хоста.
         В /etc/apache2/sites-available/ должен появиться файл yourhost.com.conf
 
