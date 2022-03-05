@@ -1,15 +1,62 @@
 https://losst.ru/ustanovka-i-nastrojka-servera-apache
+https://wiki.merionet.ru/servernye-resheniya/18/poleznye-komandy-dlya-upravleniya-apache-v-linux/
 
-# Проверить запуск apache:
-sudo systemctl status apache2
+# -------- Установить apache2
 
-# Установить apache2:
-sudo apt install apache2
+sudo apt install apache2	    # [On Debian/Ubuntu]
+sudo yum install httpd	      # [On RHEL/CentOS]
+sudo dnf install httpd	      # [On Fedora 22+]
+sudo zypper install apache2	  # [On openSUSE]
 
-# добавить веб-сервер в автозагрузку, чтобы не запускать его вручную после включения компьютера:
-sudo systemctl enable apache2
+# -------- Команды для управления службой Apache
 
-/etc/apache2/apache2.conf       # отвечает за основные настройки
+sudo systemctl <команда> apache2   # [On Systemd]  Ubunt/Debia
+sudo systemctl <команда> httpd     # [On Systemd]  CentOS/RHEL
+sudo service apache2 <команда>     # [On SysVInit] Ubunt/Debia
+sudo service httpd <команда> 	     # [On SysVInit] CentOS/RHEL
+
+# <команда>:
+status      # Просмотр состояния
+start       # Запустить службу
+restart     # Перезапустить
+reload      # Перезагрузка
+stop        # Остановка
+
+# -------- Включить автозапуск при загрузке системы
+
+sudo systemctl enable apache2   # [On Systemd]   Ubunt/Debia
+sudo systemctl enable httpd     # [On Systemd]   CentOS/RHEL
+sudo chkconfig apache2 on       # [On SysVInit]  Ubunt/Debia
+sudo chkconfig httpd on 	      # [On SysVInit]  CentOS/RHEL
+
+---------------
+
+# Проверить версию
+sudo apache2 -v     # для Debian/Ubuntu
+sudo httpd -v       # для RHEL/CentOS/Fedora 22+
+
+# Проверка на ошибки синтаксиса конфигурации Apache
+sudo apache2ctl -t
+sudo httpd -t
+
+--------------
+
+# Содержимое этих файлов будет отображаться по умолчанию (устарело?):
+header.html     # отображаться сверху сайта
+readme.html     # отобр. снизу сайта
+
+Для перезагрузки можно использовать три команды, это systemd, service и apachectl. 
+Разработчики Apache рекомендуют использовать apachectl, 
+но все другие команды просто являются оболочками для этой
+sudo systemctl restart apache2  # жесткую перезагрузку
+sudo systemctl reload apache2   # обновление конфигурации без перезагрузки сервиса
+service restart apache2         # жесткую перезагрузку
+service reload apache2          # обновление конфигурации без перезагрузки сервиса
+apachectl -k restart            # жесткую перезагрузку
+apachectl -k graceful           # обновление конфигурации без перезагрузки сервиса
+
+# все файлы дирек. типа *-enabled создаются автом-ки при изменении настроек
+/etc/apache2/apache2.conf       # основные настройки
 /etc/apache2/conf-available/*   # дополнительные настройки веб-сервера
 /etc/apache2/mods-available/*   # настройки модулей
 /etc/apache2/sites-available/*  # настойки виртуальных хостов
@@ -20,15 +67,104 @@ sudo systemctl enable apache2
 из папки available (доступно) в папку enable (включено). 
 Поэтому настройки лучше выполнять именно в папках available. 
 
-Директивы Directory отвечают за настройку прав доступа к той или иной директории в файловой системе.
+# .htaccess
+Чтобы работал .htaccess настройки для этой папки не должны содержать AllowOverride None
+Директивы .htaccess работают для файлов текущей директории. 
+Если в поддериктории нужно, чтобы правила отличались, - там создается свой .htaccess
+Все инструкции в .htaccess выполняются как бы они были обвернуты в тег 
+<directory адрес_папки>, если бы находились в основном конфиг-файле.
+Чаще всего .htaccess используется для работы с модулем mod_rewrite, 
+который позволяет изменять запросы на лету:
+RewriteEngine on
+RewriteRule ^product/([^/\.]+)/?$ product.php?id=$1 [L]
 
-Для того, чтобы сервер читал инструкции из .htaccess настройки для этой папки 
-в основном файле или файле виртуального хоста не должны содержать AllowOverride None, 
-чтобы могли работать все настройки нужно AllowOverride All.
+# Настройка автом-ки созданного файла mysite.local.conf:
+<VirtualHost *:80>
+   ServerName mysite.local
+   ServerAlias site.local mysyte.ru   # псевдонимы
+   DocumentRoot /home/ch/develop/sites/mysite.local
+   Alias "/info" "/var/www/mysite/folder"  # ссылка на /folder, чтобы обращаться к http://mysite.ru/info/
+   ErrorDociment 500 "https://www.sddsd.ru/error-handler"
+   ErrorDociment 404 "/errors/script-404.php"
+   ErrorDociment 401 "/errors/401.html"
+   ErrorDociment 403 "У вас нет прав на просмотр этого файла"
+</VirtualHost>
 
-Файлы .htaccess позволяют настраивать веб-сервер для поведения в определенной директории.
-Все инструкции, указанные в этом файле выполняются как бы они были обвернуты в тег 
-<directory адрес_папки> если бы находились в основном файле.
+# ================= Директивы (пишутся в apache2.conf или .htaccess)
+Timeout         # время попыток продолжить прерванную передачу 
+KeepAlive On    # передавать несколько файлов, за одно соединение
+MaxKeepAliveRequests 100  # максимальное количество запросов за одно соединение
+KeepAliveTimeout 5        # время соединения соединения в секундах
+User, Group      # пользователь и группа, от имени которых будет работать программа
+HostnameLookups  # записывать в логи вместо ip адресов доменные имена. Лучше отключить, чтобы ускорить работу
+LogLevel         # уровень логирования ошибок
+ErrorLog         # путь к логам
+CustomLog "logs/access.log" common  # создать свои логи (common - метка для LogFormat). Файл создается автом-ки, но папки вроде нет
+LogFormat        # формат записи логов в /var/log/apache2/access.log и в файле по пути CustomLog. %{User-Agent}i - это заголовок от браузера
+Include          # отвечает за подключение рассмотренных выше конфигурационных файлов
+Directory        # отвечают за настройку прав доступа к той или иной директории
+AllowOverride    # указывает нужно ли читать .htaccess файлы из этой директории, это такие же файлы настроек и таким же синтаксисом. All - разрешать все, None - не читать эти файлы
+DocumentRoot     # устанавливает из какой  папки нужно брать документы для отображения
+Options          # указывает какие особенности веб-сервера нужно разрешить в этой папке. All - разрешить все, FollowSymLinks - переходить по символическим ссылкам, Indexes - отображать содержимое каталога если нет файла индекса
+Require     # доступ к каталогу. Require all denied - всем запретить, Require all granted - всем разрешить. Можно явно указать пользователя с помощью user или group
+Order       # доступ к каталогу. Allow,Deny - разрешить для всех, кроме указанных или Deny,Allow - запретить для всех, кроме указанных
+DirectoryIndex index.html test.php  # запускаемый файл по умолчанию (если нет первого - запустится второй)
+Options Indexes FollowSymlynks      # если файлы в DirectoryIndex не прописаны, то покажет папку
+Options -Indexes          # не надо показывать папку, выводить Forbidden
+IndexIgnore *.txt         # не отображать при показе всей папки
+Redirect "/get.html" "http://localhost/post.html"      # перенаправит с "/get.html"(указ. от корня сайта) на "http://localhost/post.html"(указ. полный путь) с кодом 302 (временный)
+Redirect 301 "/xyz.html" "http://localhost/post.html"  # перенаправит с "/xyz.html"(указ. от корня сайта) на "http://localhost/post.html"(указ. полный путь) с кодом 301
+Redirect gone "abc.html"  # выдать ошибку 410 (такого ресурса больше нет (более информативно)) вместо 404
+AddType text/xml .html    # все файл .html представлять как xml (заголовок Content-Type)
+
+# Директивы включения модуля для всех заголовков ответа сервера
+LoadModule headers_module modules/mod_headers.so 
+# Директивы включения модуля заголовка Expires
+LoadModule expire_module modules/mod_expires.so
+
+# Кастомные заголовки
+Header set X-My-Header "Value of header"  # посылать кастоный заголовок
+Header set X-Frame-OPtions "DENY"         # заголовок для запрета использ-ть данный ресурс в <iframe>
+Header add X-My-Header "Value of header"  #
+Header unset X-My-Header                  # не посылать заголовок
+
+# Запрет кеширования
+Header set Cache-Control "no-cache" # запрешает браузеру кешировать файл на диске (но пока открыт браузер, файл буудет хранить в памяти)
+Header set Cache-Control "no-store" # запрешает браузеру кешировать файл на диске (даже когда открыт браузер не держать в памяти)
+Header set Cache-Control "private, no-cache, must-revalidate"
+ExpiresActive On
+ExpiresDefault "now"
+
+# Разрешение кеширования
+Header set Cache-Control "public, max-age=600" # кешировать на 10 мин
+ExpiresActive On # 
+ExpiresDefault "access plus 2 days" # кешировать от тек. даты доступа плюс 2 дня
+ExpiresDefault "modification plus 3 hours" # кешировать от даты изменения файла плюс 3 дня
+
+# Кеширование по типу ресурсов
+ExpiresByType text/html "access plus 2 days"
+ExpiresByType image/gif "access plus 2 weeks"
+
+# Варианты задания значения заголовку Expires
+ExpiresDefault A3600
+
+# Запрет показа файлов ".ht*"
+<Files ".ht*">
+  Require all denied
+</Files>
+
+# Запрет показа файлов по регулярному выражению
+<FilesMatch "\.(zip|rar)$">
+...
+# Перенаправление по рег. выраж.
+RedirectMathc 301 "/.(.*)\.html" "http://..."
+
+# =============== Модули
+
+# Директивы включения модуля для всех заголовков ответа сервера
+LoadModule headers_module modules/mod_headers.so 
+# Директивы включения модуля заголовка Expires
+LoadModule expire_module modules/mod_expires.so
 
 # Посмотреть все запущенные модули:
 apache2ctl -M
@@ -38,3 +174,100 @@ sudo a2enmod имя_модуля
 sudo a2dismod имя_модуля
 # После включения или отключения модулей нужно перезагрузить apache:
 sudo systemctl restart apache2
+
+# ========== Варианты привязки серверных обработчиков к Apache
+# CGI
+ScriptAlias "/cgi-bin" "/www/cgi-bin" # выделить для обработчиков указанные вирт. папки
+AddHandler cgi-script .cgi .pl        # добавить обработчики cgi-script для обработчики файлов с указ. расшир.
+
+# Модуль (по проще вариант)
+LoadModule php5_module "/PHP/php5apache2_2.dll"
+AddType application/x-httpd-php .php  # указывает какое расширение к какому типу принадлежат
+
+# SSL
+Options +Includes
+AddOutputFilter INCLUDES .shtml
+AddType text/html .shtml
+
+# ============ Аутентификация (средствами apache)
+# Создание учетной записи 
+# Файл .htpasswd:
+login:%^%^%^%^
+root:%$&%**(&^&^&)
+
+# Утилита htpasswd.exe
+# Создание нового файла и первой записи
+htpasswd -c c:\secure\.htpasswd admin
+# Добавление пользователя
+htpasswd c:\secure\.htpasswd vasia
+
+# Прописать в .htaccess:
+AuthType Basic       # Тип аутентификации (послать соответст-й заголовок)
+AuthName "Запретная зона!"          # Строка сообщения (realm)
+AuthUserFile "c:\secure\.htpasswd"  # Файл с паролями. Полный физический путь
+Require valid-user   # Включение защиты
+#Require user admin vasya petya   # доступ для конктретных польз-ей (логины)
+
+# Файл групп пользователей
+AuthGroupFile "c:\secure\.htgroup"
+# Допуск пользователей группы
+Require group admins managers
+# .htgroup:
+managers: vasya petya fedya
+admins: ...
+
+# Алгорит создания:
+htpasswd -c ~/develop/sites/mysite.local/conf/.htpasswd admin  # создали файл .htpasswd в дир. conf c паролем для admin
+htpasswd ~/develop/sites/mysite.local/conf/.htpasswd vasya     # добавили польз-ля vasya
+cd ..
+mkdir -p htdocs/secure
+# Проверка доступа: в браузере войти на http://mysite.local/htdocs/secure (должна появиться форма)
+
+# =========== Создание самоподписного сертификата сервера (для https)
+# С помощью утилиты OpenSSL openssl
+$ cd /etc/apache2/conf-available/
+$ openssl
+OpenSSL> req -config openssl.cnf -new -out mysite.csr   # устарело. См. документацию на оф. сайте
+OpenSSL> rsa -in privkey.pem -out mysite.key
+OpenSSL> x509 -in mysite.csr -out mysite.cert -req -signkey mysite.key -days 365
+
+# Подключить ssl_module
+LoadModule ssl_module modules/mod_ssl.so
+
+# Переделать виртуальный хост
+<VirtualHost 127.0.0.1:443>
+  SSLEngine On 
+  SSLCertificateFile .../ssl/mysite.cert
+  SSLCertificateKeyFile .../ssl/mysite.key
+
+# ============= Человекопонятный url
+
+# Модуль mod_rewrite
+LoadModule rewrite_module modules/mod_rewrite.so
+
+# должны быть директива
+<Directory "...">
+  Options Indexes FollowSymLinks    # FollowSymLinks обязательно для mod_rewrite
+  ...
+
+# записать в .htaccess
+RewriteEngine On   # использовать в папке модуль mod_rewrite (переадресовывать все запросы)
+RewriteRule Шаблон Замена/Подстановка [флаги]
+RewriteRule ^([a-zA-Z]+)/([0-9]{4})/(\d{1,2})/(\d\d?)/?$ /test.php?cat=$1&year$2&mon=$3&day=$4 [R=301]
+# Флаги:
+[R] - редирект (по умолч. 302), 
+[F] - Forbidden 403, 
+[G] - Gone 410, 
+[NC] - не учитывать регистр, 
+[OR] - либо следующие условие, 
+[L] - последнее правило
+# Варианты:
+RewriteCond %{REQUEST_FILENAME} !-f    # (-f - file, -d - dir) Если запрашиваемое имя файла не является файлом
+RewriteCond %{REQUEST_FILENAME} !-d    # и, если запрашиваемое имя файла не является директор-й,
+RewriteRule ^(.*)$ index.php=?q=$1     # то исполни это правило
+# Чтобы использовать и так "www.site.ru", и так "site.ru" :
+RewriteCond %{HTTP_HOST} ^www\.site\.ru [NC]  # Если HTTP_HOST соответ-ет "www\.site\.ru",
+RewriteRule ^(.*)$ http://site.ru/$1 [R=301]  # тогда примени это правило
+
+
+# =============
