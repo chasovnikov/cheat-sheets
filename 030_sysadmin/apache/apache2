@@ -29,6 +29,9 @@ sudo systemctl enable httpd     # [On Systemd]   CentOS/RHEL
 sudo chkconfig apache2 on       # [On SysVInit]  Ubunt/Debia
 sudo chkconfig httpd on 	      # [On SysVInit]  CentOS/RHEL
 
+# убрать из автозагрузки
+sudo systemctl disable apache2
+
 ---------------
 
 # Проверить версию

@@ -1,8 +1,0 @@
-Устан. расширения:
-        Russian Language Pack...,
-        Prettier,
-        Sublime Text Keymap...,
-        PHP Debug,
-        PHP Extension Pack,
-        PHP Intelephense,
-        Docker
