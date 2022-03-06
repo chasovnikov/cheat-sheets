@@ -1,0 +1,47 @@
+
+# Синтаксис rewrite запросов выглядит следующим образом:
+rewrite regex URL [flag];
+
+# Пример замены www на запрос без него
+server {
+ listen 443 ssl http2;
+ server_name www.example.com;
+ rewrite ^ https://example.com$request_uri permanent;
+}
+# permanent - флаг, который возвращает постоянное перенаправление с кодом 301
+
+# На практике конкретно с www лучше поступить вот так (return):
+server {
+    listen 443 ssl http2;
+    server_name www.example.com;
+    return 301 $scheme://example.com$request_uri;
+}
+# Разница между rewrite и return в том, что в rewrite переписывается только та часть исходного URL, 
+# которая соответствует регулярному выражению, а в return весь URL-адрес 
+# переписывается на указанный URL-адрес
+
+# к ссылкам в конце без слеша добавляет слеш
+rewrite ^([^.]*[^/])$ $1/ permanent;
+
+
+# для перенаправления запросов с http на https
+return 301 $scheme://new-name.com;
+
+# запрос http://example.com/linux/ubuntu преобразуем в http://example.com/linux.php?distro=ubuntu
+rewrite ^/linux/(.*)$ /linux.php?distro=$1 last;
+
+# постоянное перенаправление с одной страницы на другую
+location = /linux/ubuntu/ {
+    return 301 /windows/win10/;
+}
+
+# ----------- Переменные в nginx 
+# http://nginx.org/ru/docs/varindex.html
+
+$args        # аргументы в строке запроса
+$request_uri # первоначальный URI запроса целиком (с аргументами)
+$scheme      # схема запроса, http или https
+
+# Выводить переменные в заголовки, а потом смотреть их во время отладки. 
+# Добавьте в конфигурацию виртуального хоста
+add_header R-var "$request_uri";
