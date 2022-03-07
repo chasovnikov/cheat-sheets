@@ -22,6 +22,8 @@ restart     # Перезапустить
 reload      # Перезагрузка
 stop        # Остановка
 
+sudo systemctl status apache2 
+
 # -------- Включить автозапуск при загрузке системы
 
 sudo systemctl enable apache2   # [On Systemd]   Ubunt/Debia
