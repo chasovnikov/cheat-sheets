@@ -1,77 +1,75 @@
+
+# основные конфиг. файлы
+/usr/local/nginx/conf/nginx.conf	
+/usr/local/etc/nginx/nginx.conf
+/etc/nginx/nginx.conf
+/etc/nginx/nginx.conf/sites-available/default  # виртуальный хост по умолч.
+/etc/nginx/nginx.conf/conf.d  # дирек. для виртуальн. хостов (CentOS 7 ?)
+
 # ---------- Команды nginx (не все)
 
 # проверка конфигурации
-nginx -t
+sudo nginx -t
+# если команда nginx не найдена, то добавить путь к бинарнику "nginx" 
+# в переменную среды. Например 
+export PATH=$PATH:/usr/sbin/
+
+# запуск (выполнить исполняемый файл)
+sudo nginx
+
+# Для просмотра списка всех запущенных процессов nginx
+ps -ax | grep nginx
+
+# если nginx и apache используют один порт (по умолч.), то проверить, что апач не запущен
+sudo systemctl status apache2 
+
+sudo nginx -s stop   # быстрое жёсткое завершение
+sudo nginx -s quit   # перестает принимать соединения, но старые обслуживает
+
+# применить новую конфигурацию nginx без остановки. Будет запущен новый рабочий процесс с новой конфигурацией, а старые процессы плавно завершатся
+sudo nginx -s reload
 
 # перезапуск nginx
 systemctl restart nginx
 
-# применить новую конфигурацию nginx без остановки. Будет запущен новый рабочий процесс с новой конфигурацией, а старые процессы плавно завершатся
-nginx -s reload
-
 # выводит полный конфиг на экран. Вывод можно направить в отдельный файл и там проанализировать
-nginx -T
+sudo nginx -T
 
 # посмотреть полную информацию о версии nginx, параметрах сборки, модулях и т.д.
-nginx -V
+sudo nginx -V
 
-# ---------- Виртуальные хосты
-# По умолч. уже есть один виртуальный хост с конфигом default.conf
-# Обычно конфиги с виртуальными хостами расположены в директории /etc/nginx/conf.d
+# Все настройки конф-ии производятся в nginx.conf
 
-# типичный пример конфига.
+# ---------- Создание виртуального хоста для mysite.local
+# По умолч. уже есть один виртуальный хост с конфигом /etc/nginx/sites-available/default
+
+# Создать/редак-ть отдельн. конфиг. файл для mysite.local
+# CentOS 7:     
+sudo nano /etc/nginx/conf.d/mysite.local
+# Ubuntu 16.04: 
+sudo nano /etc/nginx/sites-available/mysite.local
+
+# /etc/nginx/nginx.conf/sites-available/mysite.local
 server {
-	listen 80;
-	server_name example.com www.example.com;
-	access_log /var/log/nginx/example.com.access.log main;
-	root   /var/www/example.com/public;
+	listen 127.0.01:80;
+	server_name mysite.local www.mysite.local mysite.com;
+	error_log /var/log/nginx/mysite.local.error.log;
+	access_log /var/log/nginx/mysite.local.access.log;
+	error_page 500 502 503 504 /50x.html;
 
 	location / {
+		root /home/ch/develop/sites/mysite.local;
 		index  index.html index.htm index.php;
-	}
-	location ~ \.php$ {
-		fastcgi_pass   127.0.0.1:9000;
-		fastcgi_index  index.php;
-		fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-		include        fastcgi_params;
 	}
 }
 
-# рекомендую для каждого домена делать отдельно:
+# рекоменд. для каждого домена делать отдельно:
     "директорию с исходниками сайта;
     директорию с логами;
     в некоторых ситуациях отдельный php-fpm пул для каждого сайта или группы сайтов"
 
-# ---------- Настройка location в конфигурации
-# https://nginx.org/ru/docs/http/ngx_http_core_module.html#location
-# location позволяет управлять конфигурацией в зависимости от URI запроса
-# Location можно задавать префиксной строкой или регулярным выражением
-# В регулярных вырвжениях '~' - учитывать регистр, '~*' - не учитывать регистр
-# Обработка location идет в последовательности: первыми проверяются префиксные строки. Совпадения запоминаются. Дальше проверяются регулярные выражения
-# префикс = означает точное совпадение запроса и заданного location. После совпадения, остальные проверки прекращаются. Снижает нагрузку на сервер, так как запросы не будут проверяться по всем правилам
-
-# Пример: перенаправление с amp страниц на обычные
-location ~ /amp/$ {
-    rewrite ^(.*/)amp/$ $1 permanent;
-}
-
-# Пример: максимальный срок хранения картинок и шрифтов в кэше и откл-е для них логирование
-location ~* ^.+.(js|css|png|jpg|jpeg|gif|ico|woff|woff2|swf|ttf|svg)$ {
-    access_log off;
-    expires 1y;
-}
-
-# Пример: закроем доступ к директории .git на сайте
-location ~ /.git {
-    return 404;
-}
-
-# Запретим исполнение скриптов в перечисленных директориях
-location ~* /(images|cache|media|logs|tmp)/.*.(php|pl|py|jsp|asp|sh|cgi)$ {
-    return 404;
-}
-
 # ---------- Работа nginx с php-fpm
+
 # Php-fpm может слушать как сокет unix, так и tcp порт. 
 # Эти настройки задаются в конфиге пула. Это может быть либо
 listen = 127.0.0.1:9000

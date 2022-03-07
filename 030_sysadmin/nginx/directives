@@ -1,0 +1,113 @@
+# Журналирование
+    error_log log\error.log;
+    log_format main '$remote_addr - [$time_local] "$request"';
+    access_log logs/access.log main;    # custom log, main - метка
+
+# Подключение файлов
+    include mime.types;
+
+# Доступ
+    deny all;
+    allow 127.0.0.1;
+
+# Документы
+    root document_root;
+    # файлы по умолчанию
+    index index.html index.htm;     
+    # не показывать список папок, если файлы по умолч. не найдены
+    autoindex off;                 
+    default_type application/octet-stream;
+
+# Файлы ошибок
+    error_page 404 /404.html;
+
+# Заголовки
+    add_header Cache-Control no-store;
+    expires 24h;
+    expires modified +24h;
+
+
+# ---------- Настройка location (перенаправление) в конфигурации
+
+# https://nginx.org/ru/docs/http/ngx_http_core_module.html#location
+# location позволяет управлять конфигурацией в зависимости от URI запроса
+# Location можно задавать префиксной строкой или регулярным выражением
+# В регулярных вырвжениях '~' - учитывать регистр, '~*' - не учитывать регистр
+# Обработка location идет в последовательности: первыми проверяются префиксные строки. Совпадения запоминаются. Дальше проверяются регулярные выражения
+# префикс = означает точное совпадение запроса и заданного location. После совпадения, остальные проверки прекращаются. Снижает нагрузку на сервер, так как запросы не будут проверяться по всем правилам
+
+location = / { # точное совпадение
+    # конфигурация А
+}
+
+location / {
+    # конфигурация Б
+}
+
+location /documents/ {
+    # конфигурация В
+}
+
+location ^~ /images/ { # регулярные выражения НЕ проверяются
+    # конфигурация Г
+}
+
+location ~* \.(gif|jpg|jpeg)$ { # регул. выраж-я
+    # конфигурация Д
+}
+
+# Пример: перенаправление с amp страниц на обычные
+location ~ /amp/$ {
+    rewrite ^(.*/)amp/$ $1 permanent;
+}
+
+# как прокси
+location / {
+    proxy_pass http://127.0.0.1:81/; # на 81 порт вешается другой веб-серв, например, апач
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+}
+
+# Пример: максимальный срок хранения картинок и шрифтов в кэше и откл-е для них логирование
+location ~* ^.+.(js|css|png|jpg|jpeg|gif|ico|woff|woff2|swf|ttf|svg)$ {
+    access_log off;
+    expires 1y;
+}
+
+# Пример: закроем доступ к директории .git на сайте
+location ~ /.git {
+    return 404;
+}
+
+# Запретим исполнение скриптов в перечисленных директориях
+location ~* /(images|cache|media|logs|tmp)/.*.(php|pl|py|jsp|asp|sh|cgi)$ {
+    return 404;
+}
+
+# Виртуальная директория
+location /foo/ {
+    alias /some/path/;
+}
+location ~ \.php$ {
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    include        fastcgi_params;
+}
+
+location /file.html { # для /file.html?lock=1
+    if($query_string ~ ^lock=1) {
+        return 403;
+    }
+    if($arg_lock ~ "0") {
+        return 402;
+    }
+}
+
+# Когда случится 405, отправить 200 и пойти на метку @dir
+error_page 405 =200 @dir
+location @dir {
+    root /some_root
+    ...
+}
