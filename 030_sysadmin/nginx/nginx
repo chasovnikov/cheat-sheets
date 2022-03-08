@@ -133,3 +133,22 @@ location ~ \.php$ {
 По-умолчанию после установки он запускается с правами apache. 
 Если пользователя не исправить на nginx, то у веб сервера не будет доступа к сокету, 
 php не заработает. В своем примере конфига php-fpm я указал пользователя правильно"
+
+# ------------- nginx в качестве балансировщика с apache
+# Распределение нагрузки на другие веб-серверы
+upstream apache {
+	server 127.0.0.1:81 weight=5;  # приоритет увеличен
+	server 127.0.0.1:82;
+	server 127.0.0.1:83;
+	server 127.0.0.1:84 down;  	   # выключен
+}
+server {
+	listen 80;
+	server_name mysite.local;
+	location / {
+		proxy_pass http://apache;
+		proxy_set header Host $host;
+		proxy_set header X-Real-IP $remote_addr;
+		proxy_set header X-Forwarded-For $remote_addr;
+	}
+}
