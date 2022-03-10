@@ -14,8 +14,6 @@ sudo docker run hello-world
 # запустить докер
 # -it  - созд. сеанс интерактивной работы на терминале
 sudo docker run -it ubuntu bash
-# конкретный кон-р
-sudo docker run --name <NAME> -it ubuntu bash
 
 uname -a
 top
@@ -34,6 +32,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo usermod -aG docker ch
 sudo service docker restart     # или перелогиниться
 
+# запуск конкр-го кон-ра
+docker run --name <NAME> -it ubuntu bash
+docker run -it --name myapp --hostname myapp ubuntu bash
+
 # список всех контейнеров (-a  - и установленные)
 docker ps -a
 
@@ -43,21 +45,28 @@ docker start <NAME>
 # остановить конт-р
 docker stop <NAME>
 
-# иниц. нов. кон-р (-h  - задать имя хоста)
+# иниц. нов. конт-р (-h  - задать имя хоста)
 docker run -h ch -it ubuntu bash
 
-# подробн. инф-я о кон-ре
+# подробн. инф-я о конт-ре
 docker inspect <NAME>
 docker inspect <NAME> | grep IPAddress
 
-# список файлов, измен-ых в кон-ре
+# список файлов, измен-ых в конт-ре
 docker diff <NAME>
 
-# список событий внутри кон-ра
+# список событий внутри конт-ра
 docker logs
 
-# удалить кон-р
+# удалить конт-р
 docker rm <NAME>
 
-#
-#
+# показать иден-ры всех остановленных конт-ров
+docker ps -aq -f status=exited 
+
+# удалить все остановленные конт-ры
+docker rm -v $(sudo docker ps -aq -f status=exited)
+
+# запуск скачанного конт-ра в фоновом режиме
+docker run -d <NAME>
+docker run -d -p 8000:8000 <NAME>  # <порт на ПК>:<порт внутри конт-ра>
