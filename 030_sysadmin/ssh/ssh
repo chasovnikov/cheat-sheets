@@ -1,0 +1,8 @@
+# сгенерир. пару ключей (публичный и приватный)
+SSH-keygen     
+
+# В Windows можно использовать в PuTTY:
+puttygen
+
+# Добавить ключ в конец файла autorized_keys
+echo <ключ_из_.pub> >> autorized_keys    

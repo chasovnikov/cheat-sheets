@@ -1,0 +1,90 @@
+Алгоритм создания виртуального хоста:
+
+* Перенаправить apache из /var/www/ в нашу папку с сайтами 
+        Создать папку с нашим сайтом:
+        mkdir -p /home/ch/develop/sites/mysite.local
+
+        Создать (лучше новую) резервную копию /etc/apache2/apache2.conf:
+        sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2_OLD.conf
+
+        Редактировать /etc/apache2/apache2.confca
+        Рядом с аналогичными блоками добавить блок:
+
+        <Directory /home/ch/develop/sites/mysite.local/>
+                Options Indexes FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
+
+* Создаем конфиг файл для своего сайта
+
+        cd /etc/apache2/sites-available
+        sudo gedit mysite.local
+
+        Содержание файла:
+
+        <VirtualHost *:80>
+                ServerName mysite.local
+                ServerAlias www.mysite.local supersite.ru
+                ServerAdmin admin@site.ru
+                DocumentRoot /home/ch/develop/sites/mysite.local
+                <Directory "~/develop/sites/mysite.local/htdocs">
+                        # Директивы настройки папки
+                </Directory>
+        </VirtualHost>
+
+        Это минимум информации, который необходимо указать для виртуального хоста.
+        В /etc/apache2/sites-available/ должен появиться файл yourhost.com.conf
+
+* Редактируем файл /etc/hosts
+
+        sudo gedit /etc/hosts
+        Добавляем строку:
+        127.0.0.1 yourhost.com
+
+* Активировать хост
+        sudo a2ensite yourhost.com.conf
+        По сути дела создает символическую ссылку из sites-available/ в sites-enabled/.
+        Существует обратная команда a2dissite.
+
+* Перезапуск apache2: 
+        apache2ctl graceful     - мягко перезагружает Apache без полной остановки
+        или
+        sudo systemctl reload apache2
+        или
+        sudo systemctl restart apache2
+        или
+        sudo /etc/init.d/apache2 reload
+
+* Проверяем локальный сайт в браузере
+
+Если ошибка: Forbidden:
+1) Проверяем конфиги на наличие прав
+sudo gedit /etc/apache2/apache2.conf 
+
+<Directory /home/ch/develop/sites/>
+        Options Indexes FollowSymLinks
+        AllowOverride All           # Разрешает использование .htaccess
+        Require all granted         # Общий доступ к сайту (еще может быть Require all denied)
+</Directory>
+
+2)  Каталог webroot всегда должен иметь разрешения EXECUTE, 
+а файл index.html должен иметь разрешения READ.
+
+sudo chmod -R 775 /path/to/webroot/directory
+
+Кроме того, настройте владельца каталога, как показано далее:
+
+sudo chown -R user:group /path/to/webroot/directory
+
+Где user является обычным вошедшим в систему пользователем, а группа – www-data или apache.
+
+Наконец, перезапустите веб-сервер Apache, чтобы изменения вступили в силу.
+
+sudo systemctl restart apache2
+
+Проверить права на каждую родительску папки рекусивно!!!
+Если не сработало, то на каждую папку выполняем отдельно:
+sudo chmod 775 /home
+sudo chmod 775 /home/user
+и так далее.

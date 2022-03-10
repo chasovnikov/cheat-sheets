@@ -1,0 +1,48 @@
+# /etc/bash.bashrc 
+# or 
+# ~/.bashrc
+
+#my aliases
+# git
+alias gitcommands='less /home/chas/develop/github/programmers-cheat-sheets/040_git/git_commands'
+alias gs='git status'
+alias ga='git add $*'
+alias gaa='git add -A'
+alias gpl_origin_develop='git pull origin develop'
+alias gps_origin_develop='git push origin develop'
+alias gc='git commit $*'
+alias gca='git commit -a $*'
+alias gcm='git commit -m $*'
+alias gcam='git commit -am $*'
+alias gch='git checkout $*'
+alias gchf='git checkout -f'
+alias gbr='git branch'
+alias gl='git log'
+alias glpo='git log --pretty=oneline'
+alias glpon='git log --pretty=oneline -n $*'
+
+# cd
+alias cddevelop='cd ~/develop/'
+alias cdgithub='cd ~/develop/github/'
+alias cdprogrammers_cheat_sheets='cd ~/develop/github/programmers-cheat-sheets/'
+
+# show file
+alias aliases_tail45_etc_bash_bashrc='tail -n 45 /etc/bash.bashrc'
+alias t_etc_bash_bashrc='tail -n 45 /etc/bash.bashrc'
+alias t_home_bashrc='tail -n 45 /etc/bash.bashrc'
+alias c12='sudo cat ~/Документы/3/12'
+alias catgit_commands='cat /home/ch/develop/github/programmers-cheat-sheets/040_git/git_commands'
+alias catlinux_commands='cat /home/ch/develop/github/programmers-cheat-sheets/030_sysadmin/Linux/linux_commands'
+
+# edit file
+alias kaliases_etc_bash_bashrc='sudo kate /etc/bash.bashrc'
+alias kaliases_list='kate /home/ch/develop/github/programmers-cheat-sheets/010_tools/linux/bash_aliases/aliases_list'
+alias naliases_list='nano /home/ch/develop/github/programmers-cheat-sheets/010_tools/linux/bash_aliases/aliases_list'
+alias n_home_bashrc='sudo nano /etc/bash.bashrc'
+
+# other
+alias h='history'
+alias c='clear'
+alias up='sudo apt update && sudo apt upgrade'
+alias scode='sudo code --no-sandbox --user-data-dir ~/supercode'
+alias psnginx='echo "command: ps -ax | grep nginx"; ps -ax | grep nginx'

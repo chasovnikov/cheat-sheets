@@ -1,0 +1,41 @@
+# https://serveradmin.ru/ustanovka-i-nastrojka-nginx/
+
+# ------------- На CentOS 7. Подключаем репозиторий nginx
+rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+
+yum install nginx
+
+
+# ------------- На Debian. Подключаем репозиторий nginx
+echo "deb http://nginx.org/packages/debian `lsb_release -cs` nginx" | tee /etc/apt/sources.list.d/nginx.list
+
+# Импортируем ключ для проверки подлинности пакетов:
+curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+
+apt update && apt install nginx
+
+
+# ------------- На Ubuntu. Подключаем репозиторий:
+echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" | tee /etc/apt/sources.list.d/nginx.list
+
+# Импортируем ключ:
+curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+
+apt update && apt install nginx
+
+
+# ------------- На всех указанных системах запуск веб сервера выполняется командой:
+systemctl start nginx
+
+# Добавляем nginx в автозагрузку:
+systemctl enable nginx
+
+# ------------- Nginx в Docker. Установить и запустить nginx в docker:
+docker run --name nginx01 -p 80:80 -d nginx
+"В данной команде:
+    nginx01     - имя созданного контейнера, основанного на базовом образе nginx
+    -p 80:80    - <локальный порт>: <порт внутри контейнера>
+    -d          - запуск контейнера в режиме службы
+Образ nginx в данном случае будет скачан автоматически при создании первого контейнера
+"
+

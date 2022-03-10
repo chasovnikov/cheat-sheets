@@ -1,0 +1,72 @@
+# установка на разных ОС
+https://docs.docker.com/engine/install/
+
+# установка на Astra Linux
+https://gist.github.com/daznext/ec5e1393928c1addcd087c6d7ca71209
+
+# установка на Astra Linux на оф.сайте
+sudo apt update
+sudo apt install docker.io
+
+# проверить установку
+sudo docker run hello-world
+
+# запустить докер
+# -it  - созд. сеанс интерактивной работы на терминале
+sudo docker run -it ubuntu bash
+
+uname -a
+top
+apt update
+apt install mc
+
+# выход из контейнера
+exit
+
+# установить docker-compose
+# https://gist.github.com/daznext/ec5e1393928c1addcd087c6d7ca71209
+sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# добавить поль-ля в группу docker (предоставление прав суперпольз-ля)
+sudo usermod -aG docker ch
+sudo service docker restart     # или перелогиниться
+
+# запуск конкр-го кон-ра
+docker run --name <NAME> -it ubuntu bash
+docker run -it --name myapp --hostname myapp ubuntu bash
+
+# список всех контейнеров (-a  - и установленные)
+docker ps -a
+
+# перезапустить конт-р
+docker start <NAME>
+
+# остановить конт-р
+docker stop <NAME>
+
+# иниц. нов. конт-р (-h  - задать имя хоста)
+docker run -h ch -it ubuntu bash
+
+# подробн. инф-я о конт-ре
+docker inspect <NAME>
+docker inspect <NAME> | grep IPAddress
+
+# список файлов, измен-ых в конт-ре
+docker diff <NAME>
+
+# список событий внутри конт-ра
+docker logs
+
+# удалить конт-р
+docker rm <NAME>
+
+# показать иден-ры всех остановленных конт-ров
+docker ps -aq -f status=exited 
+
+# удалить все остановленные конт-ры
+docker rm -v $(sudo docker ps -aq -f status=exited)
+
+# запуск скачанного конт-ра в фоновом режиме
+docker run -d <NAME>
+docker run -d -p 8000:8000 <NAME>  # <порт на ПК>:<порт внутри конт-ра>
