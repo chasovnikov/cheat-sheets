@@ -1,0 +1,56 @@
+# ------------ Пример: работа над проектом getting-started
+# Dockerfile в той же папке, где package.json
+# syntax=docker/dockerfile:1
+FROM node:12-alpine             # стартовый образ
+RUN apk add --no-cache python2 g++ make
+WORKDIR /app
+COPY . .
+RUN yarn install --production
+CMD ["node", "src/index.js"]    # команда по умолч. выполняемая при запуске контейнера
+EXPOSE 3000
+
+
+# создадим новую или обновленную версию образа
+# -t (тег) флаг помечает образ
+docker build -t getting-started .
+
+# запустим новый контейнер
+# -d  - в фоновом режиме
+# -p  - сопоставление между портом 3000 хоста и портом 3000 контейнера
+docker run -dp 3000:3000 getting-started
+
+# откройте веб-браузер c http://localhost:3000. Вы должны увидеть наше приложение
+# Обновите исходный код
+
+# Получите идентификатор контейнера
+docker ps
+
+# остановить и удалить контейнер в одной команде
+docker rm -f <the-container-id>
+
+# остановка контейнера
+docker stop <the-container-id>
+
+# удалить конт-р
+docker rm <the-container-id>
+
+# ------------------
+
+# Войти в Docker Hub
+docker login -u YOUR-USER-NAME
+
+# дать образу getting-started новое имя
+docker tag getting-started YOUR-USER-NAME/getting-started
+
+# ------------- Именованные тома
+# Создайте том todo-db
+docker volume create todo-db
+
+# Остановите и удалите контейнер приложения todo
+docker rm -f <id>
+
+# Запустите контейнер приложения todo, но добавьте -vфлаг для указания монтирования тома
+docker run -dp 3000:3000 -v todo-db:/etc/todos getting-started
+
+# 
+# 
