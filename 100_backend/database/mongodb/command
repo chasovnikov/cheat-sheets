@@ -1,0 +1,38 @@
+sudo apt install mongodb-server
+
+# посмотреть состояние службы
+sudo systemctl status mongod
+
+# добавить её в автозагрузку
+sudo systemctl enable mongod
+
+# Работать с базой данных можно через клиент командной строки Mongo.
+mongo
+version()
+quit()
+
+# удалить версию из официальных репозиториев
+sudo apt purge mongodb*
+
+# запустить сервис mongod 
+sudo systemctl start mongod
+
+# добавить его в автозагрузку
+sudo systemctl enable mongod
+
+# ============= Настройка MongoDB
+
+mongo
+use admin
+db.createUser(
+{
+user: "Admin",
+pwd: passwordPrompt(),
+roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+}
+)
+
+# 
+# 
+# 
+# 
