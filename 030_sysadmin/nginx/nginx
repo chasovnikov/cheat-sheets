@@ -20,6 +20,9 @@ sudo nginx
 # Для просмотра списка всех запущенных процессов nginx
 ps -ax | grep nginx
 
+# убрать из автозагрузки
+sudo systemctl disable nginx
+
 # если nginx и apache используют один порт (по умолч.), то проверить, что апач не запущен
 sudo systemctl status apache2 
 
