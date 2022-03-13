@@ -1,6 +1,7 @@
 # ------------ Пример: работа над проектом getting-started
-# Dockerfile в той же папке, где package.json
+# ========== Dockerfile в той же папке, где package.json
 # syntax=docker/dockerfile:1
+
 FROM node:12-alpine             # стартовый образ
 RUN apk add --no-cache python2 g++ make
 WORKDIR /app
@@ -9,6 +10,7 @@ RUN yarn install --production
 CMD ["node", "src/index.js"]    # команда по умолч. выполняемая при запуске контейнера
 EXPOSE 3000
 
+# ==========
 
 # создадим новую или обновленную версию образа
 # -t (тег) флаг помечает образ
