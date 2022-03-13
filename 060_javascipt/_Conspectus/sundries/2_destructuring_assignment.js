@@ -119,8 +119,6 @@ let options = {
   
   showMenu(options);
 
-
-
   let options = {
     title: "My menu",
     items: ["Item1", "Item2"]
@@ -143,7 +141,7 @@ let options = {
 // function({
 //   incomingProperty: varName = defaultValue
 //   ...
-// })
+// }) {...}
 
 
 /**===========================================================
