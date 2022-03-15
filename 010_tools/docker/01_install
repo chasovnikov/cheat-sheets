@@ -1,0 +1,48 @@
+# Установка на Linux Mint
+# все эти 3 пути установки в официальной документации не имеют никакого смысла. 
+# Правильный способ установить все это - запустить sudo apt install docker-compose
+# https://stackoverflow.com/questions/71106253/problems-installing-docker-on-linux-e-the-https-download-docker-com-linux-u
+
+# установка на разных ОС
+https://docs.docker.com/engine/install/
+
+# установка на Astra Linux
+https://gist.github.com/daznext/ec5e1393928c1addcd087c6d7ca71209
+
+# установка на Astra Linux на оф.сайте
+sudo apt update
+sudo apt install docker.io
+
+# Чтобы запускать docker без sudo, создадим группу docker и добавим в неё польз-ля
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo service docker restart     # или перелогиниться
+
+# проверить установку
+docker run hello-world
+
+# запустить докер
+# -it  - созд. сеанс интерактивной работы на терминале
+docker run -it ubuntu bash
+
+uname -a
+top
+apt update
+apt install mc
+
+# выход из контейнера
+exit
+
+# установить docker-compose
+# https://gist.github.com/daznext/ec5e1393928c1addcd087c6d7ca71209
+sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose\
+
+
+# Настройка при загрузке ОС
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
+# Чтобы отключить это поведение
+sudo systemctl disable docker.service
+sudo systemctl disable containerd.service

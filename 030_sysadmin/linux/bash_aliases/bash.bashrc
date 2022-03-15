@@ -1,11 +1,22 @@
+sudo nano ~/.bashrc
+# в самый конец добавьте строки:
+
+# color git-branch and two line in terminal
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\n\[\033[00m\]\[\033[0;31m\]\$\[\033[0;33m\] '
+
+# запуск новой конфиг-ии
+source ./.bashrc
+
+
+# или
 # color git-branch and two line in terminal
 PS1='\[\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \[\033[0;36m\]\h \w\[\033[0;32m\]$(__git_ps1)\n\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\] ▶\[\033[0m\] '
 
-
+# или
 # color git-branch and two line in terminal
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(parse_git_branch)\n\[\033[00m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\] '
 
-
+# или
 # color git-branch in terminal
 parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
@@ -16,7 +27,7 @@ else
   PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(parse_git_branch)\$ '
 fi
 
-
+# или
 # without the second line ===============
 function parse_git_branch {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'

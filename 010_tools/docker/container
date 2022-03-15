@@ -1,37 +1,3 @@
-# установка на разных ОС
-https://docs.docker.com/engine/install/
-
-# установка на Astra Linux
-https://gist.github.com/daznext/ec5e1393928c1addcd087c6d7ca71209
-
-# установка на Astra Linux на оф.сайте
-sudo apt update
-sudo apt install docker.io
-
-# проверить установку
-sudo docker run hello-world
-
-# запустить докер
-# -it  - созд. сеанс интерактивной работы на терминале
-sudo docker run -it ubuntu bash
-
-uname -a
-top
-apt update
-apt install mc
-
-# выход из контейнера
-exit
-
-# установить docker-compose
-# https://gist.github.com/daznext/ec5e1393928c1addcd087c6d7ca71209
-sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
-# добавить поль-ля в группу docker (предоставление прав суперпольз-ля)
-sudo usermod -aG docker ch
-sudo service docker restart     # или перелогиниться
-
 # запуск конкр-го кон-ра
 docker run --name <NAME> -it ubuntu bash
 docker run -it --name myapp --hostname myapp ubuntu bash
