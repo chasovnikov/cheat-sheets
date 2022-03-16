@@ -6,6 +6,10 @@ docker ps -a    # инф. о всех. контейнерах
 docker login    # авторизация на Docker.HUB
 docker logout   # 
 
+# -d  - в фоновом режиме
+# -p  - сопоставление между портом 3000 хоста и портом 3000 контейнера
+docker run -dp 3000:3000 getting-started
+
 docker pull nginx   # скачать образ nginx последней версии
 docker run nginx    # создание и запуск кон-ра из образа nginx
 docker run --name mynginx nginx    # запуск нового кон-ра из образа nginx
@@ -16,6 +20,8 @@ docker pause <CONTAINER ID>     #
 docker restart <CONTAINER ID>   # 
 docker kill <CONTAINER ID>      # 
 
-# -d  - в фоновом режиме
-# -p  - сопоставление между портом 3000 хоста и портом 3000 контейнера
-docker run -dp 3000:3000 getting-started
+# построение образа из файла DockerFile из тек. дирек.
+docker build .
+
+# удалить образ
+docker image <ID>
