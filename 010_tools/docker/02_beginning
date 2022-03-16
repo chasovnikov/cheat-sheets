@@ -25,3 +25,9 @@ docker build -t myimage .       # -t (title) задать имя образа
 
 # удалить образ
 docker image <ID>
+
+# запушить образ
+docker push <login>/<NAME>
+
+# удалить образ
+docker image rm <login>/<NAME>
