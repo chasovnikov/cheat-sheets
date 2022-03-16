@@ -21,7 +21,7 @@ docker restart <CONTAINER ID>   #
 docker kill <CONTAINER ID>      # 
 
 # построение образа из файла DockerFile из тек. дирек.
-docker build .
+docker build -t myimage .       # -t (title) задать имя образа
 
 # удалить образ
 docker image <ID>
