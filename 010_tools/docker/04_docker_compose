@@ -9,6 +9,11 @@ docker-compose up      # запуск
 
 docker-compose down    # останов
 
+# выполнить команду, если контейнер уже запущен
+docker exec -it <CONTAINER ID> bash
+# или (если в кон-ре нет bash)
+docker exec -it <CONTAINER ID> sh
+
 
 # docker-compose.yml (пример)
 version: '3.1'
