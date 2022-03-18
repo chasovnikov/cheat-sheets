@@ -1,6 +1,10 @@
+# смотреть - есть ли docker в системе
+dpkg -l | grep -i docker
+
 # Установка на Linux Mint
 # все эти 3 пути установки в официальной документации не имеют никакого смысла. 
-# Правильный способ установить все это - запустить sudo apt install docker-compose
+# Правильный способ установить все это - запустить 
+sudo apt install docker-compose
 # https://stackoverflow.com/questions/71106253/problems-installing-docker-on-linux-e-the-https-download-docker-com-linux-u
 
 # установка на разных ОС

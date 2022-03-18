@@ -1,0 +1,44 @@
+
+# после редактирования файла docker-compose.yml
+docker-compose build   # сделать образ по файлу docker-compose.yml
+
+# если нужно выполнить команды из docker-compose.yml
+docker-compose run django django-admin startproject <NAME_PROJECT> .
+
+docker-compose up      # запуск
+
+docker-compose down    # останов
+
+# выполнить команду, если контейнер уже запущен
+docker exec -it <CONTAINER ID> bash
+# или (если в кон-ре нет bash)
+docker exec -it <CONTAINER ID> sh
+
+
+# docker-compose.yml (пример)
+version: '3.1'
+
+services:
+  django:
+    build: ./            # путь к DockerFile
+    container_name: django
+    command: python manager.py runserver 0.0.0.0:8000
+    volumes:            # тома (позвол. сохранять изменения)
+      - .:/usr/src/app
+    ports: 
+      - "8000:8000"
+    depends_on:
+      - pgdb        
+
+  pgdb:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: pgdb
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+volumes:
+  pgdbdata: null
