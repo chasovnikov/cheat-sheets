@@ -1,6 +1,11 @@
 sudo nano ~/.bashrc
 # в самый конец добавьте строки:
 
+# для Fedora
+export PS1='\033[01;32m\]\u@\h\[\033[00m\]: \[\033[01;34m\]\W\033[01;33m\]$(declare -F __git_ps1 &>/dev/null && __git_ps1 " (%s)")\n\[\033[00m\]\[\033[0;31m\]\$\[\033[0;33m\] '
+. /usr/share/git-core/contrib/completion/git-prompt.sh
+
+
 # color git-branch and two line in terminal
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\n\[\033[00m\]\[\033[0;31m\]\$\[\033[0;33m\] '
 
