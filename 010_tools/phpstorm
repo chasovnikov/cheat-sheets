@@ -5,7 +5,7 @@ sudo ln -s ~/PhpStorm/bin/phpstorm.sh /usr/bin/phpstorm
 # создать ярлык
 sudo kate /usr/share/applications/phpstorm.desktop
 
-# добавить содержимое
+# добавить содержимое:
 
 [Desktop Entry]
 #Version=5.0.4
@@ -25,6 +25,7 @@ X-Ayatana-Desktop-Shortcuts=NewWindow
 Name=New Window
 Exec=phpstorm
 TargetEnvironment=Unity
+
 
 # Сохраните этот файл и перезагрузите терминал
 # И введите следующую команду для запуска PhpStorm
