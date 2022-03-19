@@ -1,0 +1,5 @@
+https://forum.ubuntu.ru/index.php?topic=267521.0
+Переключение раскладки на CapsLock
+
+установил dconf-editor и в ветке org.gnome.desktop.input-sources я указал нужные мне параметры 
+(xkb-option: ['grp:caps_toggle', 'lv3:ralt_switch', 'misc:typo', 'terminate:ctrl_alt_bksp'])
