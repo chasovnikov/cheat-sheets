@@ -8,13 +8,15 @@ let unusable: void = undefined; // undefined или null
 let undef: undefined = undefined;
 let nul: null = null;
 let bool: boolean = true;
+let union: undefined | null | string | number = 'text';
+
 let arr1: number[] = [1, 2, 3];
 let arr12: string[] = ['1', '2', '3'];
+let arr5: (string | number)[] = [1, '2', '3'];
 let arr2: Array<number> = [1, 2, 3];
 let arr3: ReadonlyArray<number> = [1, 2, 3];
 let tuple: [number, string] = [1, 'text'];
 let matrix: number[][] = [[1, 2], [3, 4]];
-let union: undefined | null | string | number = 'text';
 
 let obj: {a?: number} =  {a: 1}; // необязательное свойство "а"
 
