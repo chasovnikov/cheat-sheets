@@ -3,7 +3,7 @@
  * Деструктуризация позволяет разбивать объект или массив 
  * на переменные при присвоении.
  * Полный синтаксис для объекта:
- * let {prop : varName = default, ...rest} = object
+ * let {prop: varName = default, ...rest} = object
  * Свойства, которые не были упомянуты, копируются в объект rest
  * 
  * Полный синтаксис для массива:
@@ -41,7 +41,7 @@ let [name = "Guest", surname = "Anonymous"] = ["Julius"];
 alert(name);    // Julius (из массива)
 alert(surname); // Anonymous (значение по умолчанию)
 
-let [name = prompt('name?'), surname = prompt('surname?')] = ["Julius"];
+let [name = prompt('Ваше имя?'), surname = prompt('Ваша фамилия?')] = ["Julius"];
 
 
 let {var1, var2} = {var1: 'sd', var2: 'fg'};
@@ -160,7 +160,7 @@ function topSalary(salaries) {
 
   if (arr.length <= 0) return null;
 
-  for(let [key, val] of Object.entries(salaries))  {
+  for(let [key, val] of arr)  {
       if (max < val) {
           max = val;
           maxKey = key;

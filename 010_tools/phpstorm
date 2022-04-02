@@ -1,3 +1,14 @@
+
+# install
+
+sudo chown -R root:root /tmp/PhpStorm*
+
+sudo mv /tmp/PhpStorm* /opt/PhpStorm
+
+sudo ln -s /opt/PhpStorm/bin/phpstorm.sh /usr/local/bin/phpstorm
+
+# ====================== ИЛИ
+
 # для запуска из консоли созд. симлинк в /usr/bin/ 
 # (которая прописана в переменных окружения)
 sudo ln -s ~/PhpStorm/bin/phpstorm.sh /usr/bin/phpstorm
@@ -16,7 +27,7 @@ GenericName=Text Editor
 
 Exec=phpstorm
 Terminal=false
-Icon=/opt/PhpStorm-121.390/bin/webide.png
+Icon=/home/alexander/PhpStorm/bin/phpstorm.png
 Type=Application
 Categories=TextEditor;IDE;Development
 X-Ayatana-Desktop-Shortcuts=NewWindow
