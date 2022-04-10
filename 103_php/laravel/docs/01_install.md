@@ -32,8 +32,9 @@
 ```
 
 Типичное расположение установщика Laravel:
-Windows: %USERPROFILE%\AppData\Roaming\Composer\vendor\bin
-GNU / Linux Distributions: $HOME/.config/composer/vendor/bin или $HOME/.composer/vendor/bin
+
+- Windows: %USERPROFILE%\AppData\Roaming\Composer\vendor\bin
+- GNU / Linux Distributions: $HOME/.config/composer/vendor/bin или $HOME/.composer/vendor/bin
 
 если нужно создать репозиторий Git:
 
