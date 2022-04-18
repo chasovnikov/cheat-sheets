@@ -8,11 +8,10 @@ alias gitcommands='less /home/chas/develop/github/programmers-cheat-sheets/040_g
 alias gs='git status'
 alias ga='git add $*'
 alias gaa='git add -A'
-alias gpl_origin_develop='git pull origin develop'
-alias gps_origin_develop='git push origin develop'
-alias gc='git commit $*'
+alias gpl='git pull'
+alias gps='git push'
 alias gca='git commit -a $*'
-alias gcm='git commit -m $*'
+alias gc='git commit -m $*'
 alias gcam='git commit -am $*'
 alias gch='git checkout $*'
 alias gchf='git checkout -f'
@@ -22,7 +21,6 @@ alias glpo='git log --pretty=oneline'
 alias glpon='git log --pretty=oneline -n $*'
 
 # cd
-alias cddevelop='cd ~/develop/'
 alias cdgithub='cd ~/develop/github/'
 alias cdprogrammers_cheat_sheets='cd ~/develop/github/programmers-cheat-sheets/'
 
