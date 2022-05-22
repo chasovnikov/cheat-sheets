@@ -1,0 +1,22 @@
+<script type="module">
+import { createApp } from "vue";
+import ChildComp from "./ChildComp.js";
+
+createApp({
+    components: {
+        ChildComp,
+    },
+    data() {
+        return {
+            msg: "from parent",
+        };
+    },
+}).mount("#app");
+</script>
+
+<div id="app">
+  <child-comp>Message: {{ msg }}</child-comp>
+</div>
+
+<!-- in child template -->
+<slot></slot>
