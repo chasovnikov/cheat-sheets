@@ -3,6 +3,10 @@
 ### Миграции
 
 ```bash
+
+# создать миграцию. --create=bbs - вставить в миграцию стартовый код
+php artisan make:migration create_bbs_table --create=bbs
+
 php artisan migrate             # запустить все миграции
 php artisan migrate --force     # выполнить без подтверждения
 
@@ -19,6 +23,13 @@ php artisan migrate:refresh --step=5
 
 php artisan migrate:fresh       # удалить все таблицы + migrate
 php artisan migrate:fresh --seed
+
+php artisan db:wipe --database=mysql    # очистить всю БД
+
+php artisan migrate:install     # Создание журнала миграций — таблицы в базе данных
+
+php artisan scheme:dump         # создать дамп базы данных как альтернатива миграциям
+
 
 ```
 
@@ -81,4 +92,37 @@ php artisan make:seeder UserSeeder      # создать класс UserSeeder
 php artisan db:seed      # запустить создание тестовых данных
 php artisan db:seed --class=UserSeeder      # индивидуальный запуск для класса UserSeeder
 php artisan db:seed --force     # принудительное выполнение
+```
+
+### Контроллеры
+
+```bash
+
+php artisan make:controller PhotoController --model=Photo --resource --requests
+php artisan make:controller PhotoController --api
+php artisan make:controller ProvisionServer --invokable     # контр-р одного действия ?
+
+```
+
+### Разное
+
+```bash
+
+php artisan ui:auth     # создаст контроллеры, шаблоны, маршруты
+
+php artisan route:list
+
+php artisan make:factory BbFactory
+
+```
+
+### Очистка кеша
+
+```bash
+
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
 ```

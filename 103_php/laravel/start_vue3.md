@@ -1,11 +1,13 @@
 ### 1-й вариант установки
 
+1. Установить пакеты
+
 ```bash
 npm install --save vue@next && npm install --save-dev vue-loader@next
 
 ```
 
--   дописать строку ".vue()" в файле webpack.mix.js
+2.  Дописать строку ".vue()" в файле webpack.mix.js:
 
 ```js
 mix.js("resources/js/app.js", "public/js")
@@ -15,8 +17,8 @@ mix.js("resources/js/app.js", "public/js")
     ]);
 ```
 
--   создать свой компонент Vue 3 (/resources/js/components/HelloWorld.vue)
--   импортировать Vue в файл app.js
+3. Создать свой компонент Vue 3 (/resources/js/components/HelloWorld.vue)
+4. Импортировать Vue в файл app.js:
 
 ```js
 import { createApp } from "vue";
@@ -28,20 +30,7 @@ app.component("hello-world", HelloWorld).mount("#app");
 require("./bootstrap");
 ```
 
--   добавить "id=app" в корневой тег
--   подключить файл app.js вне тега с id=app
-
-```php
-<script src="{{ asset('js/app.js') }}"></script>
-```
-
--   скомпилировать ресурсы
-
-```bash
-npm run watch
-```
-
--   используйте компонент Vue в Blade
+5. Добавить "id=app" в корневой контейнер и вставить компонент Vue:
 
 ```php
         <div id="app">
@@ -50,6 +39,20 @@ npm run watch
            </div>
         </div>
 ```
+
+6. Подключить файл app.js вне тега с id=app:
+
+```php
+<script src="{{ asset('js/app.js') }}"></script>
+```
+
+8. Скомпилировать ресурсы
+
+```bash
+npm run watch
+```
+
+---
 
 ### 2-й вариант установки
 
