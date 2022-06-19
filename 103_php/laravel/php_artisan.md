@@ -104,6 +104,17 @@ php artisan make:controller ProvisionServer --invokable     # контр-р од
 
 ```
 
+### Очистка кеша
+
+```bash
+
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+```
+
 ### Разное
 
 ```bash
@@ -114,15 +125,7 @@ php artisan route:list
 
 php artisan make:factory BbFactory
 
-```
-
-### Очистка кеша
-
-```bash
-
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# извлечь шаблон пагинатора из состава фреймворка в /resources/views/vendor/pagitation
+php artisan vendor:publish --tag=laravel-pagination
 
 ```
