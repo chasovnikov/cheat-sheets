@@ -52,8 +52,8 @@ $table->id();   // псевдоним bigIncrements
 $table->bigIncrements('id');
 $table->mediumIncrements('id');  // автоматически увеличивающийся UNSIGNED MEDIUMINT
 $table->increments('id');   // автоматически увеличивающийся UNSIGNED INTEGER
-$table->smallIncrements('id');
-$table->tinyIncrements('id');
+$table->smallIncrements('id'); // от -32768 до 32767, занимает 2 байтa
+$table->tinyIncrements('id'); // от -128 до 127, занимает 1 байт
 
 $table->uuid('id');
 
@@ -63,7 +63,7 @@ $table->unique('email');
 $table->index(['account_id', 'created_at']);
 $table->unique('email', 'unique_email');  // unique_email - своё имя индекса
 $table->primary('id');
-$table->primary(['id', 'parent_id']);
+$table->primary(['id', 'parent_id']); // составной ключ
 $table->fullText('body'); // полнотекстовый индекс (MySQL/PostgreSQL)
 $table->fullText('body')->language('english');
 $table->spatialIndex('location'); // пространственный индекс (кроме SQLite)
@@ -73,10 +73,10 @@ $table->unsignedMediumInteger('votes');
 $table->bigInteger('votes');
 $table->mediumInteger('votes');
 $table->integer('votes');
-$table->unsignedSmallInteger('votes');
+$table->unsignedSmallInteger('votes');  // от 0 до 65535, занимает 2 байтa
 $table->smallInteger('votes');
 
-$table->unsignedTinyInteger('votes');
+$table->unsignedTinyInteger('votes');  // от 0 до 255, занимает 1 байт
 $table->tinyInteger('votes');
 $table->boolean('confirmed');
 

@@ -2,10 +2,11 @@
 
 ```bash
 
-? composer update     # если нужно обновиться до последних версий
 
 composer install    # если есть composer.lock (composer.lock не позволяет автоматически получать последние версии)
+? composer update     # если нужно обновиться до последних версий
 npm install         # уст-ка npm-завис-ти (см. package.jsoon)
+npm audit fix --force  # если попросит
 npm run dev         # запуск команды из package.json: scripts: dev
 
 # создать файл .env по примеру .env.example
