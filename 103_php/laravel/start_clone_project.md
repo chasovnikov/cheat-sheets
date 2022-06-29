@@ -15,10 +15,8 @@ php artisan key:generate    # записывает APP_KEY в файле .env
 
 php artisan storage:link # создать симлинк папки storage в папке public
 
+# создать БД
+
 php artisan migrate --seed # запуск миграций + создание тестовых данных
 
-? php artisan serve           # запуск встроенного сервера
-
 ```
-
-проверить результат по url
