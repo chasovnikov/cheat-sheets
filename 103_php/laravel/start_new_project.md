@@ -13,6 +13,8 @@ php artisan ui bootstrap
 
 php artisan ui:auth
 
+php artisan ui vue  # если нужен 
+
 npm install         # уст-ка npm-завис-ти (см. package.jsoon)
 
 npm audit fix --force  # если попросит
