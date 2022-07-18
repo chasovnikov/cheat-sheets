@@ -22,6 +22,7 @@ composer require aws/aws-sdk-php ~3.0
 - `block_for` — время между опросами базы данных на предмет появления задания;
 - `failed` — настройки таблицы, хранящей список проваленных заданий;
 - `dynamodb` — нереляционная база данных Amazon DynamoDB;
+- `after_commit` - true - будет ждать, пока не будут зафиксированы транзакции (без транзакций задание будет отправлено немедленно).
 
 ```php
 'redis' => [
@@ -103,6 +104,8 @@ BbDeleteJob::dispatch($bb);
 
 ## Свойства заданий-классов
 
+- `failOnTimeout = true` - задание должно быть помечено как неудачное по таймауту;
+
 - `uniqueFor` - время, пока задание будет уникальным;
 
 - `tries` — количество попыток выполнения задания;
@@ -131,9 +134,9 @@ BbDeleteJob::dispatch($bb);
 
 - `attempts()` — возвращает количество попыток исполнения текущего задания;
 
-- `release([<задержка>=0])` — вновь помещает текущее задание в очередь;
+- `release([<задержка>=0])` — вновь помещает текущее задание в очередь (задержка в секундах);
 
-- `fail()` — помечает задание как проваленное;
+- `fail([$exception])` — помечает задание как проваленное;
 
 - `delete()` — удаляет текущее задание из очереди. 
 
@@ -150,14 +153,17 @@ php artisan make:job <имя класса задания> --sync
 
 ## Запуск отложенных заданий-классов (трейт Dispatchable)
 
+- `dispatchSync()` — немедленно запускает текущее задание (как неотложное).
+- `dispatchNow()` — немедленно запускает текущее задание (как неотложное).
 - `dispatch()` — запускает отложенное задание;
 - `dispatchIf()` — запуск при условии;
 - `dispatchUnless()` — запуск при условии;
 - `dispatchAfterResponse()` — запуск после отправки серверного ответа;
-- `dispatchNow()` — немедленно запускает текущее задание (как неотложное).
 
-### Методы результата:
+### Методы результата отправки в очередь:
 
+- `afterCommit()` - позволяет временно включить `after_commit=true`;
+- `beforeCommit()` - позволяет временно выключить `after_commit=true`;
 - `onQueue(<имя очереди>)` — помещает текущее задание в очередь с указанным именем;
 - `onConnection(<имя службы очередей>)` — помещает текущее задание в очередь, хранящуюся в службе с указанным именем;
 - `delay(<задержка>)` — указывает выполнить задание по истечении заданной задержки.
@@ -184,6 +190,7 @@ dispatch(function() {
     }); 
 ```
 
+---
 ### Цепочки отложенных заданий
 ```php
 BbDeletePrepareJob::withChain([
@@ -193,6 +200,21 @@ BbDeletePrepareJob::withChain([
 ])->dispatch(); 
 ```
 Передать конструктору класса ведущего (`BbDeletePrepareJob`) задания какие-либо параметры невозможно.
+
+С попомщью фасада Bus:
+```php
+Bus::chain([
+    new ProcessPodcast,
+    function () {
+        Podcast::update(/* ... */);
+    },
+])->onConnection('redis')
+    ->onQueue('podcasts')
+    ->catch(function (Throwable $e) {
+        // A job within the chain has failed...
+    })
+    ->dispatch();
+```
 
 ---
 
@@ -357,3 +379,94 @@ public function middleware()
     return [(new ThrottlesExceptions(10, 10))->by('key')];  # 'key' -  ключ для кеша
 ```
 Если вы используете Redis, вы можете использовать `Illuminate\Queue\Middleware\ThrottlesExceptionsWithRedis`.
+
+---
+---
+---
+
+# Пакетирование заданий
+
+Создание таблицы, содержащей метаинформацию о пакетах заданий:
+
+```bash
+php artisan queue:batches-table
+```
+
+Чтобы определить пакетируемое задание нужно добавить трейт Batchable. Он предоставляет доступ к методу `batch()`.
+```php
+    public function handle()
+    {
+        if ($this->batch()->cancelled()) {
+            // ...
+            return;
+        } 
+        // ...
+    }
+```
+
+```php
+    $batch = Bus::batch([
+        new ImportCsv(1, 100),
+        new ImportCsv(101, 200),
+        new ImportCsv(201, 300),
+    ])->then(function (Batch $batch) {
+        // All jobs completed successfully...
+    })->catch(function (Batch $batch, Throwable $e) {
+        // First batch job failure detected...
+    })->finally(function (Batch $batch) {
+        // The batch has finished executing...
+    })->name('Import CSV')      // именование пакета
+    ->dispatch();
+    
+    return $batch->id;
+```
+
+Добавить задание в пакет:
+```php
+    $this->batch()->add(Collection::times(1000, function () {
+        return new ImportContacts;
+    }));
+```
+
+Проверка пакетов:
+- `$batch->id`;
+- `$batch->name` - имя пакета;
+- `$batch->totalJobs` - Количество заданий, назначенных пакету;
+- `$batch->pendingJobs` - Количество заданий, которые не были обработаны очередью;
+- `$batch->failedJobs()` - Количество неудачных заданий;
+- `$batch->processedJobs()` - Количество заданий, которые были обработаны на данный момент;
+- `$batch->progress()` - Процент завершения партии (0-100);
+- `$batch->finished()` - Указывает, завершилось ли выполнение пакета;
+- `$batch->cancel()` - Отменит выполнение пакета;
+- `$batch->cancelled()` - Указывает, был ли пакет отменен.
+
+Получить пакет:
+```php
+    return Bus::findBatch($batchId);
+```
+
+Не отмечать пакет как "отмененный" при неудачном задании `allowFailures()`:
+
+```php
+$batch = Bus::batch([
+    // ...
+])->then(function (Batch $batch) {
+    // All jobs completed successfully...
+})->allowFailures()->dispatch();
+
+```
+
+Повторная попытка неудачных пакетных заданий:
+```bash
+php artisan queue:retry-batch <UUID>
+```
+
+Запланировать ежедневную обрезку пакетов:
+
+```php
+$schedule->command('queue:prune-batches --hours=48')->daily();
+
+// ---------------
+// обрезать незавершенные пакетные записи
+$schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
+```
